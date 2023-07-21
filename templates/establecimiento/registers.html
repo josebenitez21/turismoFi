@@ -1,0 +1,214 @@
+{% extends "master.html" %}
+{% block container %}
+<div class="page-header">
+    {% if not administrativo %}
+    <small class="pull-right">
+        <a href="{% url "core:establecimiento" item.id %}"> - Regresar </a>
+        <br>
+        <br>
+        <strong>Habitaciones:</strong> {{item.habitaciones}}
+        <br>
+        <strong>Empleados:</strong> {{item.empleados}}
+    </small>
+    {% endif %}
+    <h2>Registros</h2>
+    {{item}}
+    {% if not administrativo %}
+    <br>
+    <a href="{% url "core:establecimiento_registro_nuevo" item.id %}">+ Agregar Registro</a>
+    {% endif %}
+</div>
+<br>
+<div class="table-responsive">  
+<table class="table table-bordered table-striped table-condensed text-center" id="table-registers" style="font-size:12px;">
+    <thead>
+        <tr>
+            <th>establecimiento</th>
+            <th>clasificacion</th>
+            <th>categoria</th>
+            <th>habitaciones</th>
+            <th>plazas</th>
+            <th>fecha</th>
+            <th>checkins</th>
+            <th>checkouts</th>
+            <th>pernoctaciones</th>
+            <th>nacionales</th>
+            <th>extranjeros</th>
+            <th>habitaciones ocupadas</th>
+            <th>habitaciones disponibles</th>
+            <th>tipo tarifa</th>
+            <th>tarifa promedio</th>
+            <th>ventas netas</th>
+            <th>porcentaje ocupacion %</th>
+            <th>revpar</th>
+            <th>empleados temporales</th>
+            <th>estado</th>
+            <th>opciones</th>
+            {% if administrativo %}
+            {% endif %}
+        </tr>
+    </thead>
+    <tfoot>
+        <tr>
+            <th>establecimiento</th>
+            <th>clasificacion</th>
+            <th>categoria</th>
+            <th>habitaciones</th>
+            <th>plazas</th>
+            <th>fecha</th>
+            <th>checkins</th>
+            <th>checkouts</th>
+            <th>pernoctaciones</th>
+            <th>nacionales</th>
+            <th>extranjeros</th>
+            <th>habitaciones ocupadas</th>
+            <th>habitaciones disponibles</th>
+            <th>tipo tarifa</th>
+            <th>tarifa promedio</th>
+            <th>ventas netas</th>
+            <th>porcentaje ocupacion</th>
+            <th>revpar</th>
+            <th>empleados temporales</th>
+            <th>estado</th>
+            <th>opciones</th>
+            {% if administrativo %}
+            {% endif %}
+        </tr>
+    </tfoot>
+    <tbody>
+    {% for reg in list  %}
+        <tr>
+            <td>{{reg.establecimiento}}</td>
+            <td>{{reg.establecimiento.clasificacion}}</td>
+            <td>{{reg.establecimiento.categoria}}</td>
+            <td>{{reg.establecimiento.habitaciones}}</td>
+            <td>{{reg.establecimiento.plazas}}</td>
+            <td><strong>{{reg.fecha|date:"d/m/Y"}}</strong></td>
+            <td>{{reg.checkins}}</td>
+            <td>{{reg.checkouts}}</td>
+            <td>{{reg.pernoctaciones}}</td>
+            <td>{{reg.nacionales}}</td>
+            <td>{{reg.extranjeros}}</td>
+            <td>{{reg.habitaciones_ocupadas}}</td>
+            <td>{{reg.habitaciones_disponibles}}</td>
+            <td>{{reg.tipo_tarifa}}</td>
+            <td>$ {{reg.tarifa_promedio|floatformat:"2"}}</td>
+            <td>$ {{reg.ventas_netas|floatformat:"2"}}</td>
+            <td>{{reg.porcentaje_ocupacion}} %</td>
+            <td>$ {{reg.revpar|floatformat:"2"}}</td>
+            <td>{{reg.empleados_temporales}}</td>
+            <td id="estado-{{reg.id}}">{{reg.estado}}</td>
+            {% if administrativo %}
+            <td id="opcion-{{reg.id}}">
+                {% if reg.estado == 'sin_validar' %}
+                    <a href="#" id="{{reg.id}}" data-estado="validado" class="validar">Validar</a>
+                {% else %}        
+                    <a href="#" id="{{reg.id}}" data-estado="sin_validar" class="validar" style="color:#f00;">Revocar</a>
+                {% endif %}    
+            </td>
+            {% else %}
+            <td>
+                {% if reg.estado == 'sin_validar' %}
+                    <a href="{% url "core:establecimiento_registro_editar" reg.id %}">[ + Editar ]</a>
+                    <br>
+                    <a href="{% url "core:establecimiento_registro_eliminar" reg.id %}" style="color:#f00;">[ - Borrar ]</a>
+                   
+                {% endif %}
+            </td>
+            {% endif %} 
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+<hr>
+{% endblock container %}
+{% block javascript %}
+{% include "core/datatables.html" %}
+<script>
+    $(document).ready(function() {
+
+        console.log('datatable');
+        var table =  $('#table-registers').DataTable({
+                        language: {
+                            url: "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+                        },
+                        pageLength: 25,
+                        lengthMenu: [[25, 50, 100, -1], [25, 50, 100, 'Todos']],
+                        dom: 'Bflrtip',
+                        buttons: [
+                            'copy',
+                            'csv', 
+                            'excel',
+                            //{
+                            //    extend: 'pdfHtml5',
+                            //    orientation: 'landscape',
+                            //    pageSize: 'LEGAL'
+                            //},
+                            'print'
+                        ],
+                        initComplete: function () {
+                            this.api().columns().every( function () {
+                                var column = this;
+                                var select = $('<select style="width:50%;"><option value=""></option></select>')
+                                    .appendTo( $(column.footer()).empty() )
+                                    .on( 'change', function () {
+                                        var val = $.fn.dataTable.util.escapeRegex(
+                                            $(this).val()
+                                        );
+                 
+                                        column
+                                            .search( val ? '^'+val+'$' : '', true, false )
+                                            .draw();
+                                    } );
+                 
+                                column.data().unique().sort().each( function ( d, j ) {
+                                    select.append( '<option value="'+d+'">'+d+'</option>' )
+                                } );
+                            } );
+                        }
+
+
+                    });
+
+        $('.validar').click(function(event) {
+            event.preventDefault();
+            var a = $(this);
+            var id = $(this).attr('id');
+            var estado = $(this).data('estado');
+            $.ajax({
+                url:'/indicadoresalojamiento/core/validar',
+                type: 'POST',
+                dataType: 'jsonp',
+                data: {'id':parseInt(id),'estado':estado},
+                success: function(data, textStatus, xhr) {
+                    if (data.result){
+                        console.log(data.result);
+                        if (data.result === 'validado' ){
+                            console.log(a);
+                            a.data('estado','sin_validar');
+                            a.text('Revocar');
+                            a.css('color', '#f00');
+                            $('#estado-'+id).text('validado');
+                        }
+                        else{
+                            console.log('no entra');
+                            a.data('estado','validado');
+                            a.text('Validar');
+                            $('#estado-'+id).text('sin_validar');
+                            a.css('color', '');
+
+                        }
+                    }
+                    
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    console.log(textStatus);
+                }
+            });// end Ajax
+                    
+        });
+
+    });
+</script>
+{% endblock javascript %}

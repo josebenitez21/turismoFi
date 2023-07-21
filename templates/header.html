@@ -1,0 +1,75 @@
+{% load static %}
+<link href="{% static 'css/headers.css' %}" rel="stylesheet">
+<header class="p-3 text-bg-dark header-fixed" style="background-color: #0c3f66 !important;">
+  <div class="container">
+    <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+      <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+        <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap">
+          <use xlink:href="#bootstrap"/>
+        </svg>
+      </a>
+      <div class="navbar-header">
+        <!--<a class="navbar-brand" href="{% url 'profile' %}" style="color: white;">Inicio</a>-->
+        <a href="{% url 'profile' %}" class="nav-link px-2 text-secondary">Inicio</a>
+      </div>
+      <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+        {% if user.is_authenticated %}
+          <!--<li><a href="" style="color: white;">Usuario: {{ user }}</a></li>-->
+          <li style="display: none;"><a id="logoutLink" class="nav-link px-2 text-white" href="{% url 'logout' %}">Logout</a></li>
+        {% endif %}
+      </ul>
+      <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search" >
+
+        <input type="search" class="form-control form-control-dark text-bg-light" placeholder="Search..." aria-label="Search">
+      </form>
+      <div class="text-end">
+        {% if user.is_authenticated %}
+          <span class="text-white me-2">Usuario: {{ user.username }}</span>
+        {% else %}
+          <button type="button" class="btn btn-outline-light me-2" id="loginButton">Login</button>
+        {% endif %}
+        {% if user.is_authenticated %}
+          <button type="button" class="btn btn-warning" id="logoutButton">Logout</button>
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+</header>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var loginButton = document.getElementById('loginButton');
+    loginButton.addEventListener('click', function() {
+      window.location.href = "{% url 'login' %}";
+    });
+    var logoutButton = document.getElementById('logoutButton');
+    if (logoutButton) {
+      logoutButton.addEventListener('click', function() {
+        window.location.href = "{% url 'logout' %}";
+      });
+    }
+  });
+
+  document.addEventListener('DOMContentLoaded', function() {
+    var logoutButton = document.getElementById('logoutButton');
+    if (logoutButton) {
+      logoutButton.addEventListener('click', function() {
+        fetch('{% url 'logout' %}', {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': '{{ csrf_token }}'
+          }
+        })
+        .then(function(response) {
+          if (response.redirected) {
+            window.location.href = response.url;
+          }
+        })
+        .catch(function(error) {
+          console.error('Error:', error);
+        });
+      });
+    }
+  });
+</script>

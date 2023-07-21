@@ -1,0 +1,39 @@
+{% extends "master.html" %}
+{% block container %}
+
+<div class="page-header">
+    <h2> 
+        {{user.first_name}} {{user.last_name}}
+    </h2>
+   usuario: <strong>{{user}}</strong> email: <strong>{{user.email}}</strong>  
+</div>
+
+<h3>Establecimientos</h3>
+
+<div class="row">
+{% for item in list %}
+
+<div class="col-md-4">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title"><a href="{% url "core:establecimiento" item.id %}">{{item}}</a></h3>
+      </div>
+      <div class="panel-body">
+        Registros: <a href="{% url "core:establecimiento_registros" item.id %}">{{item.registros.all|length}}</a>
+        <br>
+        Último registro: <em>{{item.get_ultimo_registro.fecha}}</em>
+      </div>
+      <div class="panel-footer text-center">
+        <a href="{% url "core:establecimiento" item.id %}">[ + Ver Información ]</a>
+        <a href="{% url "core:establecimiento_editar" item.id %}">[ + Editar Información ]</a>
+        <br>
+        <a href="{% url "core:establecimiento_registros" item.id %}">[ + Ver Registros ]</a>
+        <a href="{% url "core:establecimiento_registro_nuevo" item.id %}">[ + Agregar Registro ]</a>
+      </div>
+    </div>
+</div>
+
+{% endfor %}
+</div>
+        
+{% endblock container %}

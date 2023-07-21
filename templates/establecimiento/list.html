@@ -1,0 +1,280 @@
+{% extends "master.html" %}
+{% block head %}
+    <style>
+        select{width: 75%;}
+    </style>
+{% endblock head %}
+{% block container %}
+<div class="page-header">
+    <!--
+        <small class="pull-right"><a href="{% url "core:establecimiento_nuevo" %}">+ Registrar nuevo establecimiento</a></small>
+    -->
+    <h2>
+        Establecimientos
+    </h2>
+</div>
+
+{% if administrativo %}
+<div class="table-responsive">
+    <table class="table table-bordered table-condensed table-items">
+        <thead>
+            <tr>
+                <th>nombre</th>
+                <th>clasificación</th>
+                <th>categoría</th>
+                <th>RUC</th>
+                <th>email</th>
+                <th>teléfono</th>
+                <th>dirección</th>
+                <th>provincia</th>
+                <th>cantón</th>
+                <th>parroquia</th>
+                <th>empleados</th>
+                <th>hombres</th>
+                <th>mujeres</th>
+                <th>discapacitados</th>
+                <th>empleados habitaciones</th>
+                <th>empleados alimentos bebidas</th>
+                <th>empleados administrativos</th>
+                <th>empleados otras areas</th>
+                <th>área total m<sup>2</sup></th>
+                <th>área alimentos bebidas m<sup>2</sup></th>                
+                <th>habitaciones</th>
+                <th>plazas</th>
+                <th>registro_SIIT</th>
+                <th>registro_SIETE</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th>nombre</th>
+                <th>clasificación</th>
+                <th>categoría</th>
+                <th>RUC</th>
+                <th>email</th>
+                <th>teléfono</th>
+                <th>dirección</th>
+                <th>provincia</th>
+                <th>cantón</th>
+                <th>parroquia</th>
+                <th>empleados</th>
+                <th>hombres</th>
+                <th>mujeres</th>
+                <th>discapacitados</th>
+                <th>empleados habitaciones</th>
+                <th>empleados alimentos bebidas</th>
+                <th>empleados administrativos</th>
+                <th>empleados otras areas</th>
+                <th>area_total</th>
+                <th>area_alimentos_bebidas</th>
+                <th>habitaciones</th>
+                <th>plazas</th>
+                <th>registro_SIIT</th>
+                <th>registro_SIETE</th>
+            </tr>
+        </tfoot>
+
+        <tbody>
+            {% for item in list  %}
+            <tr>
+                <td>{{item.nombre}}</td>
+                <td>{{item.clasificacion}}</td>
+                <td>{{item.categoria}}</td>
+                <td>{{item.RUC}}</td>
+                <td>{{item.email}}</td>
+                <td>{{item.telefono}}</td>
+                <td>{{item.direccion}}</td>
+                <td>{{item.provincia}}</td>
+                <td>{{item.canton}}</td>
+                <td>{{item.parroquia}}</td>
+                <td>{{item.empleados}}</td>
+                <td>{{item.hombres}}</td>
+                <td>{{item.mujeres}}</td>
+                <td>{{item.discapacitados}}</td>
+                <td>{{item.empleados_habitaciones}}</td>
+                <td>{{item.empleados_alimentos_bebidas}}</td>
+                <td>{{item.empleados_administrativos}}</td>
+                <td>{{item.empleados_otras_areas}}</td>
+                <td>{{item.area_total}}</td>
+                <td>{{item.area_alimentos_bebidas}}</td>
+                <td>{{item.habitaciones}}</td>
+                <td>{{item.plazas}}</td>
+                <td>{{item.registro_SIIT}}</td>
+                <td>{{item.registro_SIETE}}</td>
+            </tr>         
+                
+            {% endfor %}     
+        </tbody>
+    </table>
+</div>   
+{% else %}
+
+    {% for item in list  %}
+    
+    <small class="pull-right"><a href="{% url "core:establecimiento_editar" item.id %}">+ Editar información</a></small>
+    <h3>
+        {{item.nombre}}
+    </h3>
+       
+    <table class="table table-condensed table-striped">
+        <tr>
+            <td><strong>clasificación:</strong></td><td>{{item.clasificacion}}</td>
+            <td><strong>categoría:</strong></td><td>{{item.categoria}}</td>
+            <td></td><td></td>
+        </tr>
+        <tr>
+            <td><strong>email:</strong></td><td>{{item.email}}</td>
+            <td><strong>teléfono:</strong></td><td>{{item.telefono}}</td>
+            <td><strong>dirección:</strong></td><td>{{item.direccion}}</td>
+        </tr>
+        <tr>
+            <td><strong>calle principal:</strong></td><td>{{item.calle_principal}}</td>
+            <td><strong>calle número:</strong></td><td>{{item.calle_numero}}</td>
+            <td><strong>calle secundaria:</strong></td><td>{{item.calle_secundaria}}</td>
+        </tr>
+
+        <tr>
+            <td><strong>provincia:</strong></td><td>{{item.provincia}}</td>
+            <td><strong>cantón:</strong></td><td>{{item.canton}}</td>
+            <td><strong>parroquia:</strong></td><td>{{item.parroquia}}</td>
+        </tr>
+        <tr>
+            <td><strong>empleados:</strong></td><td>{{item.empleados}}</td>
+            <td><strong>hombres:</strong></td><td>{{item.hombres}}</td>
+            <td><strong>mujeres:</strong></td><td>{{item.mujeres}}</td>
+        </tr>
+
+        <tr>
+            <td><strong>habitaciones:</strong></td><td><span class="badge">{{item.habitaciones}}</span></td>
+            <td><strong>plazas:</strong></td><td><span class="badge">{{item.plazas}}</span></td>
+            <td><strong>tipo de tarifa:</strong></td><td>{{item.tipo_tarifa}}</td>
+        </tr>
+        <tr>
+            <td><strong>propietario:</strong></td><td>{{item.propietario}}</td>
+            <td><strong>representante:</strong></td><td>{{item.representante}}</td>
+            <td></td><td></td>
+        </tr>
+    </table>
+    <br>
+    <strong>Registros:</strong>
+    <small class="pull-right"><a href="{% url "core:establecimiento_registro" item.id %}">+ Agregar Registro</a></small> 
+    {% if item.registros.all %}
+
+    <table class="table table-bordered table-striped table-condensed table-items">
+        <thead>
+            <tr>
+                <th>fecha</th>
+                <th>checkins</th>
+                <th>checkouts</th>
+                <th>nacionales</th>
+                <th>extranjeros</th>
+                <th>pernoctaciones</th>
+                <th>tarifa promedio</th>
+                <th>ventas netas</th>
+                <th>empleados temporales</th>
+                <th>estado</th>
+                <th>opciones</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th>fecha</th>
+                <th>checkins</th>
+                <th>checkouts</th>
+                <th>nacionales</th>
+                <th>extranjeros</th>
+                <th>pernoctaciones</th>
+                <th>tarifa promedio</th>
+                <th>ventas netas</th>
+                <th>empleados temporales</th>
+                <th>estado</th>
+                <th>opciones</th>
+            </tr>
+        </tfoot>
+
+        <tbody>
+        {% for reg in item.registros.all  %}
+            <tr>
+            <td>{{reg.fecha|date:"d/m/Y"}}</td>
+            <td>{{reg.checkins}}</td>
+            <td>{{reg.checkouts}}</td>
+            <td>{{reg.nacionales}}</td>
+            <td>{{reg.extranjeros}}</td>
+            <td>{{reg.pernoctaciones}}</td>
+            <td>{{reg.tarifa_promedio}}</td>
+            <td>{{reg.ventas_netas}}</td>
+            <td>{{reg.empleados_temporales}}</td>
+            <td>{{reg.validate}}</td>
+            <td><small>
+                {% if reg.validate == 'sin_validar' %}
+                    <a href="{% url "core:establecimiento_registro_editar" reg.id %}">[ Editar ]</a>
+                    <br>
+                    <a href="{% url "core:establecimiento_registro_eliminar" reg.id %}" style="color:#f00;">[ Borrar ]</a>
+                   
+                {% endif %}
+
+            </small></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+ 
+    {% endif %}
+    <hr>
+    {% endfor %}
+
+{% endif %}    
+
+
+{% endblock container %}
+{% block javascript %}
+    {% include "core/datatables.html" %}
+    <script>
+        $(document).ready(function() {
+
+            console.log('datatable');
+            var table =  $('.table-items').DataTable({
+                            language: {
+                                url: "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+                            },
+                            pageLength: 25,
+                            lengthMenu: [[25, 50, 100, -1], [25, 50, 100, 'Todos']],
+                            dom: 'Bflrtip',
+                            buttons: [
+                                'copy',
+                                'csv', 
+                                'excel',
+                                //{
+                                //    extend: 'pdfHtml5',
+                                //    orientation: 'landscape',
+                                //    pageSize: 'LEGAL'
+                                //},
+                                'print'
+                            ],
+                            initComplete: function () {
+                                this.api().columns().every( function () {
+                                    var column = this;
+                                    var select = $('<select><option value=""></option></select>')
+                                        .appendTo( $(column.footer()).empty() )
+                                        .on( 'change', function () {
+                                            var val = $.fn.dataTable.util.escapeRegex(
+                                                $(this).val()
+                                            );
+                     
+                                            column
+                                                .search( val ? '^'+val+'$' : '', true, false )
+                                                .draw();
+                                        } );
+                     
+                                    column.data().unique().sort().each( function ( d, j ) {
+                                        select.append( '<option value="'+d+'">'+d+'</option>' )
+                                    } );
+                                } );
+                            }
+
+
+                        });
+
+        });
+    </script>
+{% endblock javascript %}

@@ -1,0 +1,45 @@
+{% extends "master.html" %}
+{% block container %}
+<div class="page-header">
+    <small class="pull-right">
+        <strong>Habitaciones:</strong> {{item.habitaciones}}
+        <br>
+        <strong>Empleados:</strong> {{item.empleados}}
+    </small>
+    <h2><small>{{action}}</small> Registro</h2>
+    {{item}}
+</div>
+
+<form action="" method="post" class="form-horizontal">
+{% csrf_token %}
+    {# Include the hidden fields #}
+    {% for hidden in form.hidden_fields %}
+        {{ hidden }}
+    {% endfor %}
+    {# Include the visible fields #}
+    <div class="row">
+    {% for field in form.visible_fields %}
+        <div class="col-md-3">
+        {{ field.label_tag }} {{ field }}
+        {% if field.help_text %}
+            <small class="text-muted">{{field.help_text}}</small>
+        {% endif %}
+        <small class="text-danger">{{ field.errors }}</small>
+        </div>
+    {% endfor %}
+    </div>
+    <div class="text-center">
+        <button class="btn btn-primary btn-sm" type="submit">Registrar</button>
+        <a class="btn btn-danger btn-sm" href="{% url "core:establecimiento_registros" item.id %}" role="button">Cancelar</a>
+    </div>
+</form>
+<hr>
+
+{% endblock container %}
+{% block javascript %}
+<script>
+    $('input').addClass('form-control');
+    $('input').attr('required',false);
+    $('input[type="number"]').attr('min',0);
+</script>
+{% endblock javascript %}

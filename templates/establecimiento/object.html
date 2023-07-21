@@ -1,0 +1,43 @@
+{% extends "master.html" %}
+{% block container %}
+<div class="page-header">
+    <h2><small>{{action}}</small> {{item}}</h2>
+</div>
+
+<form action="" method="post">
+{% csrf_token %}
+<div class="row">
+    <div class="col-md-5">
+            {# Include the hidden fields #}
+            {% for hidden in form.hidden_fields %}
+            {{ hidden }}
+            {% endfor %}
+        {# Include the visible fields #}
+        {% for field in form.visible_fields %}
+                {{ field.errors }}
+                {{ field.label_tag }} {{ field }}
+        {% endfor %}
+
+        <br>
+        <div class="text-center">
+            <button class="btn btn-primary btn-sm" type="submit">Registrar</button>
+            <a class="btn btn-danger btn-sm" href="{% url "core:establecimiento" item.id %}" role="button">Cancelar</a>
+        </div>
+    </div>
+    <div class="col-md-2"></div>
+    <div class="col-md-3">
+        {% for field in form.visible_fields %}
+                {{ field.errors }}
+        {% endfor %}
+    </div>
+</div>
+</form>
+<hr>
+{% endblock container %}
+{% block javascript %}
+    <script>
+    $('input').addClass('form-control');
+    $('input').attr('required',false);
+    $('input[type="number"]').attr('min',0);
+    </script>
+{% endblock javascript %}
