@@ -2,11 +2,6 @@
 -------------------------------------------------- */
 /* Padding below the footer and lighter body text */
 
-body {
-  padding-top: 3rem;
-  padding-bottom: 3rem;
-  color: rgb(var(--bs-tertiary-color-rgb));
-}
 
 
 /* CUSTOMIZE THE CAROUSEL
@@ -18,7 +13,7 @@ body {
 }
 /* Since positioning the image, we need to help out the caption */
 .carousel-caption {
-  bottom: 3rem;
+  bottom: 50rem;
   z-index: 10;
 }
 
@@ -81,11 +76,11 @@ body {
   }
 }
 .featurette-divider {
-  background-color: #f9a825;
+
 }
 
 .carousel-inner .carousel-item.active,
 .carousel-inner .carousel-item-next,
 .carousel-inner .carousel-item-prev {
-  background-color: #f9a825 !important;
+
 }
