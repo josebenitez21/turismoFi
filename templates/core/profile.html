@@ -1,11 +1,11 @@
 {% extends "master.html" %}
 {% block container %}
 
-<div class="page-header">
-    <h2> 
+<div class="page-header mt-4">
+    <h2>
         {{user.first_name}} {{user.last_name}}
     </h2>
-   usuario: <strong>{{user}}</strong> email: <strong>{{user.email}}</strong>  
+    usuario: <strong>{{user}}</strong> email: <strong>{{user.email}}</strong>
 </div>
 
 <h3>Establecimientos</h3>
@@ -35,5 +35,5 @@
 
 {% endfor %}
 </div>
-        
+
 {% endblock container %}
