@@ -1,56 +1,254 @@
 {% extends "master.html" %}
 {% block head %}
     <style>
-        select{width: 75%;}
+        select {
+            width: 75%;
+        }
     </style>
 {% endblock head %}
 {% block container %}
-<div class="page-header mt-4">
-    <h2>
-        {{item.nombre}}
-    </h2>
-    <a class="pull-right" href="{% url "core:establecimiento_registros" item.id %}">+ Ver Registros</a>
-    <a href="{% url "core:establecimiento_editar" item.id %}">+ Editar información</a>
-</div>
-   
-<table class="table table-condensed table-striped">
-    <tr>
-        <td><strong>clasificación:</strong></td><td>{{item.clasificacion}}</td>
-        <td><strong>categoría:</strong></td><td>{{item.categoria}}</td>
-        <td></td><td></td>
-    </tr>
-    <tr>
-        <td><strong>email:</strong></td><td>{{item.email}}</td>
-        <td><strong>teléfono:</strong></td><td>{{item.telefono}}</td>
-        <td><strong>dirección:</strong></td><td>{{item.direccion}}</td>
-    </tr>
-    <tr>
-        <td><strong>calle principal:</strong></td><td>{{item.calle_principal}}</td>
-        <td><strong>calle número:</strong></td><td>{{item.calle_numero}}</td>
-        <td><strong>calle secundaria:</strong></td><td>{{item.calle_secundaria}}</td>
-    </tr>
+    <div class="page-header mt-4">
+        <h2>
+            {{ item.nombre }}
+        </h2>
+        <a class="btn btn-primary" href="{% url "core:establecimiento_registros" item.id %}">+ Ver Registros</a>
+        <a class="btn btn-primary" href="{% url "core:establecimiento_editar" item.id %}">+ Editar información</a>
+    </div>
+    <br>
 
-    <tr>
-        <td><strong>provincia:</strong></td><td>{{item.provincia}}</td>
-        <td><strong>cantón:</strong></td><td>{{item.canton}}</td>
-        <td><strong>parroquia:</strong></td><td>{{item.parroquia}}</td>
-    </tr>
-    <tr>
-        <td><strong>empleados:</strong></td><td>{{item.empleados}}</td>
-        <td><strong>hombres:</strong></td><td>{{item.hombres}}</td>
-        <td><strong>mujeres:</strong></td><td>{{item.mujeres}}</td>
-    </tr>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <td><strong>clasificación:</strong></td>
+                    <br>
+                    <td>{{ item.clasificacion }}</td>
 
-    <tr>
-        <td><strong>habitaciones:</strong></td><td><span class="badge">{{item.habitaciones}}</span></td>
-        <td><strong>plazas:</strong></td><td><span class="badge">{{item.plazas}}</span></td>
-        <td><strong>tipo de tarifa:</strong></td><td>{{item.tipo_tarifa}}</td>
-    </tr>
-    <tr>
-        <td><strong>propietario:</strong></td><td>{{item.propietario}}</td>
-        <td><strong>representante:</strong></td><td>{{item.representante}}</td>
-        <td></td><td></td>
-    </tr>
-</table>
-<small>web:</small> <a href="{{item.web}}" target="_blank">{{item.web}}</a> 
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <td><strong>categoría:</strong></td>
+                    <br>
+                    <td>{{ item.categoria }}</td>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <td><strong>email:</strong></td>
+                    <br>
+                    <td>{{ item.email }}</td>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <td><strong>teléfono:</strong></td>
+                    <br>
+                    <td>{{ item.telefono }}</td>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card mb-6">
+                <div class="card-body">
+                    <td><strong>dirección:</strong></td>
+                    <br>
+                    <td>{{ item.direccion }}</td>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <td><strong>calle principal:</strong></td>
+                    <br>
+                    <td>{{ item.calle_principal }}</td>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <td><strong>calle número:</strong></td>
+                    <br>
+                    <td>{{ item.calle_numero }}</td>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card mb-6">
+                <div class="card-body">
+                    <td><strong>calle secundaria:</strong></td>
+                    <br>
+                    <td>{{ item.calle_secundaria }}</td>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <td><strong>provincia:</strong></td>
+                    <br>
+                    <td>{{ item.provincia }}</td>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <td><strong>cantón:</strong></td>
+                    <br>
+                    <td>{{ item.canton }}</td>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card mb-6">
+                <div class="card-body">
+                    <td><strong>parroquia:</strong></td>
+                    <br>
+                    <td>{{ item.parroquia }}</td>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <td><strong>empleados:</strong></td>
+                    <br>
+                    <td>{{ item.empleados }}</td>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <td><strong>hombres:</strong></td>
+                    <br>
+                    <td>{{ item.hombres }}</td>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card mb-6">
+                <div class="card-body">
+                    <td><strong>mujeres:</strong></td>
+                    <br>
+                    <td>{{item.mujeres}}</td>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+     <br>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <td><strong>habitaciones:</strong></td>
+                    <br>
+                    <td>{{item.habitaciones}}</td>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <td><strong>plazas:</strong></td>
+                    <br>
+                    <td>{{item.plazas}}</td>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card mb-6">
+                <div class="card-body">
+                    <td><strong>tipo de tarifa:</strong></td>
+                    <br>
+                    <td>//////</td>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+         <br>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <td><strong>propietario:</strong></td>
+                    <br>
+                    <td>{{item.propietario}}</td>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <td><strong>representante:</strong></td>
+                    <br>
+                    <td>{{item.representante}}</td>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card mb-6">
+                <div class="card-body">
+                    <td><strong>web</strong></td>
+                    <br>
+                    <td>//////</td>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </div>
+    </div>
 {% endblock container %}
