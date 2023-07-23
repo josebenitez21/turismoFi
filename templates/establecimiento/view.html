@@ -5,248 +5,258 @@
 {% endblock head %}
 
 {% block container %}
-    <div class="page-header mt-4">
-        <h2>
-            {{ item.nombre }}
-        </h2>
-        <a class="btn btn-primary" href="{% url "core:establecimiento_registros" item.id %}">+ Ver Registros</a>
-        <a class="btn btn-primary" href="{% url "core:establecimiento_editar" item.id %}">+ Editar información</a>
-    </div>
+
+    <br><br><br>
     <br>
-
-    <div class="row">
-<div class="col-md-3">
-  <div class="card mb-3" style="background-color: #0c3f66; color: #f9a825;">
-    <div class="card-body">
-      <strong><span style="color: #f9a825;">clasificación:</span></strong>
-      <br>
-      <span style="color: white;">{{ item.clasificacion }}</span>
-    </div>
-  </div>
-</div>
-
-
-        <div class="col-md-3">
-            <div class="card mb-4" style="background-color: #0c3f66; color: #f9a825;">
+    <div class="mb-4" style="background-color: #eeeeee; padding: 0px; border-radius: 15px;">
+        <div style="margin: 10px 0; background-color: #eeeeee; padding: 10px; border-radius: 15px;">
+            <div class="card" style="background-color: #f9a825;">
                 <div class="card-body">
-                    <td><strong>categoría:</strong></td>
-                    <br>
-                    <span style="color: white;">{{ item.categoria }}</span>
-
+                      <foreignObject x="50" y="50" width="50" height="50">
+                       <i class="fa-solid fa-hotel" style="color: #ffffff; font-size: 40px;"></i>
+                    </foreignObject>
+                    <h2>{{ item.nombre }}</h2>
+                    <a class="btn  custom-bg-color" href="{% url 'core:establecimiento_registros' item.id %}">+ Ver
+                        Registros</a>
+                    <a class="btn  custom-bg-color" href="{% url 'core:establecimiento_editar' item.id %}">+ Editar
+                        información</a>
                 </div>
             </div>
-        </div>
+            <br>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card mb-3" style="background-color: #0c3f66; color: #f9a825;">
+                        <div class="card-body">
+                            <strong><span style="color: #f9a825;">clasificación:</span></strong>
+                            <br>
+                            <span style="color: white;">{{ item.clasificacion }}</span>
+                        </div>
+                    </div>
+                </div>
 
-    </div>
+
+                <div class="col-md-3">
+                    <div class="card mb-4" style="background-color: #0c3f66; color: #f9a825;">
+                        <div class="card-body">
+                            <strong>categoría:</strong>
+                            <br>
+                            <span style="color: white;">{{ item.categoria }}</span>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
 
 
-    <div class="row">
-        <div class="col-md-3">
-            <div class="card mb-4"style="background-color: #0c3f66; color: #f9a825;">
-                <div class="card-body">
-                    <td><strong>email:</strong></td>
-                    <br>
-                    <span style="color: white;">{{ item.email }}</span>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card mb-4" style="background-color: #0c3f66; color: #f9a825;">
+                        <div class="card-body">
+                            <strong>email:</strong>
+                            <br>
+                            <span style="color: white;">{{ item.email }}</span>
 
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card mb-4" style="background-color: #0c3f66; color: #f9a825;">
+                        <div class="card-body">
+                            <td><strong>teléfono:</strong></td>
+                            <br>
+                            <span style="color: white;">{{ item.telefono }}</span>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card mb-6" style="background-color: #0c3f66; color: #f9a825;">
+                        <div class="card-body">
+                            <td><strong>dirección:</strong></td>
+                            <br>
+                            <span style="color: white;">{{ item.direccion }}</span>
+
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+            <br>
 
-        <div class="col-md-3">
-            <div class="card mb-4"style="background-color: #0c3f66; color: #f9a825;">
-                <div class="card-body">
-                    <td><strong>teléfono:</strong></td>
-                    <br>
-                   <span style="color: white;">{{ item.telefono }}</span>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card mb-4" style="background-color: #0c3f66; color: #f9a825;">
+                        <div class="card-body">
+                            <td><strong>calle principal:</strong></td>
+                            <br>
+                            <span style="color: white;">{{ item.calle_principal }}</span>
 
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card mb-4" style="background-color: #0c3f66; color: #f9a825;">
+                        <div class="card-body">
+                            <td><strong>calle número:</strong></td>
+                            <br>
+                            <span style="color: white;">{{ item.calle_numero }}</span>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card mb-6" style="background-color: #0c3f66; color: #f9a825;">
+                        <div class="card-body">
+                            <td><strong>calle secundaria:</strong></td>
+                            <br>
+                            <span style="color: white;">{{ item.calle_secundaria }}</span>
+
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card mb-6"style="background-color: #0c3f66; color: #f9a825;">
-                <div class="card-body">
-                    <td><strong>dirección:</strong></td>
-                    <br>
-                    <span style="color: white;">{{ item.direccion }}</span>
+            <br>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card mb-4" style="background-color: #0c3f66; color: #f9a825;">
+                        <div class="card-body">
+                            <td><strong>provincia:</strong></td>
+                            <br>
+                            <span style="color: white;">{{ item.provincia }}</span>
 
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card mb-4" style="background-color: #0c3f66; color: #f9a825;">
+                        <div class="card-body">
+                            <td><strong>cantón:</strong></td>
+                            <br>
+                            <span style="color: white;">{{ item.canton }}</span>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card mb-6" style="background-color: #0c3f66; color: #f9a825;">
+                        <div class="card-body">
+                            <td><strong>parroquia:</strong></td>
+                            <br>
+                            <span style="color: white;">{{ item.parroquia }}</span>
+
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <br>
+            <br>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card mb-4" style="background-color: #0c3f66; color: #f9a825;">
+                        <div class="card-body">
+                            <td><strong>empleados:</strong></td>
+                            <br>
+                            <span style="color: white;">{{ item.empleados }}</span>
 
-    <div class="row">
-        <div class="col-md-3">
-            <div class="card mb-4"style="background-color: #0c3f66; color: #f9a825;">
-                <div class="card-body">
-                    <td><strong>calle principal:</strong></td>
-                    <br>
-                    <span style="color: white;">{{ item.calle_principal }}</span>
+                        </div>
+                    </div>
+                </div>
 
+                <div class="col-md-3">
+                    <div class="card mb-4" style="background-color: #0c3f66; color: #f9a825;">
+                        <div class="card-body">
+                            <td><strong>hombres:</strong></td>
+                            <br>
+                            <span style="color: white;">{{ item.hombres }}</span>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card mb-6" style="background-color: #0c3f66; color: #f9a825;">
+                        <div class="card-body">
+                            <td><strong>mujeres:</strong></td>
+                            <br>
+                            <span style="color: white;">{{ item.mujeres }}</span>
+
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="col-md-3">
-            <div class="card mb-4"style="background-color: #0c3f66; color: #f9a825;">
-                <div class="card-body">
-                    <td><strong>calle número:</strong></td>
-                    <br>
-                   <span style="color: white;">{{ item.calle_numero }}</span>
+            <br>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card mb-4" style="background-color: #0c3f66; color: #f9a825;">
+                        <div class="card-body">
+                            <td><strong>habitaciones:</strong></td>
+                            <br>
+                            <span style="color: white;">{{ item.habitaciones }}</span>
 
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card mb-4" style="background-color: #0c3f66; color: #f9a825;">
+                        <div class="card-body">
+                            <td><strong>plazas:</strong></td>
+                            <br>
+                            <span style="color: white;">{{ item.plazas }}</span>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card mb-6" style="background-color: #0c3f66; color: #f9a825;">
+                        <div class="card-body">
+                            <td><strong>tipo de tarifa:</strong></td>
+                            <br>
+                            <span style="color: white;">//////</span>
+
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card mb-6"style="background-color: #0c3f66; color: #f9a825;">
-                <div class="card-body">
-                    <td><strong>calle secundaria:</strong></td>
-                    <br>
-                    <span style="color: white;">{{ item.calle_secundaria }}</span>
 
+            <br>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card mb-4" style="background-color: #0c3f66; color: #f9a825;">
+                        <div class="card-body">
+                            <td><strong>propietario:</strong></td>
+                            <br>
+                            <span style="color: white;">{{ item.propietario }}</span>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card mb-4" style="background-color: #0c3f66; color: #f9a825;">
+                        <div class="card-body">
+                            <td><strong>representante:</strong></td>
+                            <br>
+                            <span style="color: white;">{{ item.representante }}</span>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card mb-6" style="background-color: #0c3f66; color: #f9a825;">
+                        <div class="card-body">
+                            <td><strong>web</strong></td>
+                            <br>
+                            <span style="color: white;">//////</span>
+
+                        </div>
+                    </div>
                 </div>
             </div>
+
         </div>
-    </div>
-    <br>
-    <div class="row">
-        <div class="col-md-3">
-            <div class="card mb-4"style="background-color: #0c3f66; color: #f9a825;">
-                <div class="card-body">
-                    <td><strong>provincia:</strong></td>
-                    <br>
-                    <span style="color: white;">{{ item.provincia }}</span>
-
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card mb-4"style="background-color: #0c3f66; color: #f9a825;">
-                <div class="card-body">
-                    <td><strong>cantón:</strong></td>
-                    <br>
-                   <span style="color: white;">{{ item.canton }}</span>
-
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card mb-6"style="background-color: #0c3f66; color: #f9a825;">
-                <div class="card-body">
-                    <td><strong>parroquia:</strong></td>
-                    <br>
-                    <span style="color: white;">{{ item.parroquia }}</span>
-
-                </div>
-            </div>
-        </div>
-    </div>
-    <br>
-    <div class="row">
-        <div class="col-md-3">
-            <div class="card mb-4"style="background-color: #0c3f66; color: #f9a825;">
-                <div class="card-body">
-                    <td><strong>empleados:</strong></td>
-                    <br>
-                    <span style="color: white;">{{ item.empleados }}</span>
-
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card mb-4"style="background-color: #0c3f66; color: #f9a825;">
-                <div class="card-body">
-                    <td><strong>hombres:</strong></td>
-                    <br>
-                    <span style="color: white;">{{ item.hombres }}</span>
-
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card mb-6"style="background-color: #0c3f66; color: #f9a825;">
-                <div class="card-body">
-                    <td><strong>mujeres:</strong></td>
-                    <br>
-                    <span style="color: white;">{{item.mujeres}}</span>
-
-                </div>
-            </div>
-        </div>
-    </div>
-
-     <br>
-    <div class="row">
-        <div class="col-md-3">
-            <div class="card mb-4"style="background-color: #0c3f66; color: #f9a825;">
-                <div class="card-body">
-                    <td><strong>habitaciones:</strong></td>
-                    <br>
-                    <span style="color: white;">{{item.habitaciones}}</span>
-
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card mb-4"style="background-color: #0c3f66; color: #f9a825;">
-                <div class="card-body">
-                    <td><strong>plazas:</strong></td>
-                    <br>
-                    <span style="color: white;">{{item.plazas}}</span>
-
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card mb-6"style="background-color: #0c3f66; color: #f9a825;">
-                <div class="card-body">
-                    <td><strong>tipo de tarifa:</strong></td>
-                    <br>
-                    <span style="color: white;">//////</span>
-
-                </div>
-            </div>
-        </div>
-    </div>
-
-         <br>
-    <div class="row">
-        <div class="col-md-3">
-            <div class="card mb-4"style="background-color: #0c3f66; color: #f9a825;">
-                <div class="card-body">
-                    <td><strong>propietario:</strong></td>
-                    <br>
-                    <span style="color: white;">{{item.propietario}}</span>
-
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card mb-4"style="background-color: #0c3f66; color: #f9a825;">
-                <div class="card-body">
-                    <td><strong>representante:</strong></td>
-                    <br>
-                    <span style="color: white;">{{item.representante}}</span>
-
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card mb-6"style="background-color: #0c3f66; color: #f9a825;">
-                <div class="card-body">
-                    <td><strong>web</strong></td>
-                    <br>
-                   <span style="color: white;">//////</span>
-
-                </div>
-            </div>
-        </div>
-    </div>
-
     </div>
     </div>
 {% endblock container %}
