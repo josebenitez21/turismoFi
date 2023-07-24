@@ -77,7 +77,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'turismo',
         'USER': 'root',
-        'PASSWORD': 'AfterHoursDB21',
+        'PASSWORD': 'Belen2019.',
         'HOST': 'localhost',
         'PORT': '3306',
     }
@@ -120,6 +120,7 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+MEDIA_ROOT = BASE_DIR / 'images'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
