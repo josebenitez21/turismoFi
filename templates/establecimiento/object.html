@@ -1,4 +1,5 @@
 {% extends "master.html" %}
+{% load static %}
 {% block container %}
 <div class="page-header mt-4">
     <h2><small>{{action}}</small> {{item}}</h2>
@@ -20,8 +21,8 @@
 
         <br>
         <div class="text-center">
-            <button class="btn btn-primary btn-sm" type="submit">Registrar</button>
-            <a class="btn btn-danger btn-sm" href="{% url "core:establecimiento" item.id %}" role="button">Cancelar</a>
+            <button class="btn custom-bg-color" type="submit">Registrar</button>
+            <a class="btn custom1-bg-color" href="{% url "core:establecimiento" item.id %}" role="button">Cancelar</a>
         </div>
     </div>
     <div class="col-md-2"></div>

@@ -3,6 +3,43 @@
   background-color: #0c3f66;
   color: white; /* Para asegurar que el texto sea legible en el fondo oscuro */
 }
+
+.custom1-bg-color {
+  background-color: #ffca2c;
+  color: white; /* Para asegurar que el texto sea legible en el fondo oscuro */
+}
 .contenedor-padre {
     margin-bottom: 200px;
+}
+html,
+body,
+.intro {
+  height: 100%;
+}
+
+table td,
+table th {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+thead th {
+  color: #fff;
+}
+
+.card {
+  border-radius: .5rem;
+}
+
+.table-scroll {
+  border-radius: .5rem;
+}
+
+.table-scroll table thead th {
+  font-size: 1.25rem;
+}
+thead {
+  top: 0;
+  position: sticky;
 }

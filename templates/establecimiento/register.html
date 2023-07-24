@@ -29,7 +29,7 @@
     {% endfor %}
     </div>
     <div class="text-center">
-        <button class="btn btn-primary btn-sm" type="submit">Registrar</button>
+        <button class="btn custom-bg-color" type="submit">Registrar</button>
         <a class="btn btn-danger btn-sm" href="{% url "core:establecimiento_registros" item.id %}" role="button">Cancelar</a>
     </div>
 </form>
@@ -38,7 +38,7 @@
 {% endblock container %}
 {% block javascript %}
 <script>
-    $('input').addClass('form-control');
+
     $('input').attr('required',false);
     $('input[type="number"]').attr('min',0);
 </script>
