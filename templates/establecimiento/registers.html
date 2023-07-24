@@ -1,401 +1,382 @@
 {% extends "master.html" %}
 {% block container %}
-<div class="page-header mt-4">
-    {% if not administrativo %}
-    <small class="pull-right">
-        <a href="{% url "core:establecimiento" item.id %}"> - Regresar </a>
-        <br>
-        <br>
-        <strong>Habitaciones:</strong> {{item.habitaciones}}
-        <br>
-        <strong>Empleados:</strong> {{item.empleados}}
-    </small>
-    {% endif %}
-    <h2>Registros</h2>
-    {{item}}
-    {% if not administrativo %}
-    <br>
-    <a href="{% url "core:establecimiento_registro_nuevo" item.id %}">+ Agregar Registro</a>
-    {% endif %}
-</div>
-<br>
-<div class="table-responsive">
-<table class="table table-bordered table-striped table-condensed text-center" id="table-registers" style="font-size:12px;">
-    <thead>
-        <tr>
-            <th>establecimiento</th>
-            <th>clasificacion</th>
-            <th>categoria</th>
-            <th>habitaciones</th>
-            <th>plazas</th>
-            <th>fecha</th>
-            <th>checkins</th>
-            <th>checkouts</th>
-            <th>pernoctaciones</th>
-            <th>nacionales</th>
-            <th>extranjeros</th>
-            <th>habitaciones ocupadas</th>
-            <th>habitaciones disponibles</th>
-            <th>tipo tarifa</th>
-            <th>tarifa promedio</th>
-            <th>ventas netas</th>
-            <th>porcentaje ocupacion %</th>
-            <th>revpar</th>
-            <th>empleados temporales</th>
-            <th>estado</th>
-            <th>opciones</th>
-            {% if administrativo %}
-            {% endif %}
-        </tr>
-    </thead>
-    <tfoot>
-        <tr>
-            <th>establecimiento</th>
-            <th>clasificacion</th>
-            <th>categoria</th>
-            <th>habitaciones</th>
-            <th>plazas</th>
-            <th>fecha</th>
-            <th>checkins</th>
-            <th>checkouts</th>
-            <th>pernoctaciones</th>
-            <th>nacionales</th>
-            <th>extranjeros</th>
-            <th>habitaciones ocupadas</th>
-            <th>habitaciones disponibles</th>
-            <th>tipo tarifa</th>
-            <th>tarifa promedio</th>
-            <th>ventas netas</th>
-            <th>porcentaje ocupacion</th>
-            <th>revpar</th>
-            <th>empleados temporales</th>
-            <th>estado</th>
-            <th>opciones</th>
-            {% if administrativo %}
-            {% endif %}
-        </tr>
-    </tfoot>
-    <tbody>
-    {% for reg in list  %}
-        <tr>
-            <td>{{reg.establecimiento}}</td>
-            <td>{{reg.establecimiento.clasificacion}}</td>
-            <td>{{reg.establecimiento.categoria}}</td>
-            <td>{{reg.establecimiento.habitaciones}}</td>
-            <td>{{reg.establecimiento.plazas}}</td>
-            <td><strong>{{reg.fecha|date:"d/m/Y"}}</strong></td>
-            <td>{{reg.checkins}}</td>
-            <td>{{reg.checkouts}}</td>
-            <td>{{reg.pernoctaciones}}</td>
-            <td>{{reg.nacionales}}</td>
-            <td>{{reg.extranjeros}}</td>
-            <td>{{reg.habitaciones_ocupadas}}</td>
-            <td>{{reg.habitaciones_disponibles}}</td>
-            <td>{{reg.tipo_tarifa}}</td>
-            <td>$ {{reg.tarifa_promedio|floatformat:"2"}}</td>
-            <td>$ {{reg.ventas_netas|floatformat:"2"}}</td>
-            <td>{{reg.porcentaje_ocupacion}} %</td>
-            <td>$ {{reg.revpar|floatformat:"2"}}</td>
-            <td>{{reg.empleados_temporales}}</td>
-            <td id="estado-{{reg.id}}">{{reg.estado}}</td>
-            {% if administrativo %}
-            <td id="opcion-{{reg.id}}">
-                {% if reg.estado == 'sin_validar' %}
-                    <a href="#" id="{{reg.id}}" data-estado="validado" class="validar">Validar</a>
-                {% else %}
-                    <a href="#" id="{{reg.id}}" data-estado="sin_validar" class="validar" style="color:#f00;">Revocar</a>
-                {% endif %}
-            </td>
-            {% else %}
-            <td>
-                {% if reg.estado == 'sin_validar' %}
-                    <a href="{% url "core:establecimiento_registro_editar" reg.id %}">[ + Editar ]</a>
-                    <br>
-                    <a href="{% url "core:establecimiento_registro_eliminar" reg.id %}" style="color:#f00;">[ - Borrar ]</a>
+    <div class="page-header mt-4">
+        {% if not administrativo %}
 
-                {% endif %}
-            </td>
-            {% endif %}
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
-</div>
-<hr>
+            <a href="{% url "core:establecimiento" item.id %}"> - Regresar </a>
+            <br>
 
-    <section class="intro">
-  <div class="bg-image h-100" style="background-color: #f5f7fa;">
-    <div class="mask d-flex align-items-center h-100">
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col-12">
-            <div class="card">
-              <div class="card-body p-0">
-                <div class="table-responsive table-scroll" data-mdb-perfect-scrollbar="true" style="position: relative; height: 700px">
-                  <table class="table table-striped mb-0">
-                    <thead style="background-color: #002d72;">
-                      <tr>
-                        <th scope="col">Class name</th>
-                        <th scope="col">Type</th>
-                        <th scope="col">Hours</th>
-                        <th scope="col">Trainer</th>
-                        <th scope="col">Spots</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>Like a butterfly</td>
-                        <td>Boxing</td>
-                        <td>9:00 AM - 11:00 AM</td>
-                        <td>Aaron Chapman</td>
-                        <td>10</td>
-                      </tr>
-                      <tr>
-                        <td>Mind &amp; Body</td>
-                        <td>Yoga</td>
-                        <td>8:00 AM - 9:00 AM</td>
-                        <td>Adam Stewart</td>
-                        <td>15</td>
-                      </tr>
-                      <tr>
-                        <td>Crit Cardio</td>
-                        <td>Gym</td>
-                        <td>9:00 AM - 10:00 AM</td>
-                        <td>Aaron Chapman</td>
-                        <td>10</td>
-                      </tr>
-                      <tr>
-                        <td>Wheel Pose Full Posture</td>
-                        <td>Yoga</td>
-                        <td>7:00 AM - 8:30 AM</td>
-                        <td>Donna Wilson</td>
-                        <td>15</td>
-                      </tr>
-                      <tr>
-                        <td>Playful Dancer's Flow</td>
-                        <td>Yoga</td>
-                        <td>8:00 AM - 9:00 AM</td>
-                        <td>Donna Wilson</td>
-                        <td>10</td>
-                      </tr>
-                      <tr>
-                        <td>Zumba Dance</td>
-                        <td>Dance</td>
-                        <td>5:00 PM - 7:00 PM</td>
-                        <td>Donna Wilson</td>
-                        <td>20</td>
-                      </tr>
-                      <tr>
-                        <td>Cardio Blast</td>
-                        <td>Gym</td>
-                        <td>5:00 PM - 7:00 PM</td>
-                        <td>Randy Porter</td>
-                        <td>10</td>
-                      </tr>
-                      <tr>
-                        <td>Pilates Reformer</td>
-                        <td>Gym</td>
-                        <td>8:00 AM - 9:00 AM</td>
-                        <td>Randy Porter</td>
-                        <td>10</td>
-                      </tr>
-                      <tr>
-                        <td>Supple Spine and Shoulders</td>
-                        <td>Yoga</td>
-                        <td>6:30 AM - 8:00 AM</td>
-                        <td>Randy Porter</td>
-                        <td>15</td>
-                      </tr>
-                      <tr>
-                        <td>Yoga for Divas</td>
-                        <td>Yoga</td>
-                        <td>9:00 AM - 11:00 AM</td>
-                        <td>Donna Wilson</td>
-                        <td>20</td>
-                      </tr>
-                      <tr>
-                        <td>Virtual Cycle</td>
-                        <td>Gym</td>
-                        <td>8:00 AM - 9:00 AM</td>
-                        <td>Randy Porter</td>
-                        <td>20</td>
-                      </tr>
-                      <tr>
-                        <td>Like a butterfly</td>
-                        <td>Boxing</td>
-                        <td>9:00 AM - 11:00 AM</td>
-                        <td>Aaron Chapman</td>
-                        <td>10</td>
-                      </tr>
-                      <tr>
-                        <td>Mind &amp; Body</td>
-                        <td>Yoga</td>
-                        <td>8:00 AM - 9:00 AM</td>
-                        <td>Adam Stewart</td>
-                        <td>15</td>
-                      </tr>
-                      <tr>
-                        <td>Crit Cardio</td>
-                        <td>Gym</td>
-                        <td>9:00 AM - 10:00 AM</td>
-                        <td>Aaron Chapman</td>
-                        <td>10</td>
-                      </tr>
-                      <tr>
-                        <td>Wheel Pose Full Posture</td>
-                        <td>Yoga</td>
-                        <td>7:00 AM - 8:30 AM</td>
-                        <td>Donna Wilson</td>
-                        <td>15</td>
-                      </tr>
-                      <tr>
-                        <td>Playful Dancer's Flow</td>
-                        <td>Yoga</td>
-                        <td>8:00 AM - 9:00 AM</td>
-                        <td>Donna Wilson</td>
-                        <td>10</td>
-                      </tr>
-                      <tr>
-                        <td>Zumba Dance</td>
-                        <td>Dance</td>
-                        <td>5:00 PM - 7:00 PM</td>
-                        <td>Donna Wilson</td>
-                        <td>20</td>
-                      </tr>
-                      <tr>
-                        <td>Cardio Blast</td>
-                        <td>Gym</td>
-                        <td>5:00 PM - 7:00 PM</td>
-                        <td>Randy Porter</td>
-                        <td>10</td>
-                      </tr>
-                      <tr>
-                        <td>Pilates Reformer</td>
-                        <td>Gym</td>
-                        <td>8:00 AM - 9:00 AM</td>
-                        <td>Randy Porter</td>
-                        <td>10</td>
-                      </tr>
-                      <tr>
-                        <td>Supple Spine and Shoulders</td>
-                        <td>Yoga</td>
-                        <td>6:30 AM - 8:00 AM</td>
-                        <td>Randy Porter</td>
-                        <td>15</td>
-                      </tr>
-                      <tr>
-                        <td>Yoga for Divas</td>
-                        <td>Yoga</td>
-                        <td>9:00 AM - 11:00 AM</td>
-                        <td>Donna Wilson</td>
-                        <td>20</td>
-                      </tr>
-                      <tr>
-                        <td>Virtual Cycle</td>
-                        <td>Gym</td>
-                        <td>8:00 AM - 9:00 AM</td>
-                        <td>Randy Porter</td>
-                        <td>20</td>
-                      </tr>
-                    </tbody>
-                  </table>
+            <br><br><br>
+            <div class="row row-cols-1 row-cols-md-2 g-2">
+                <div class="col">
+                    <div class="card custom-bg-color">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <img src="/static/imgs/obtour2.jpg" class="img-fluid rounded-start" alt="...">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title">Habitaciones</h5>
+                                    <p class="card-text">
+                                        {{ item.habitaciones }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
+
+                <div class="col">
+                    <div class="card custom-bg-color">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <img src="/static/imgs/obtour2.jpg" class="img-fluid rounded-start" alt="...">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title">Empleados</h5>
+                                    <p class="card-text">{{ item.empleados }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
+            <br>
+
+        {% endif %}
+
+    <div class="card" style="background-color: #f9a825;">
+        <div class="card-body">
+            <h1>Registros</h1>
+            <h5>{{ item.nombre }}</h5>
+            {% if not administrativo %}
+            <a class="btn  custom-bg-color" href="{% url "core:establecimiento_registro_nuevo" item.id %}">+ Agregar
+                Registro</a>
+            {% endif %}
         </div>
-      </div>
     </div>
-  </div>
-</section>
+    </div>
+    <br>
+    <div class="table-responsive ">
+        <table class="table table-bordered table-striped table-condensed text-center" id="table-registers"
+               style="font-size:12px;">
+            <thead>
+            <tr>
+                <th>establecimiento</th>
+                <th>clasificacion</th>
+                <th>categoria</th>
+                <th>habitaciones</th>
+                <th>plazas</th>
+                <th>fecha</th>
+                <th>checkins</th>
+                <th>checkouts</th>
+                <th>pernoctaciones</th>
+                <th>nacionales</th>
+                <th>extranjeros</th>
+                <th>habitaciones ocupadas</th>
+                <th>habitaciones disponibles</th>
+                <th>tipo tarifa</th>
+                <th>tarifa promedio</th>
+                <th>ventas netas</th>
+                <th>porcentaje ocupacion %</th>
+                <th>revpar</th>
+                <th>empleados temporales</th>
+                <th>estado</th>
+                <th>opciones</th>
+                {% if administrativo %}
+                {% endif %}
+            </tr>
+            </thead>
+            <tfoot>
+            <tr>
+                <th>establecimiento</th>
+                <th>clasificacion</th>
+                <th>categoria</th>
+                <th>habitaciones</th>
+                <th>plazas</th>
+                <th>fecha</th>
+                <th>checkins</th>
+                <th>checkouts</th>
+                <th>pernoctaciones</th>
+                <th>nacionales</th>
+                <th>extranjeros</th>
+                <th>habitaciones ocupadas</th>
+                <th>habitaciones disponibles</th>
+                <th>tipo tarifa</th>
+                <th>tarifa promedio</th>
+                <th>ventas netas</th>
+                <th>porcentaje ocupacion</th>
+                <th>revpar</th>
+                <th>empleados temporales</th>
+                <th>estado</th>
+                <th>opciones</th>
+                {% if administrativo %}
+                {% endif %}
+            </tr>
+            </tfoot>
+            <tbody>
+            {% for reg in list %}
+                <tr>
+                    <td>{{ reg.establecimiento }}</td>
+                    <td>{{ reg.establecimiento.clasificacion }}</td>
+                    <td>{{ reg.establecimiento.categoria }}</td>
+                    <td>{{ reg.establecimiento.habitaciones }}</td>
+                    <td>{{ reg.establecimiento.plazas }}</td>
+                    <td><strong>{{ reg.fecha|date:"d/m/Y" }}</strong></td>
+                    <td>{{ reg.checkins }}</td>
+                    <td>{{ reg.checkouts }}</td>
+                    <td>{{ reg.pernoctaciones }}</td>
+                    <td>{{ reg.nacionales }}</td>
+                    <td>{{ reg.extranjeros }}</td>
+                    <td>{{ reg.habitaciones_ocupadas }}</td>
+                    <td>{{ reg.habitaciones_disponibles }}</td>
+                    <td>{{ reg.tipo_tarifa }}</td>
+                    <td>$ {{ reg.tarifa_promedio|floatformat:"2" }}</td>
+                    <td>$ {{ reg.ventas_netas|floatformat:"2" }}</td>
+                    <td>{{ reg.porcentaje_ocupacion }} %</td>
+                    <td>$ {{ reg.revpar|floatformat:"2" }}</td>
+                    <td>{{ reg.empleados_temporales }}</td>
+                    <td id="estado-{{ reg.id }}">{{ reg.estado }}</td>
+                    {% if administrativo %}
+                        <td id="opcion-{{ reg.id }}">
+                            {% if reg.estado == 'sin_validar' %}
+                                <a href="#" id="{{ reg.id }}" data-estado="validado" class="validar">Validar</a>
+                            {% else %}
+                                <a href="#" id="{{ reg.id }}" data-estado="sin_validar" class="validar"
+                                   style="color:#f00;">Revocar</a>
+                            {% endif %}
+                        </td>
+                    {% else %}
+                        <td>
+                            {% if reg.estado == 'sin_validar' %}
+                                <a href="{% url "core:establecimiento_registro_editar" reg.id %}">[ + Editar ]</a>
+                                <br>
+                                <a href="{% url "core:establecimiento_registro_eliminar" reg.id %}" style="color:#f00;">[
+                                    - Borrar ]</a>
+
+                            {% endif %}
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <hr>
+
+
+
+        <div class="mask d-flex align-items-center h-100 ">
+            <div class="container " >
+                <div class="row justify-content-center  ">
+                    <div class="col-12 ">
+                        <div class="card ">
+                            <div class="card-body p-0 ">
+                                <div class="table-responsive table-scroll" data-mdb-perfect-scrollbar="true"
+                                    style="position: relative; height: 300px;">
+                                    <table class="table table-striped mb-0 table-responsive ">
+                                        <thead style="background-color: #002d72;">
+                                            <tr>
+                                                <th>establecimiento</th>
+                                                <th>clasificacion</th>
+                                                <th>categoria</th>
+                                                <th>habitaciones</th>
+                                                <th>plazas</th>
+                                                <th>fecha</th>
+                                                <th>checkins</th>
+                                                <th>checkouts</th>
+                                                <th>pernoctaciones</th>
+                                                <th>nacionales</th>
+                                                <th>extranjeros</th>
+                                                <th>habitaciones ocupadas</th>
+                                                <th>habitaciones disponibles</th>
+                                                <th>tipo tarifa</th>
+                                                <th>tarifa promedio</th>
+                                                <th>ventas netas</th>
+                                                <th>porcentaje ocupacion</th>
+                                                <th>revpar</th>
+                                                <th>empleados temporales</th>
+                                                <th>estado</th>
+                                                <th>opciones</th>
+                                                {% if administrativo %}
+                                                {% endif %}
+                                            </tr>
+                                        </thead>
+                                        <tfoot style="background-color: #002d72;">
+                                            <tr>
+                                                <th>establecimiento</th>
+                                                <th>clasificacion</th>
+                                                <th>categoria</th>
+                                                <th>habitaciones</th>
+                                                <th>plazas</th>
+                                                <th>fecha</th>
+                                                <th>checkins</th>
+                                                <th>checkouts</th>
+                                                <th>pernoctaciones</th>
+                                                <th>nacionales</th>
+                                                <th>extranjeros</th>
+                                                <th>habitaciones ocupadas</th>
+                                                <th>habitaciones disponibles</th>
+                                                <th>tipo tarifa</th>
+                                                <th>tarifa promedio</th>
+                                                <th>ventas netas</th>
+                                                <th>porcentaje ocupacion</th>
+                                                <th>revpar</th>
+                                                <th>empleados temporales</th>
+                                                <th>estado</th>
+                                                <th>opciones</th>
+                                                {% if administrativo %}
+                                                {% endif %}
+                                            </tr>
+                                        </tfoot>
+                                        <tbody>
+                                            {% for reg in list %}
+                                                <tr>
+                                                    <td>{{ reg.establecimiento }}</td>
+                                                    <td>{{ reg.establecimiento.clasificacion }}</td>
+                                                    <td>{{ reg.establecimiento.categoria }}</td>
+                                                    <td>{{ reg.establecimiento.habitaciones }}</td>
+                                                    <td>{{ reg.establecimiento.plazas }}</td>
+                                                    <td><strong>{{ reg.fecha|date:"d/m/Y" }}</strong></td>
+                                                    <td>{{ reg.checkins }}</td>
+                                                    <td>{{ reg.checkouts }}</td>
+                                                    <td>{{ reg.pernoctaciones }}</td>
+                                                    <td>{{ reg.nacionales }}</td>
+                                                    <td>{{ reg.extranjeros }}</td>
+                                                    <td>{{ reg.habitaciones_ocupadas }}</td>
+                                                    <td>{{ reg.habitaciones_disponibles }}</td>
+                                                    <td>{{ reg.tipo_tarifa }}</td>
+                                                    <td>$ {{ reg.tarifa_promedio|floatformat:"2" }}</td>
+                                                    <td>$ {{ reg.ventas_netas|floatformat:"2" }}</td>
+                                                    <td>{{ reg.porcentaje_ocupacion }} %</td>
+                                                    <td>$ {{ reg.revpar|floatformat:"2" }}</td>
+                                                    <td>{{ reg.empleados_temporales }}</td>
+                                                    <td id="estado-{{ reg.id }}">{{ reg.estado }}</td>
+                                                    {% if administrativo %}
+                                                        <td id="opcion-{{ reg.id }}">
+                                                            {% if reg.estado == 'sin_validar' %}
+                                                                <a href="#" id="{{ reg.id }}" data-estado="validado"
+                                                                    class="validar">Validar</a>
+                                                            {% else %}
+                                                                <a href="#" id="{{ reg.id }}" data-estado="sin_validar"
+                                                                    class="validar" style="color:#f00;">Revocar</a>
+                                                            {% endif %}
+                                                        </td>
+                                                    {% else %}
+                                                        <td>
+                                                            {% if reg.estado == 'sin_validar' %}
+                                                                <a class="btn custom-bg-color" href="{% url "core:establecimiento_registro_editar" reg.id %}">Editar</a>
+                                                                <br>
+                                                                <br>
+
+                                                                <a class="btn custom1-bg-color" href="{% url "core:establecimiento_registro_eliminar" reg.id %}"
+                                                                    style="color: white;">Borrar</a>
+
+                                                            {% endif %}
+                                                        </td>
+                                                    {% endif %}
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <br>
+
+
+
 {% endblock container %}
 
 {% block javascript %}
-{% include "core/datatables.html" %}
-<script>
-    $(document).ready(function() {
+    {% include "core/datatables.html" %}
+    <script>
+        $(document).ready(function () {
 
-        console.log('datatable');
-        var table =  $('#table-registers').DataTable({
-                        language: {
-                            url: "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
-                        },
-                        pageLength: 25,
-                        lengthMenu: [[25, 50, 100, -1], [25, 50, 100, 'Todos']],
-                        dom: 'Bflrtip',
-                        buttons: [
-                            'copy',
-                            'csv',
-                            'excel',
-                            //{
-                            //    extend: 'pdfHtml5',
-                            //    orientation: 'landscape',
-                            //    pageSize: 'LEGAL'
-                            //},
-                            'print'
-                        ],
-                        initComplete: function () {
-                            this.api().columns().every( function () {
-                                var column = this;
-                                var select = $('<select style="width:50%;"><option value=""></option></select>')
-                                    .appendTo( $(column.footer()).empty() )
-                                    .on( 'change', function () {
-                                        var val = $.fn.dataTable.util.escapeRegex(
-                                            $(this).val()
-                                        );
-
-                                        column
-                                            .search( val ? '^'+val+'$' : '', true, false )
-                                            .draw();
-                                    } );
-
-                                column.data().unique().sort().each( function ( d, j ) {
-                                    select.append( '<option value="'+d+'">'+d+'</option>' )
-                                } );
-                            } );
-                        }
-
-
-                    });
-
-        $('.validar').click(function(event) {
-            event.preventDefault();
-            var a = $(this);
-            var id = $(this).attr('id');
-            var estado = $(this).data('estado');
-            $.ajax({
-                url:'/indicadoresalojamiento/core/validar',
-                type: 'POST',
-                dataType: 'jsonp',
-                data: {'id':parseInt(id),'estado':estado},
-                success: function(data, textStatus, xhr) {
-                    if (data.result){
-                        console.log(data.result);
-                        if (data.result === 'validado' ){
-                            console.log(a);
-                            a.data('estado','sin_validar');
-                            a.text('Revocar');
-                            a.css('color', '#f00');
-                            $('#estado-'+id).text('validado');
-                        }
-                        else{
-                            console.log('no entra');
-                            a.data('estado','validado');
-                            a.text('Validar');
-                            $('#estado-'+id).text('sin_validar');
-                            a.css('color', '');
-
-                        }
-                    }
-
+            console.log('datatable');
+            var table = $('#table-registers').DataTable({
+                language: {
+                    url: "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
                 },
-                error: function(xhr, textStatus, errorThrown) {
-                    console.log(textStatus);
+                pageLength: 25,
+                lengthMenu: [[25, 50, 100, -1], [25, 50, 100, 'Todos']],
+                dom: 'Bflrtip',
+                buttons: [
+                    'copy',
+                    'csv',
+                    'excel',
+                    //{
+                    //    extend: 'pdfHtml5',
+                    //    orientation: 'landscape',
+                    //    pageSize: 'LEGAL'
+                    //},
+                    'print'
+                ],
+                initComplete: function () {
+                    this.api().columns().every(function () {
+                        var column = this;
+                        var select = $('<select style="width:50%;"><option value=""></option></select>')
+                            .appendTo($(column.footer()).empty())
+                            .on('change', function () {
+                                var val = $.fn.dataTable.util.escapeRegex(
+                                    $(this).val()
+                                );
+
+                                column
+                                    .search(val ? '^' + val + '$' : '', true, false)
+                                    .draw();
+                            });
+
+                        column.data().unique().sort().each(function (d, j) {
+                            select.append('<option value="' + d + '">' + d + '</option>')
+                        });
+                    });
                 }
-            });// end Ajax
+
+
+            });
+
+            $('.validar').click(function (event) {
+                event.preventDefault();
+                var a = $(this);
+                var id = $(this).attr('id');
+                var estado = $(this).data('estado');
+                $.ajax({
+                    url: '/indicadoresalojamiento/core/validar',
+                    type: 'POST',
+                    dataType: 'jsonp',
+                    data: {'id': parseInt(id), 'estado': estado},
+                    success: function (data, textStatus, xhr) {
+                        if (data.result) {
+                            console.log(data.result);
+                            if (data.result === 'validado') {
+                                console.log(a);
+                                a.data('estado', 'sin_validar');
+                                a.text('Revocar');
+                                a.css('color', '#f00');
+                                $('#estado-' + id).text('validado');
+                            } else {
+                                console.log('no entra');
+                                a.data('estado', 'validado');
+                                a.text('Validar');
+                                $('#estado-' + id).text('sin_validar');
+                                a.css('color', '');
+
+                            }
+                        }
+
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        console.log(textStatus);
+                    }
+                });// end Ajax
+
+            });
 
         });
-
-    });
-</script>
+    </script>
 {% endblock javascript %}

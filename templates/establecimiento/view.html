@@ -7,14 +7,12 @@
 {% block container %}
 
     <br><br><br>
-    <br>
+    <br><br>
     <div class="mb-4" style="background-color: #eeeeee; padding: 0px; border-radius: 15px;">
         <div style="margin: 10px 0; background-color: #eeeeee; padding: 10px; border-radius: 15px;">
             <div class="card" style="background-color: #f9a825;">
                 <div class="card-body">
-                      <foreignObject x="50" y="50" width="50" height="50">
-                       <i class="fa-solid fa-hotel" style="color: #ffffff; font-size: 40px;"></i>
-                    </foreignObject>
+
                     <h2>{{ item.nombre }}</h2>
                     <a class="btn  custom-bg-color" href="{% url 'core:establecimiento_registros' item.id %}">+ Ver
                         Registros</a>
