@@ -23,10 +23,10 @@
         {% if user.is_authenticated %}
           <span class="text-white me-2">Usuario: {{ user.username }}</span>
         {% else %}
-          <button type="button" class="btn btn-outline-light me-2" id="loginButton">Login</button>
+          <button type="button" class="btn btn-outline-light me-2" id="loginButton">Iniciar sesión</button>
         {% endif %}
         {% if user.is_authenticated %}
-          <button type="button" class="btn btn-warning" id="logoutButton">Logout</button>
+          <button type="button" class="btn btn-warning" id="logoutButton">Cerrar sesión</button>
         {% endif %}
 
       </div>

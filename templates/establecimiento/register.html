@@ -1,45 +1,94 @@
 {% extends "master.html" %}
 {% block container %}
-<div class="page-header mt-4">
-    <small class="pull-right">
-        <strong>Habitaciones:</strong> {{item.habitaciones}}
-        <br>
-        <strong>Empleados:</strong> {{item.empleados}}
-    </small>
-    <h2><small>{{action}}</small> Registro</h2>
-    {{item}}
+
+
+    <div class="page-header mt-4">
+        {% if not administrativo %}
+
+            <a href="{% url "core:establecimiento" item.id %}"> - Regresar </a>
+            <br>
+
+            <br><br><br>
+            <div class="row row-cols-1 row-cols-md-2 g-2">
+<div class="col">
+    <div class="card custom-bg-color">
+        <div class="row g-0 align-items-center">
+            <div class="col-md-4 d-flex justify-content-center align-items-center">
+                <i class="fa fa-home" style="color: #ffffff; font-size: 60px;"></i>
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title">Habitaciones</h5>
+                    <p class="card-text">{{ item.habitaciones }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
-<form action="" method="post" class="form-horizontal">
-{% csrf_token %}
-    {# Include the hidden fields #}
-    {% for hidden in form.hidden_fields %}
-        {{ hidden }}
-    {% endfor %}
-    {# Include the visible fields #}
-    <div class="row">
-    {% for field in form.visible_fields %}
-        <div class="col-md-3">
-        {{ field.label_tag }} {{ field }}
-        {% if field.help_text %}
-            <small class="text-muted">{{field.help_text}}</small>
+
+                <div class="col">
+                    <div class="card custom-bg-color">
+        <div class="row g-0 align-items-center">
+            <div class="col-md-4 d-flex justify-content-center align-items-center">
+                                <i class="fa fa-users" style="color: #ffffff; font-size: 60px;"></i>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title">Empleados</h5>
+                                    <p class="card-text">{{ item.empleados }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+
         {% endif %}
-        <small class="text-danger">{{ field.errors }}</small>
+
+        <div class="card" style="background-color: #f9a825;">
+            <div class="card-body">
+                <h1>Registro</h1>
+                <h5>{{ item.nombre }}</h5>
+
+            </div>
         </div>
-    {% endfor %}
     </div>
-    <div class="text-center">
-        <button class="btn custom-bg-color" type="submit">Registrar</button>
-        <a class="btn btn-danger btn-sm" href="{% url "core:establecimiento_registros" item.id %}" role="button">Cancelar</a>
-    </div>
-</form>
-<hr>
+    <br>
+
+    <form action="" method="post" class="form-horizontal">
+        {% csrf_token %}
+        {# Include the hidden fields #}
+        {% for hidden in form.hidden_fields %}
+            {{ hidden }}
+        {% endfor %}
+        {# Include the visible fields #}
+        <div class="row">
+            {% for field in form.visible_fields %}
+                <div class="col-md-3">
+                    {{ field.label_tag }} {{ field }}
+                    {% if field.help_text %}
+                        <small class="text-muted">{{ field.help_text }}</small>
+                    {% endif %}
+                    <small class="text-danger">{{ field.errors }}</small>
+                </div>
+            {% endfor %}
+        </div>
+        <br>
+        <div class="text-center">
+            <button class="btn custom-bg-color" type="submit">Registrar</button>
+            <a class="btn custom1-bg-color" href="{% url "core:establecimiento_registros" item.id %}" role="button">Cancelar</a>
+        </div>
+    </form>
+    <hr>
 
 {% endblock container %}
 {% block javascript %}
-<script>
+    <script>
 
-    $('input').attr('required',false);
-    $('input[type="number"]').attr('min',0);
-</script>
+        $('input').attr('required', false);
+        $('input[type="number"]').attr('min', 0);
+    </script>
 {% endblock javascript %}

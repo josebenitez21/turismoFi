@@ -19,7 +19,7 @@
 
 /* Declare heights because of positioning of img element */
 .carousel-item {
-  height: 32rem;
+  height: 80rem;
 }
 
 
@@ -84,3 +84,4 @@
 .carousel-inner .carousel-item-prev {
 
 }
+
