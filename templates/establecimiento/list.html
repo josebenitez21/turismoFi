@@ -157,7 +157,7 @@
     </table>
     <br>
     <strong>Registros:</strong>
-    <small class="pull-right"><a href="{% url "core:establecimiento_registro" item.id %}">+ Agregar Registro</a></small> 
+    <small class="pull-right"><a href="{% url "core:establecimiento_registro" item.id %}">+ Agregar Registro</a></small>
     {% if item.registros.all %}
 
     <table class="table table-bordered table-striped table-condensed table-items">
@@ -210,7 +210,7 @@
                     <a href="{% url "core:establecimiento_registro_editar" reg.id %}">[ Editar ]</a>
                     <br>
                     <a href="{% url "core:establecimiento_registro_eliminar" reg.id %}" style="color:#f00;">[ Borrar ]</a>
-                   
+
                 {% endif %}
 
             </small></td>
@@ -218,12 +218,12 @@
         {% endfor %}
         </tbody>
     </table>
- 
+
     {% endif %}
     <hr>
     {% endfor %}
 
-{% endif %}    
+{% endif %}
 
 
 {% endblock container %}

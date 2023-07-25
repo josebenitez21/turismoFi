@@ -1,98 +1,115 @@
-{% extends "master.html" %}
-{% block container %}
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet"/>
+    <link href="{% static 'assets/css/styles.css' %}" rel="stylesheet"/>
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 
-<div class="page-header mt-4">
-    <h2>
-        {{user.first_name}} {{user.last_name}}
-    </h2>
-    usuario: <strong>{{user}}</strong> email: <strong>{{user.email}}</strong>
-</div>
+</head>
+<body class="sb-nav-fixed">
 
+<div id="layoutSidenav">
+    <div id="layoutSidenav_nav">
+        <nav class="sb-sidenav accordion sb-sidenav-dark custom1-bg-color" id="sidenavAccordion">
+            <div class="sb-sidenav-menu">
+                <div class="nav">
+                    <a class="nav-link" href="{% url 'profile' %}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        Inicio
+                    </a>
+                 <div class="sb-sidenav-menu-heading ">Datos Generales</div>
+                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts"
+                       aria-expanded="false" aria-controls="collapseLayouts">
+                        <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                        Datos
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+                    <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne"
+                         data-bs-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav">
+                            <a class="nav-link" href="">Datos Anuales</a>
+                            <a class="nav-link" href="">Datos Mensuales</a>
+                             <a class="nav-link" href="layout-sidenav-light.html">Datos Diarios</a>
+                        </nav>
+                    </div>
 
-
-<div class="row">
-
-<div class="col-md-8">
-  <div class="card mb-3" style="border-radius: .5rem;">
-    <div class="row g-0">
-      <div class="col-md-4 gradient-custom text-center text-white"
-           style="border-top-left-radius: .5rem; border-bottom-left-radius: .5rem;">
-        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp"
-             alt="Avatar" class="img-fluid my-5" style="width: 80px;" />
-          <h5>usuario: <strong>{{user}}</strong></h5>
-        <p>Web Designer</p>
-        <i class="far fa-edit mb-5"></i>
-      </div>
-      <div class="col-md-8">
-        <div class="card-body p-4">
-          <h6>Información</h6>
-          <hr class="mt-0 mb-4">
-          <div class="row pt-1">
-            <div class="col-10 mb-3">
-              <h6></h6>
-               <strong>email:</strong> {{user.email}} </h5>
-
+                </div>
             </div>
-
-          </div>
-          <h6>Projects</h6>
-          <hr class="mt-0 mb-4">
-          <div class="row pt-1">
-            <div class="col-6 mb-3">
-              <h6>Recent</h6>
+            <div class="sb-sidenav-footer custom1-bg-color  ">
+                <div class="small ">Logged in as:</div>
+                {{user.first_name}}
+            </div>
+        </nav>
+    </div>
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4 ">
+                <h1 class="mt-4">Menu</h1>
+                <ol class="breadcrumb mb-4">
+                    <li class="breadcrumb-item active">{{user.email}}</li>
+                </ol>
+                {% for item in list %}
                 <div class="row">
-{% for item in list %}
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card custom-bg-color mb-4">
+                            <div class="card-body">Ver Información</div>
+                            <div class="card-footer d-flex align-items-center justify-content-between">
+                                <a class="small text-white stretched-link" href="{% url "core:establecimiento" item.id %}   ">Clic aquí</a>
+                                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card custom-bg-color text-white mb-4">
+                            <div class="card-body">Agregar Registro</div>
+                            <div class="card-footer d-flex align-items-center justify-content-between">
+                                <a class="small text-white stretched-link" href="{% url "core:establecimiento_registro_nuevo" item.id %}">Clic aquí</a>
+                                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card custom-bg-color text-white mb-4">
+                            <div class="card-body">Ver Registros</div>
+                            <div class="card-footer d-flex align-items-center justify-content-between">
+                                <a class="small text-white stretched-link" href="{% url "core:establecimiento_registros" item.id %}">Clic aquí</a>
+                                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card custom-bg-color text-white mb-4">
+                            <div class="card-body">Editar Información</div>
+                            <div class="card-footer d-flex align-items-center justify-content-between">
+                                <a class="small text-white stretched-link " href="{% url "core:establecimiento_editar" item.id %}">Clic aquí</a>
+                                <div class="small text-white"><i class="fas fa-angle-right " ></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
 
-<div >
-    <div class="panel panel-primary">
-      <div class="panel-heading">
-        <h3 class="panel-title"><a href="{% url "core:establecimiento" item.id %}">{{item}}</a></h3>
-      </div>
-      <div class="panel-body">
-        Registros: <a href="{% url "core:establecimiento_registros" item.id %}">{{item.registros.all|length}}</a>
-        <br>
-        Último registro: <em>{{item.get_ultimo_registro.fecha}}</em>
-      </div>
-      <div class="panel-footer text-center">
-        <a href="{% url "core:establecimiento" item.id %}">[ + Ver Información ]</a>
-        <a href="{% url "core:establecimiento_editar" item.id %}">[ + Editar Información ]</a>
-        <br>
-          <div class="card" style="width: 18rem;">
-  <img src="..." class="card-img-top" alt="...">
-  <div class="card-body">
-    <h5 class="card-title">Card title</h5>
-    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-    <a href="#" class="btn btn-primary"href="{% url "core:establecimiento_registros" item.id %}"> Ver Registros</a>
-  </div>
-</div>
-        <a class = "btn btn-primary"href="{% url "core:establecimiento_registros" item.id %}"> Ver Registros</a>
-        <a href="{% url "core:establecimiento_registro_nuevo" item.id %}">[ + Agregar Registro ]</a>
-      </div>
+
+            </div>
+        </main>
+    {% include "master.html" %}
     </div>
 </div>
-
-{% endfor %}
-
-              <p class="text-muted">Lorem ipsum</p>
-            </div>
-            <div class="col-6 mb-3">
-              <h6>Most Viewed</h6>
-              <p class="text-muted">Dolor sit amet</p>
-            </div>
-          </div>
-          <div class="d-flex justify-content-start">
-            <a href="#!"><i class="fab fa-facebook-f fa-lg me-3"></i></a>
-            <a href="#!"><i class="fab fa-twitter fa-lg me-3"></i></a>
-            <a href="#!"><i class="fab fa-instagram fa-lg"></i></a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-</div>
-
-
-{% endblock container %}
-</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+<script src="{% static 'assets/js/scripts.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+<script src="{% static 'assets/assets/demo/chart-area-demo.js' %}"></script>
+<script src="{% static 'assets/assets/demo/chart-bar-demo.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"
+        crossorigin="anonymous"></script>
+<script src="{% static 'assets/js/datatables-simple-demo.js' %}"></script>
+</body>
+</html>
