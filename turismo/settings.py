@@ -77,7 +77,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'turismo',
         'USER': 'root',
-        'PASSWORD': 'Belen2019.',
+        'PASSWORD': 'AfterHoursDB21',
         'HOST': 'localhost',
         'PORT': '3306',
     }

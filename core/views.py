@@ -1,3 +1,4 @@
+from django.db.models import Sum
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
@@ -91,6 +92,17 @@ def establecimientos(request):
         ctx['list'] = Establecimiento.objects.filter(user=user)
     return render(request, 'establecimiento/list.html', ctx)
 
+@login_required(login_url='/login/')
+def establecimientos(request):
+    ctx = _get_context(request)
+    user = request.user
+    if ctx['administrativo']:
+        # ctx['list'] = Establecimiento.objects.all()
+        provincias = _get_provincias(user)
+        ctx['list'] = Establecimiento.objects.filter(provincia__in=provincias)
+    else:
+        ctx['list'] = Establecimiento.objects.filter(user=user)
+    return render(request, 'establecimiento/list.html', ctx)
 
 @login_required(login_url='/login/')
 def establecimiento(request, id):
@@ -204,6 +216,9 @@ def registros(request):
         ctx['list'] = EstablecimientoRegistro.objects.filter(establecimiento__user=request.user)
     return render(request, 'establecimiento/registers.html', ctx)
 
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+
 
 # Se puede borrar el jsonp y cambiarlo por render_to_json_response
 
@@ -256,6 +271,7 @@ def validar(request):
     data['result'] = estado
 
     return JsonResponse(data)
+
 
 
 # utilities
