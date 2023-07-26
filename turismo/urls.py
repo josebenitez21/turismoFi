@@ -20,6 +20,7 @@ urlpatterns = [
                   path('core/', include('core.urls', namespace='core')),
                   path('rest/', include('rest.urls', namespace='rest')),
                   path('obtener-datos/', views.obtener_datos, name='obtener_datos'),
+                  path('obtener_NacionalAnual/', views.graficaNacionalAnual, name='graficaNacionalAnual'),
                   path('ejemplohighcharts/', include('EjemploHighcharts.urls')),
                   path('estadistica/', TemplateView.as_view(template_name='Estadistica.html'), name='estadistica'),
 

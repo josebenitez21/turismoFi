@@ -3,12 +3,19 @@ from django.db.models import Sum
 from core.models import EstablecimientoRegistro
 from django.shortcuts import render
 from django.db.models.functions import Coalesce
-from django.contrib.auth import authenticate, login
-from django.views.decorators.csrf import csrf_exempt
-from core.views import profile
+
+
 def obtener_datos(request):
-    datos = EstablecimientoRegistro.objects.values('fecha__month') \
-        .annotate(checkins=Sum('checkins'), checkouts=Sum('checkouts'))
+    user = request.user  # Obtener el usuario loggeado
+
+    year_param = request.GET.get('year')  # Obtener el año seleccionado desde el frontend
+
+    datos = EstablecimientoRegistro.objects.filter(establecimiento__user=user)
+
+    if year_param:
+        datos = datos.filter(fecha__year=year_param)
+
+    datos = datos.values('fecha__month').annotate(total_checkouts=Sum('checkouts'))
 
     meses = [
         'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
@@ -17,87 +24,111 @@ def obtener_datos(request):
 
     data = {
         'meses': [],
-        'checkins': [],
-        'checkouts': []
-    }
-
-
-    datos_ordenados = sorted(datos, key=lambda x: x['fecha__month'])
-
-    for item in datos_ordenados:
-        mes_num = item['fecha__month']
-        mes = meses[mes_num - 1]
-        data['meses'].append(mes)
-        data['checkins'].append(item['checkins'])
-        data['checkouts'].append(item['checkouts'])
-
-
-    return JsonResponse(data)
-
-def obtener_datosCheckinsAnuales(request):
-    datos = EstablecimientoRegistro.objects.filter(fecha__year__range=[2019, 2023]) \
-        .values('fecha__year').annotate(checkins=Sum('checkins'))
-
-    anios = list(range(2019, 2024))
-
-    data = {
-        'anios': [],
-        'checkins': [],
-    }
-
-    for anio in anios:
-        data['anios'].append(str(anio))
-        checkins = next((item['checkins'] for item in datos if item['fecha__year'] == anio), 0)
-        data['checkins'].append(checkins)
-
-    return JsonResponse(data)
-
-def obtener_datosCheckoutsGenerales(request):
-    datos = EstablecimientoRegistro.objects.filter(fecha__year__range=[2019, 2023]) \
-        .values('fecha__year').annotate(checkouts=Sum('checkouts'))
-
-    anios = list(range(2019, 2024))
-
-    data = {
-        'anios': [],
         'checkouts': [],
     }
 
+    for mes_num in range(1, 13):
+        mes = meses[mes_num - 1]
+        data['meses'].append(mes)
+        checkouts_mes = next((item['total_checkouts'] for item in datos if item['fecha__month'] == mes_num), 0)
+        data['checkouts'].append(checkouts_mes)
+
+    return JsonResponse(data)
+def obtener_datosCheckinsAnuales(request):
+    user = request.user  # Obtener el usuario loggeado
+
+    anios = list(range(2019, 2024))
+    data = {
+        'anios': anios,
+        'checkins': [],  # Cambiar 'nacionales' por 'checkins' en el diccionario de datos
+    }
+
+    year_param = request.GET.get('year')  # Obtener el año seleccionado desde el frontend
+
+    registros = EstablecimientoRegistro.objects.filter(establecimiento__user=user, fecha__year__in=anios)
+
+    if year_param:
+        registros = registros.filter(fecha__year=year_param)
+
+    # Cambiar el campo 'nacionales' por 'checkins' en el annotate para sumar los checkins en lugar de los nacionales
+    registros = registros.values('fecha__year').annotate(total_checkins=Sum('checkins'))
+
     for anio in anios:
-        data['anios'].append(str(anio))
-        checkouts = next((item['checkouts'] for item in datos if item['fecha__year'] == anio), 0)
-        data['checkouts'].append(checkouts)
+        # Cambiar 'total_nacionales' por 'total_checkins' para obtener la suma de los checkins
+        checkins_anio = next(
+            (registro['total_checkins'] for registro in registros if registro['fecha__year'] == anio), 0)
+        data['checkins'].append(checkins_anio)  # Cambiar 'nacionales' por 'checkins' en la lista de datos
+
+    return JsonResponse(data)
+
+
+def obtener_datosCheckoutsGenerales(request):
+    user = request.user  # Obtener el usuario loggeado
+
+    anios = list(range(2019, 2024))
+    data = {
+        'anios': anios,
+        'checkouts': [],
+    }
+
+    year_param = request.GET.get('year')  # Obtener el año seleccionado desde el frontend
+
+    registros = EstablecimientoRegistro.objects.filter(establecimiento__user=user, fecha__year__in=anios)
+
+    if year_param:
+        registros = registros.filter(fecha__year=year_param)
+
+    registros = registros.values('fecha__year').annotate(total_checkouts=Sum('checkouts'))
+
+    for anio in anios:
+        checkouts_anio = next(
+            (registro['total_checkouts'] for registro in registros if registro['fecha__year'] == anio), 0)
+        data['checkouts'].append(checkouts_anio)
 
     return JsonResponse(data)
 
 
 def obtener_datosPernoctacionesAnuales(request):
+    user = request.user  # Obtener el usuario loggeado
+
     anios = list(range(2019, 2024))
     data = {
         'anios': anios,
         'pernoctaciones': [],
     }
 
-    registros = EstablecimientoRegistro.objects.filter(fecha__year__in=anios) \
-                                               .values('fecha__year') \
-                                               .annotate(total_pernoctaciones=Sum('pernoctaciones'))
+    year_param = request.GET.get('year')  # Obtener el año seleccionado desde el frontend
+
+    registros = EstablecimientoRegistro.objects.filter(establecimiento__user=user, fecha__year__in=anios)
+
+    if year_param:
+        registros = registros.filter(fecha__year=year_param)
+
+    registros = registros.values('fecha__year').annotate(total_pernoctaciones=Sum('pernoctaciones'))
 
     for anio in anios:
-        pernoctaciones_anio = next((registro['total_pernoctaciones'] for registro in registros if registro['fecha__year'] == anio), 0)
+        pernoctaciones_anio = next(
+            (registro['total_pernoctaciones'] for registro in registros if registro['fecha__year'] == anio), 0)
         data['pernoctaciones'].append(pernoctaciones_anio)
 
     return JsonResponse(data)
-
 def obtener_datosNacionalesAnual(request):
+    user = request.user  # Obtener el usuario loggeado
+
     anios = list(range(2019, 2024))
     data = {
         'anios': anios,
         'nacionales': [],
     }
 
-    registros = EstablecimientoRegistro.objects.filter(fecha__year__in=anios) \
-        .values('fecha__year') \
-        .annotate(total_nacionales=Sum('nacionales'))
+    year_param = request.GET.get('year')  # Obtener el año seleccionado desde el frontend
+
+    registros = EstablecimientoRegistro.objects.filter(establecimiento__user=user, fecha__year__in=anios)
+
+    if year_param:
+        registros = registros.filter(fecha__year=year_param)
+
+    registros = registros.values('fecha__year').annotate(total_nacionales=Sum('nacionales'))
 
     for anio in anios:
         nacionales_anio = next(
@@ -105,37 +136,45 @@ def obtener_datosNacionalesAnual(request):
         data['nacionales'].append(nacionales_anio)
 
     return JsonResponse(data)
-
 def obtener_datosExtranjerosAnual(request):
-    anios = list(range(2019, 2024))
-    data = {
-        'anios': anios,
-        'extranjeros': [],
-    }
+    def obtener_datosExtranjerosAnual(request):
+        anios = list(range(2019, 2024))
+        data = {
+            'anios': anios,
+            'extranjeros': [],
+        }
 
-    registros = EstablecimientoRegistro.objects.filter(fecha__year__in=anios) \
-        .values('fecha__year') \
-        .annotate(total_extranjeros=Sum('extranjeros'))
+        registros = EstablecimientoRegistro.objects.filter(fecha__year__in=anios) \
+            .values('fecha__year') \
+            .annotate(total_extranjeros=Sum('extranjeros'))
 
-    for anio in anios:
-        extranjeros_anio = next(
-            (registro['total_extranjeros'] for registro in registros if registro['fecha__year'] == anio), 0)
-        data['extranjeros'].append(extranjeros_anio)
+        for anio in anios:
+            extranjeros_anio = next(
+                (registro['total_extranjeros'] for registro in registros if registro['fecha__year'] == anio), 0)
+            data['extranjeros'].append(extranjeros_anio)
 
-    return JsonResponse(data)
+        return JsonResponse(data)
+
 
 from django.db.models import Sum
 
 def obtener_datosHabitacionesOcupadasAnual(request):
+    user = request.user  # Obtener el usuario loggeado
+
     anios = list(range(2019, 2024))
     data = {
         'anios': anios,
         'habitaciones_ocupadas': [],
     }
 
-    registros = EstablecimientoRegistro.objects.filter(fecha__year__in=anios) \
-        .values('fecha__year') \
-        .annotate(total_habitaciones=Sum('habitaciones_ocupadas'))
+    year_param = request.GET.get('year')  # Obtener el año seleccionado desde el frontend
+
+    registros = EstablecimientoRegistro.objects.filter(establecimiento__user=user, fecha__year__in=anios)
+
+    if year_param:
+        registros = registros.filter(fecha__year=year_param)
+
+    registros = registros.values('fecha__year').annotate(total_habitaciones=Sum('habitaciones_ocupadas'))
 
     for anio in anios:
         habitaciones_ocupadas_anio = next(
@@ -145,18 +184,24 @@ def obtener_datosHabitacionesOcupadasAnual(request):
 
     return JsonResponse(data)
 
-from django.db.models import Sum
 
 def obtener_datosHabitacionesDisponiblesAnual(request):
+    user = request.user  # Obtener el usuario loggeado
+
     anios = list(range(2019, 2024))
     data = {
         'anios': anios,
         'habitaciones_disponibles': [],
     }
 
-    registros = EstablecimientoRegistro.objects.filter(fecha__year__in=anios) \
-        .values('fecha__year') \
-        .annotate(total_habitaciones=Sum('habitaciones_disponibles'))
+    year_param = request.GET.get('year')  # Obtener el año seleccionado desde el frontend
+
+    registros = EstablecimientoRegistro.objects.filter(establecimiento__user=user, fecha__year__in=anios)
+
+    if year_param:
+        registros = registros.filter(fecha__year=year_param)
+
+    registros = registros.values('fecha__year').annotate(total_habitaciones=Sum('habitaciones_disponibles'))
 
     for anio in anios:
         habitaciones_disponibles_anio = next(
@@ -167,20 +212,28 @@ def obtener_datosHabitacionesDisponiblesAnual(request):
     return JsonResponse(data)
 #revisar
 def obtener_datosTarifaPromedioAnual(request):
-    datos = EstablecimientoRegistro.objects.filter(fecha__year__range=[2019, 2023]) \
-        .values('fecha__year').annotate(tarifa_promedio=Sum('tarifa_promedio'))
+    user = request.user  # Obtener el usuario loggeado
 
     anios = list(range(2019, 2024))
-
     data = {
-        'anios': [],
+        'anios': anios,
         'tarifa_promedio': [],
     }
 
+    year_param = request.GET.get('year')  # Obtener el año seleccionado desde el frontend
+
+    registros = EstablecimientoRegistro.objects.filter(establecimiento__user=user, fecha__year__in=anios)
+
+    if year_param:
+        registros = registros.filter(fecha__year=year_param)
+
+    registros = registros.values('fecha__year').annotate(total_tarifa_promedio=Sum('tarifa_promedio'))
+
     for anio in anios:
-        data['anios'].append(str(anio))
-        checkins = next((item['tarifa_promedio'] for item in datos if item['fecha__year'] == anio), 0)
-        data['tarifa_promedio'].append(checkins)
+        tarifa_promedio_anio = next(
+            (registro['total_tarifa_promedio'] for registro in registros if registro['fecha__year'] == anio), 0)
+
+        data['tarifa_promedio'].append(tarifa_promedio_anio)
 
     return JsonResponse(data)
 #revisar
@@ -203,47 +256,73 @@ def obtener_datosVentasNetasAnual(request):
 
     return JsonResponse(data)
 
-def obtener_datosPorcentajeOcupacionAnual(request):
-    anios = list(range(2019, 2024))
+def obtener_datosCheckinsMensuales(request):
+    user = request.user  # Obtener el usuario loggeado
+
+    # Obtener el año seleccionado desde el frontend
+    year_param = request.GET.get('year')
+
+    # Filtrar los registros del usuario por el año seleccionado
+    registros = EstablecimientoRegistro.objects.filter(establecimiento__user=user, fecha__year=year_param) if year_param else EstablecimientoRegistro.objects.filter(establecimiento__user=user)
+
+    # Agrupar por mes y sumar los checkins
+    datos = registros.values('fecha__month').annotate(checkins=Sum('checkins'))
+
+    meses = [
+        'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+        'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    ]
+
     data = {
-        'anios': anios,
-        'porcentaje_ocupacion': [],
+        'meses': [],
+        'checkins': [],
     }
 
-    registros = EstablecimientoRegistro.objects.filter(fecha__year__in=anios) \
-        .values('fecha__year') \
-        .annotate(total_porcentaje_ocupacion=Sum('porcentaje_ocupacion'))
+    for mes_num in range(1, 13):  # Rango de meses (1 a 12)
+        mes = meses[mes_num - 1]
+        data['meses'].append(mes)
 
-    for anio in anios:
-        porcentaje_ocupacion_anio = next(
-            (registro['total_porcentaje_ocupacion'] for registro in registros if registro['fecha__year'] == anio), 0)
-
-        data['porcentaje_ocupacion'].append('porcentaje_ocupacion_anio')
+        # Obtener el valor de checkins para el mes actual, si no hay valor, agregar 0
+        checkins_mes = next((item['checkins'] for item in datos if item['fecha__month'] == mes_num), 0)
+        data['checkins'].append(checkins_mes)
 
     return JsonResponse(data)
 
-def obtener_datosEmpleadosTemporalesAnual(request):
-    anios = list(range(2019, 2024))
+def obtener_datosCheckoutsMensuales(request):
+    user = request.user  # Obtener el usuario loggeado
+
+    year_param = request.GET.get('year')  # Obtener el año seleccionado desde el frontend
+
+    datos = EstablecimientoRegistro.objects.filter(establecimiento__user=user)
+
+    if year_param:
+        datos = datos.filter(fecha__year=year_param)
+
+    datos = datos.values('fecha__month').annotate(total_checkouts=Sum('checkouts'))
+
+    meses = [
+        'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+        'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    ]
+
     data = {
-        'anios': anios,
-        'empleados_temporales': [],
+        'meses': [],
+        'checkouts': [],
     }
 
-    registros = EstablecimientoRegistro.objects.filter(fecha__year__in=anios) \
-        .values('fecha__year') \
-        .annotate(total_empleados_temporales=Sum('empleados_temporales'))
-
-    for anio in anios:
-        empleados_temporales_anio = next(
-            (registro['total_empleados_temporales'] for registro in registros if registro['fecha__year'] == anio), 0)
-
-        data['empleados_temporales'].append(empleados_temporales_anio)
+    for mes_num in range(1, 13):
+        mes = meses[mes_num - 1]
+        data['meses'].append(mes)
+        checkouts_mes = next((item['total_checkouts'] for item in datos if item['fecha__month'] == mes_num), 0)
+        data['checkouts'].append(checkouts_mes)
 
     return JsonResponse(data)
-
-
 def barras_check_view(request):
     return render(request, 'Graficas/barrasCheck.html')
+
+def graficaNacionalAnual(request):
+    return render(request, 'Graficas/NacionalesAnual.html')
+
 
 def dash_view(request):
     return render(request, 'DashboardG.html')

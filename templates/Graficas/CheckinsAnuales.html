@@ -87,7 +87,7 @@
                     type: 'line'
                 },
                 title: {
-                    text: 'Habitaciones Ocupadas por Año'  // Cambiar el título de la gráfica
+                    text: 'Checkins por Año'  // Cambiar el título de la gráfica
                 },
                 xAxis: {
                     categories: data.anios,
@@ -97,12 +97,12 @@
                 },
                 yAxis: {
                     title: {
-                        text: 'Número de Habitaciones Ocupadas'  // Cambiar el título del eje Y
+                        text: 'Número de Checkins'  // Cambiar el título del eje Y
                     }
                 },
                 series: [{
-                    name: 'Habitaciones Ocupadas',  // Cambiar el nombre de la serie
-                    data: data.habitaciones_ocupadas  // Cambiar 'nacionales' por 'habitaciones_ocupadas' en los datos
+                    name: 'Checkins',  // Cambiar el nombre de la serie
+                    data: data.checkins  // Cambiar 'nacionales' por 'checkins' en los datos
                 }],
                 responsive: {
                     rules: [{

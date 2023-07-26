@@ -1,7 +1,9 @@
 {% block title %}
 
 {% endblock %}
+
 <br>
+
 {% block container %}
     <style type="text/css">
         .highcharts-figure,
@@ -50,11 +52,27 @@
         .highcharts-data-table tr:hover {
             background: #f1f7ff;
         }
+
+        .filter-form {
+            margin-top: 10px;
+        }
     </style>
 
     <div class="row">
         <div class="col-md-12">
             <h1>Estadistica</h1>
+            <form class="filter-form">
+                <label for="year">Selecciona un año:</label>
+                <select id="year" name="year">
+                    <option value="">Todos</option>
+                    <option value="2019">2019</option>
+                    <option value="2020">2020</option>
+                    <option value="2021">2021</option>
+                    <option value="2022">2022</option>
+                    <option value="2023">2023</option>
+                </select>
+                <button type="button" onclick="filterByYear()">Filtrar</button>
+            </form>
             <div id="container"></div>
         </div>
     </div>
@@ -62,68 +80,70 @@
 
 {% block javascriptx %}
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        // Función para obtener los datos y cargar la gráfica
+        function loadChart(data) {
+            Highcharts.chart('container', {
+                chart: {
+                    type: 'line'
+                },
+                title: {
+                    text: 'Pernoctaciones por Año'  // Cambiar el título de la gráfica
+                },
+                xAxis: {
+                    categories: data.anios,
+                    accessibility: {
+                        rangeDescription: 'Range: 2019 to 2023'
+                    }
+                },
+                yAxis: {
+                    title: {
+                        text: 'Número de Pernoctaciones'  // Cambiar el título del eje Y
+                    }
+                },
+                series: [{
+                    name: 'Pernoctaciones',  // Cambiar el nombre de la serie
+                    data: data.pernoctaciones  // Cambiar 'nacionales' por 'pernoctaciones' en los datos
+                }],
+                responsive: {
+                    rules: [{
+                        condition: {
+                            maxWidth: 500
+                        },
+                        chartOptions: {
+                            legend: {
+                                layout: 'horizontal',
+                                align: 'center',
+                                verticalAlign: 'bottom'
+                            }
+                        }
+                    }]
+                }
+            });
+        }
+
+        // Función para obtener los datos filtrados por año
+        function filterByYear() {
+            var selectedYear = document.getElementById('year').value;
+            var url = "{% url 'obtener_datos' %}";
+
+            if (selectedYear) {
+                url += "?year=" + selectedYear;
+            }
+
+            // Realizar la petición AJAX para obtener los datos
             $.ajax({
-                url: "{% url 'obtener_datos' %}",
+                url: url,
                 dataType: 'json',
                 success: function(data) {
                     console.log(data);
-                    Highcharts.chart('container', {
-                        title: {
-                            text: 'U.S Solar Employment Growth',
-                            align: 'left'
-                        },
-                        subtitle: {
-                            text: 'By Job Category. Source: <a href="https://irecusa.org/programs/solar-jobs-census/" target="_blank">IREC</a>.',
-                            align: 'left'
-                        },
-                        yAxis: {
-                            title: {
-                                text: 'Number of Employees'
-                            }
-                        },
-                        xAxis: {
-                            categories: ['2019', '2020', '2021', '2022', '2023'],
-                            accessibility: {
-                                rangeDescription: 'Range: 2019 to 2023'
-                            }
-                        },
-                        legend: {
-                            layout: 'vertical',
-                            align: 'right',
-                            verticalAlign: 'middle'
-                        },
-                        plotOptions: {
-                            series: {
-                                label: {
-                                    connectorAllowed: false
-                                }
-                            }
-                        },
-                        series: [{
-                            name: 'Installation & Developers',
-                            data: data.checkins
-                        }, {
-                            name: 'Manufacturing',
-                            data: data.checkouts
-                        }],
-                        responsive: {
-                            rules: [{
-                                condition: {
-                                    maxWidth: 500
-                                },
-                                chartOptions: {
-                                    legend: {
-                                        layout: 'horizontal',
-                                        align: 'center',
-                                        verticalAlign: 'bottom'
-                                    }
-                                }
-                            }]
-                        }
-                    });
+                    loadChart(data);
                 }
             });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Cargar la gráfica inicial sin filtrar
+            filterByYear();
         });
     </script>
 {% endblock %}

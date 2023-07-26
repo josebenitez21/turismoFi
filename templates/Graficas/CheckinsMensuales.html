@@ -87,22 +87,25 @@
                     type: 'line'
                 },
                 title: {
-                    text: 'Habitaciones Ocupadas por Año'  // Cambiar el título de la gráfica
+                    text: 'Checkins por Mes'  // Cambiar el título de la gráfica
                 },
                 xAxis: {
-                    categories: data.anios,
+                    categories: [
+                        'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                        'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+                    ],
                     accessibility: {
-                        rangeDescription: 'Range: 2019 to 2023'
+                        rangeDescription: 'Range: Enero a Diciembre'
                     }
                 },
                 yAxis: {
                     title: {
-                        text: 'Número de Habitaciones Ocupadas'  // Cambiar el título del eje Y
+                        text: 'Checkins'  // Cambiar el título del eje Y
                     }
                 },
                 series: [{
-                    name: 'Habitaciones Ocupadas',  // Cambiar el nombre de la serie
-                    data: data.habitaciones_ocupadas  // Cambiar 'nacionales' por 'habitaciones_ocupadas' en los datos
+                    name: 'Checkins',  // Cambiar el nombre de la serie
+                    data: data.checkins  // Usar los datos de checkins
                 }],
                 responsive: {
                     rules: [{
