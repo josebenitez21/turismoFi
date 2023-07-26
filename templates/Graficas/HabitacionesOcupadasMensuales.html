@@ -58,7 +58,7 @@
         }
     </style>
 
-   <div class="row">
+    <div class="row">
         <div class="col-md-12">
             <h1>Estadistica</h1>
             <form class="filter-form">
@@ -71,7 +71,7 @@
                     <option value="2022">2022</option>
                     <option value="2023">2023</option>
                 </select>
-                <button type="button" onclick="filterByYearAndMonth()">Filtrar</button>
+                <button type="button" onclick="filterByYear()">Filtrar</button>
             </form>
             <div id="container"></div>
         </div>
@@ -87,23 +87,23 @@
                     type: 'line'
                 },
                 title: {
-                    text: 'Habitaciones Disponibles por Día en ' + data.selected_year  // Cambiar el título de la gráfica
+                    text: 'Habitaciones Ocupadas Mensuales'
                 },
                 xAxis: {
-                    categories: [...Array(31).keys()].map(day => day + 1),  // Generar los números del 1 al 31 para el eje X
+                    categories: data.meses,
                     accessibility: {
-                        rangeDescription: 'Range: Days of the Month'
+                        rangeDescription: 'Range: Enero to Diciembre'
                     }
                 },
                 yAxis: {
                     title: {
-                        text: 'Habitaciones Disponibles'  // Cambiar el título del eje Y
+                        text: 'Habitaciones Ocupadas'
                     }
                 },
-                series: data.meses.map((mes, index) => ({
-                    name: mes.nombre,
-                    data: data.habitaciones_disponibles[index]  // Obtener los datos de habitaciones disponibles para cada mes
-                })),
+                series: [{
+                    name: 'Habitaciones Ocupadas',
+                    data: data.habitaciones_ocupadas
+                }],
                 responsive: {
                     rules: [{
                         condition: {
@@ -122,7 +122,7 @@
         }
 
         // Función para obtener los datos filtrados por año
-        function filterByYearAndMonth() {
+        function filterByYear() {
             var selectedYear = document.getElementById('year').value;
             var url = "{% url 'obtener_datos' %}";
 
@@ -144,9 +144,6 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Cargar la gráfica inicial sin filtrar
             filterByYear();
-
-            // Asignar evento click al botón "Filtrar"
-            document.getElementById('filter-button').addEventListener('click', filterByYearAndMonth);
         });
     </script>
 {% endblock %}
