@@ -58,7 +58,7 @@
         }
     </style>
 
-    <div class="row">
+   <div class="row">
         <div class="col-md-12">
             <h1>Estadistica</h1>
             <form class="filter-form">
@@ -71,7 +71,7 @@
                     <option value="2022">2022</option>
                     <option value="2023">2023</option>
                 </select>
-                <button type="button" onclick="filterByYear()">Filtrar</button>
+                <button type="button" onclick="filterByYearAndMonth()">Filtrar</button>
             </form>
             <div id="container"></div>
         </div>
@@ -87,23 +87,23 @@
                     type: 'line'
                 },
                 title: {
-                    text: 'Nacionales Mensuales'
+                    text: 'Check-ins por Día en ' + data.selected_year  // Cambiar el título de la gráfica
                 },
                 xAxis: {
-                    categories: data.meses,
+                    categories: [...Array(31).keys()].map(day => day + 1),  // Generar los números del 1 al 31 para el eje X
                     accessibility: {
-                        rangeDescription: 'Range: Enero to Diciembre'
+                        rangeDescription: 'Range: Days of the Month'
                     }
                 },
                 yAxis: {
                     title: {
-                        text: 'Nacionales'
+                        text: 'Check-ins'  // Cambiar el título del eje Y
                     }
                 },
-                series: [{
-                    name: 'Nacionales',
-                    data: data.nacionales
-                }],
+                series: data.meses.map((mes, index) => ({
+                    name: mes.nombre,
+                    data: data.checkins[index]  // Obtener los datos de check-ins para cada mes
+                })),
                 responsive: {
                     rules: [{
                         condition: {
@@ -122,9 +122,9 @@
         }
 
         // Función para obtener los datos filtrados por año
-        function filterByYear() {
+        function filterByYearAndMonth() {
             var selectedYear = document.getElementById('year').value;
-            var url = "{% url 'NacionalMes' %}";
+            var url = "{% url 'CheckinsDia' %}";
 
             if (selectedYear) {
                 url += "?year=" + selectedYear;
@@ -143,7 +143,10 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             // Cargar la gráfica inicial sin filtrar
-            filterByYear();
+            filterByYearAndMonth();
+
+            // Asignar evento change al elemento "select" para filtrar automáticamente al cambiar el año
+            document.getElementById('year').addEventListener('change', filterByYearAndMonth);
         });
     </script>
 {% endblock %}

@@ -87,7 +87,7 @@
                     type: 'line'
                 },
                 title: {
-                    text: 'Empleados Nacionales'
+                    text: 'Nacionales'
                 },
                 xAxis: {
                     categories: data.anios,
@@ -97,11 +97,11 @@
                 },
                 yAxis: {
                     title: {
-                        text: 'Empleados Nacionales'
+                        text: 'Nacionales'
                     }
                 },
                 series: [{
-                    name: 'Empleados Nacionales',
+                    name: 'Nacionales',
                     data: data.nacionales
                 }],
                 responsive: {
@@ -124,7 +124,7 @@
         // Función para obtener los datos filtrados por año
         function filterByYear() {
             var selectedYear = document.getElementById('year').value;
-            var url = "{% url 'graficaNacionalAnual' %}";
+            var url = "{% url 'datosNacionalesAnual' %}";
 
             if (selectedYear) {
                 url += "?year=" + selectedYear;

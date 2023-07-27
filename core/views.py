@@ -50,6 +50,20 @@ def login_view(request):
 
     return render(request, 'core/login.html', ctx)
 
+def years_view(request):
+    ctx = _get_context(request)
+    user = request.user
+    if ctx['administrativo']:
+        # ctx['list'] = Establecimiento.objects.all()
+        provincias = _get_provincias(user)
+        ctx['list'] = Establecimiento.objects.filter(provincia__in=provincias)
+    else:
+        ctx['list'] = Establecimiento.objects.filter(user=user)
+
+    print(ctx)
+
+    return render(request, 'core/DatosAnuales.html', ctx)
+
 
 def _group_user(user):
     url = 'profile'
@@ -79,6 +93,30 @@ def profile(request):
         ctx['list'] = Establecimiento.objects.filter(user=user)
     return render(request, 'core/profile.html', ctx)
 
+@login_required(login_url='/login/')
+def datosAnuales(request):
+    ctx = _get_context(request)
+    user = request.user
+    if ctx['administrativo']:
+        # ctx['list'] = Establecimiento.objects.all()
+        provincias = _get_provincias(user)
+        ctx['list'] = Establecimiento.objects.filter(provincia__in=provincias)
+    else:
+        ctx['list'] = Establecimiento.objects.filter(user=user)
+    return render(request, 'core/DatosAnuales.html', ctx)
+
+@login_required(login_url='/login/')
+def views_years(request):
+    ctx = _get_context(request)
+    user = request.user
+    if ctx['administrativo']:
+        # ctx['list'] = Establecimiento.objects.all()
+        provincias = _get_provincias(user)
+        ctx['list'] = Establecimiento.objects.filter(provincia__in=provincias)
+    else:
+        ctx['list'] = Establecimiento.objects.filter(user=user)
+    print('Hola')
+    return render(request, 'core/DatosAnuales.html', ctx)
 
 @login_required(login_url='/login/')
 def establecimientos(request):

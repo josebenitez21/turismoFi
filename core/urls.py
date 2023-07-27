@@ -16,4 +16,5 @@ urlpatterns = [
     path('establecimientos/', views.establecimientos, name='establecimientos'),
     path('registros/', views.registros, name='registros'),
     path('validar/', views.validar, name='validar'),
+    path('anuales', views.years_view, name='years_view')
 ]

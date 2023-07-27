@@ -124,7 +124,7 @@
         // Función para obtener los datos filtrados por año
         function filterByYear() {
             var selectedYear = document.getElementById('year').value;
-            var url = "{% url 'obtener_datos' %}";
+            var url = "{% url 'pernoctacionesAnuales' %}";
 
             if (selectedYear) {
                 url += "?year=" + selectedYear;

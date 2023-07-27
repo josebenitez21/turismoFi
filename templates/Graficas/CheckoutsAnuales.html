@@ -73,7 +73,7 @@
                 </select>
                 <button type="button" onclick="filterByYear()">Filtrar</button>
             </form>
-            <div id="container"></div>
+            <div id="container2"></div>
         </div>
     </div>
 {% endblock %}
@@ -82,7 +82,7 @@
     <script>
         // Función para obtener los datos y cargar la gráfica
         function loadChart(data) {
-            Highcharts.chart('container', {
+            Highcharts.chart('container2', {
                 chart: {
                     type: 'line'
                 },
@@ -124,7 +124,7 @@
         // Función para obtener los datos filtrados por año
         function filterByYear() {
             var selectedYear = document.getElementById('year').value;
-            var url = "{% url 'obtener_datos' %}";
+            var url = "{% url 'checkoutsG' %}";
 
             if (selectedYear) {
                 url += "?year=" + selectedYear;

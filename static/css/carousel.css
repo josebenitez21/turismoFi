@@ -18,8 +18,12 @@
 }
 
 /* Declare heights because of positioning of img element */
-.carousel-item {
-  height: 80rem;
+
+
+@media (min-width: 768px) {
+  .carousel-item {
+  height: 770px;
+}
 }
 
 

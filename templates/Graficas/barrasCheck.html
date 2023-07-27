@@ -58,7 +58,7 @@
         }
     </style>
 
-   <div class="row">
+  <div class="row">
         <div class="col-md-12">
             <h1>Estadistica</h1>
             <form class="filter-form">
@@ -71,7 +71,35 @@
                     <option value="2022">2022</option>
                     <option value="2023">2023</option>
                 </select>
-                <button type="button" onclick="filterByYearAndMonth()">Filtrar</button>
+
+                <label for="option">Selecciona una opción:</label>
+                <select id="option" name="option">
+                    <option value="checkins">Checkins</option>
+                    <option value="min_checkins">Mínimo Checkins</option>
+                    <option value="max_checkins">Máximo Checkins</option>
+                    <option value="promedio_checkins">Promedio Checkins</option>
+                    <option value="suma_checkins">Suma Checkins</option>
+                </select>
+
+                <button type="button" onclick="filterByYear()">Filtrar</button>
+            </form>
+            <div id="container"></div>
+        </div>
+    </div>
+ <div class="row">
+        <div class="col-md-12">
+            <h1>Estadistica</h1>
+            <form class="filter-form">
+                <label for="year">Selecciona un año:</label>
+                <select id="year" name="year">
+                    <option value="">Todos</option>
+                    <option value="2019">2019</option>
+                    <option value="2020">2020</option>
+                    <option value="2021">2021</option>
+                    <option value="2022">2022</option>
+                    <option value="2023">2023</option>
+                </select>
+                <button type="button" onclick="filterByYear()">Filtrar</button>
             </form>
             <div id="container"></div>
         </div>
@@ -81,29 +109,32 @@
 {% block javascriptx %}
     <script>
         // Función para obtener los datos y cargar la gráfica
-        function loadChart(data) {
+        function loadChart() {
+            var dataContainer = document.querySelector('.data-container');
+            var data = JSON.parse(dataContainer.dataset.nacionales);
+
             Highcharts.chart('container', {
                 chart: {
                     type: 'line'
                 },
                 title: {
-                    text: 'Habitaciones Disponibles por Día en ' + data.selected_year  // Cambiar el título de la gráfica
+                    text: 'Empleados Nacionales'  // Cambiar el título de la gráfica
                 },
                 xAxis: {
-                    categories: [...Array(31).keys()].map(day => day + 1),  // Generar los números del 1 al 31 para el eje X
+                    categories: data.anios,
                     accessibility: {
-                        rangeDescription: 'Range: Days of the Month'
+                        rangeDescription: 'Range: 2019 to 2023'
                     }
                 },
                 yAxis: {
                     title: {
-                        text: 'Habitaciones Disponibles'  // Cambiar el título del eje Y
+                        text: 'Empleados Nacionales'  // Cambiar el título del eje Y
                     }
                 },
-                series: data.meses.map((mes, index) => ({
-                    name: mes.nombre,
-                    data: data.habitaciones_disponibles[index]  // Obtener los datos de habitaciones disponibles para cada mes
-                })),
+                series: [{
+                    name: 'Empleados Nacionales',  // Cambiar el nombre de la serie
+                    data: data.nacionales  // Cambiar 'pernoctaciones' por 'nacionales' en los datos
+                }],
                 responsive: {
                     rules: [{
                         condition: {
@@ -121,32 +152,9 @@
             });
         }
 
-        // Función para obtener los datos filtrados por año
-        function filterByYearAndMonth() {
-            var selectedYear = document.getElementById('year').value;
-            var url = "{% url 'obtener_datos' %}";
-
-            if (selectedYear) {
-                url += "?year=" + selectedYear;
-            }
-
-            // Realizar la petición AJAX para obtener los datos
-            $.ajax({
-                url: url,
-                dataType: 'json',
-                success: function(data) {
-                    console.log(data);
-                    loadChart(data);
-                }
-            });
-        }
-
         document.addEventListener('DOMContentLoaded', function() {
             // Cargar la gráfica inicial sin filtrar
-            filterByYear();
-
-            // Asignar evento click al botón "Filtrar"
-            document.getElementById('filter-button').addEventListener('click', filterByYearAndMonth);
+            loadChart();
         });
     </script>
 {% endblock %}
