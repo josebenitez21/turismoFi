@@ -38,7 +38,7 @@
                 <th>empleados administrativos</th>
                 <th>empleados otras areas</th>
                 <th>área total m<sup>2</sup></th>
-                <th>área alimentos bebidas m<sup>2</sup></th>                
+                <th>área alimentos bebidas m<sup>2</sup></th>
                 <th>habitaciones</th>
                 <th>plazas</th>
                 <th>registro_SIIT</th>
@@ -101,21 +101,21 @@
                 <td>{{item.plazas}}</td>
                 <td>{{item.registro_SIIT}}</td>
                 <td>{{item.registro_SIETE}}</td>
-            </tr>         
-                
-            {% endfor %}     
+            </tr>
+
+            {% endfor %}
         </tbody>
     </table>
-</div>   
+</div>
 {% else %}
 
     {% for item in list  %}
-    
+
     <small class="pull-right"><a href="{% url "core:establecimiento_editar" item.id %}">+ Editar información</a></small>
     <h3>
         {{item.nombre}}
     </h3>
-       
+
     <table class="table table-condensed table-striped">
         <tr>
             <td><strong>clasificación:</strong></td><td>{{item.clasificacion}}</td>
@@ -242,7 +242,7 @@
                             dom: 'Bflrtip',
                             buttons: [
                                 'copy',
-                                'csv', 
+                                'csv',
                                 'excel',
                                 //{
                                 //    extend: 'pdfHtml5',
@@ -260,12 +260,12 @@
                                             var val = $.fn.dataTable.util.escapeRegex(
                                                 $(this).val()
                                             );
-                     
+
                                             column
                                                 .search( val ? '^'+val+'$' : '', true, false )
                                                 .draw();
                                         } );
-                     
+
                                     column.data().unique().sort().each( function ( d, j ) {
                                         select.append( '<option value="'+d+'">'+d+'</option>' )
                                     } );

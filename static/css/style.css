@@ -1,49 +1,74 @@
 
 .custom-bg-color {
-  background-color: #0c3f66;
-  color: white; /* Para asegurar que el texto sea legible en el fondo oscuro */
+    background-color: #0c3f66;
+    color: white; /* Para asegurar que el texto sea legible en el fondo oscuro */
 }
 
 .custom1-bg-color {
-  background-color: #f9a825;
-  color: white; /* Para asegurar que el texto sea legible en el fondo oscuro */
+    background-color: #f9a825;
+    color: white; /* Para asegurar que el texto sea legible en el fondo oscuro */
 }
+.custom4-bg-color {
+    background-color: #f9a825 ;
+    color: black; /* Para asegurar que el texto sea legible en el fondo oscuro */
+}
+
 .contenedor-padre {
     margin-bottom: 200px;
 }
+
 html,
 body,
 .intro {
-  height: 100%;
+    height: 100%;
 }
 
 table td,
 table th {
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 thead th {
-  color: #fff;
+    color: #fff;
 }
 
 .card {
-  border-radius: .5rem;
+    border-radius: .5rem;
 }
 
 .table-scroll {
-  border-radius: .5rem;
+    border-radius: .5rem;
 }
 
 .table-scroll table thead th {
-  font-size: 1.25rem;
+    font-size: 1.25rem;
 }
+
 thead {
-  top: 0;
-  position: sticky;
+    top: 0;
+    position: sticky;
 }
+
 .enlace-amarillo {
-  color: #f9a825;
+    color: #f9a825;
 }
+
+.rounded-container {
+    background-color: #f9a825 ;
+    padding: 10px;
+    border-radius: 10px; /* Ajusta este valor para controlar el redondeo de las esquinas */
+}
+
+    .rounded-container {
+        background-color: #f9a825;
+        padding: 10px;
+        border-radius: 10px;
+    }
+
+    .custom-btn {
+        width: 100%;
+    }
+
 

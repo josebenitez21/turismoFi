@@ -1,321 +1,338 @@
-{% extends "master.html" %}
-{% block container %}
-    <div class="page-header mt-4">
-        {% if not administrativo %}
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet"/>
+    <link href="{% static 'assets/css/styles.css' %}" rel="stylesheet"/>
+    <link rel="stylesheet" href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css'>
 
-            <a href="{% url "core:establecimiento" item.id %}"> - Regresar </a>
-            <br>
-
-            <br><br><br>
-            <div class="row row-cols-1 row-cols-md-2 g-2">
-                <div class="col">
-                    <div class="card custom-bg-color">
-                        <div class="row g-0">
-                            <div class="col-md-4">
-                                <img src="/static/imgs/obtour2.jpg" class="img-fluid rounded-start" alt="...">
-                            </div>
-                            <div class="col-md-8">
-                                <div class="card-body">
-                                    <h5 class="card-title">Habitaciones</h5>
-                                    <p class="card-text">
-                                        {{ item.habitaciones }}</p>
-                                </div>
-                            </div>
-                        </div>
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <link href="assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css"/>
+    <script src="assets/plugins/global/plugins.bundle.js"></script>
+    {% block header %}
+    {% endblock header %}
+</head>
+<body class="sb-nav-fixed">
+<nav class="sb-topnav navbar navbar-expand navbar-dark bg-secondary">
+    <!-- Navbar Brand-->
+    <a class="navbar-brand ps-3 " href="{% url 'profile' %}">Inicio</a>
+    <!-- Sidebar Toggle-->
+    <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
+            class="fas fa-bars"></i></button>
+    <!-- Navbar Search-->
+    <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+        <div class="input-group">
+        </div>
+    </form>
+    <!-- Navbar-->
+    <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
+               aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="#!">Settings</a></li>
+                <li><a class="dropdown-item" href="#!">Activity Log</a></li>
+                <li>
+                    <hr class="dropdown-divider"/>
+                </li>
+                <li><a class="dropdown-item" href="#!" id="logout-link">Cerrar Sesión</a></li>
+            </ul>
+        </li>
+    </ul>
+</nav>
+<div id="layoutSidenav">
+    <div id="layoutSidenav_nav">
+        <nav class="sb-sidenav accordion sb-sidenav-light" id="sidenavAccordion">
+            <div class="sb-sidenav-menu">
+                <div class="nav">
+                    <div class="sb-sidenav-menu-heading">Core</div>
+                    <a class="nav-link" href="{% url 'profile' %}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        Dashboard
+                    </a>
+                    <div class="sb-sidenav-menu-heading">Datos</div>
+                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts"
+                       aria-expanded="false" aria-controls="collapseLayouts">
+                        <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                        Estadísticas
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+                    <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne"
+                         data-bs-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav">
+                            <a class="nav-link" href="{% url 'DatosAnuales' %}">Datos Anuales</a>
+                            <a class="nav-link" href="{% url 'DatosMensuales' %}">Datos Mensuales</a>
+                            <a class="nav-link" href="{% url 'DatosDiarios' %}">Datos Diarios</a>
+                        </nav>
                     </div>
-                </div>
 
-                <div class="col">
-                    <div class="card custom-bg-color">
-                        <div class="row g-0">
-                            <div class="col-md-4">
-                                <img src="/static/imgs/obtour2.jpg" class="img-fluid rounded-start" alt="...">
+                    <div class="collapse" id="collapsePages" aria-labelledby="headingTwo"
+                         data-bs-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
+                               data-bs-target="#pagesCollapseAuth" aria-expanded="false"
+                               aria-controls="pagesCollapseAuth">
+                                Authentication
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne"
+                                 data-bs-parent="#sidenavAccordionPages">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="login.html">Login</a>
+                                    <a class="nav-link" href="register.html">Register</a>
+                                    <a class="nav-link" href="password.html">Forgot Password</a>
+                                </nav>
                             </div>
-                            <div class="col-md-8">
-                                <div class="card-body">
-                                    <h5 class="card-title">Empleados</h5>
-                                    <p class="card-text">{{ item.empleados }}</p>
-                                </div>
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
+                               data-bs-target="#pagesCollapseError" aria-expanded="false"
+                               aria-controls="pagesCollapseError">
+                                Error
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne"
+                                 data-bs-parent="#sidenavAccordionPages">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="401.html">401 Page</a>
+                                    <a class="nav-link" href="404.html">404 Page</a>
+                                    <a class="nav-link" href="500.html">500 Page</a>
+                                </nav>
                             </div>
-                        </div>
+                        </nav>
                     </div>
+                    <div class="sb-sidenav-menu-heading"></div>
                 </div>
             </div>
-            <br>
-
-        {% endif %}
-
-    <div class="card" style="background-color: #f9a825;">
-        <div class="card-body">
-            <h1>Registros</h1>
-            <h5>{{ item.nombre }}</h5>
-            {% if not administrativo %}
-            <a class="btn  custom-bg-color" href="{% url "core:establecimiento_registro_nuevo" item.id %}">+ Agregar
-                Registro</a>
-            {% endif %}
-        </div>
+            <div class="sb-sidenav-footer">
+                <div class="small">Inició sesión como:</div>
+                {{ user.first_name }}
+            </div>
+        </nav>
     </div>
-    </div>
-    <br>
-    <div class="table-responsive ">
-        <table class="table table-bordered table-striped table-condensed text-center" id="table-registers"
-               style="font-size:12px;">
-            <thead>
-            <tr>
-                <th>establecimiento</th>
-                <th>clasificacion</th>
-                <th>categoria</th>
-                <th>habitaciones</th>
-                <th>plazas</th>
-                <th>fecha</th>
-                <th>checkins</th>
-                <th>checkouts</th>
-                <th>pernoctaciones</th>
-                <th>nacionales</th>
-                <th>extranjeros</th>
-                <th>habitaciones ocupadas</th>
-                <th>habitaciones disponibles</th>
-                <th>tipo tarifa</th>
-                <th>tarifa promedio</th>
-                <th>ventas netas</th>
-                <th>porcentaje ocupacion %</th>
-                <th>revpar</th>
-                <th>empleados temporales</th>
-                <th>estado</th>
-                <th>opciones</th>
-                {% if administrativo %}
-                {% endif %}
-            </tr>
-            </thead>
-            <tfoot>
-            <tr>
-                <th>establecimiento</th>
-                <th>clasificacion</th>
-                <th>categoria</th>
-                <th>habitaciones</th>
-                <th>plazas</th>
-                <th>fecha</th>
-                <th>checkins</th>
-                <th>checkouts</th>
-                <th>pernoctaciones</th>
-                <th>nacionales</th>
-                <th>extranjeros</th>
-                <th>habitaciones ocupadas</th>
-                <th>habitaciones disponibles</th>
-                <th>tipo tarifa</th>
-                <th>tarifa promedio</th>
-                <th>ventas netas</th>
-                <th>porcentaje ocupacion</th>
-                <th>revpar</th>
-                <th>empleados temporales</th>
-                <th>estado</th>
-                <th>opciones</th>
-                {% if administrativo %}
-                {% endif %}
-            </tr>
-            </tfoot>
-            <tbody>
-            {% for reg in list %}
-                <tr>
-                    <td>{{ reg.establecimiento }}</td>
-                    <td>{{ reg.establecimiento.clasificacion }}</td>
-                    <td>{{ reg.establecimiento.categoria }}</td>
-                    <td>{{ reg.establecimiento.habitaciones }}</td>
-                    <td>{{ reg.establecimiento.plazas }}</td>
-                    <td><strong>{{ reg.fecha|date:"d/m/Y" }}</strong></td>
-                    <td>{{ reg.checkins }}</td>
-                    <td>{{ reg.checkouts }}</td>
-                    <td>{{ reg.pernoctaciones }}</td>
-                    <td>{{ reg.nacionales }}</td>
-                    <td>{{ reg.extranjeros }}</td>
-                    <td>{{ reg.habitaciones_ocupadas }}</td>
-                    <td>{{ reg.habitaciones_disponibles }}</td>
-                    <td>{{ reg.tipo_tarifa }}</td>
-                    <td>$ {{ reg.tarifa_promedio|floatformat:"2" }}</td>
-                    <td>$ {{ reg.ventas_netas|floatformat:"2" }}</td>
-                    <td>{{ reg.porcentaje_ocupacion }} %</td>
-                    <td>$ {{ reg.revpar|floatformat:"2" }}</td>
-                    <td>{{ reg.empleados_temporales }}</td>
-                    <td id="estado-{{ reg.id }}">{{ reg.estado }}</td>
-                    {% if administrativo %}
-                        <td id="opcion-{{ reg.id }}">
-                            {% if reg.estado == 'sin_validar' %}
-                                <a href="#" id="{{ reg.id }}" data-estado="validado" class="validar">Validar</a>
-                            {% else %}
-                                <a href="#" id="{{ reg.id }}" data-estado="sin_validar" class="validar"
-                                   style="color:#f00;">Revocar</a>
-                            {% endif %}
-                        </td>
-                    {% else %}
-                        <td>
-                            {% if reg.estado == 'sin_validar' %}
-                                <a href="{% url "core:establecimiento_registro_editar" reg.id %}">[ + Editar ]</a>
-                                <br>
-                                <a href="{% url "core:establecimiento_registro_eliminar" reg.id %}" style="color:#f00;">[
-                                    - Borrar ]</a>
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4">
+                {% block container %}
+                    <div class="page-header mt-4">
+                        {% if not administrativo %}
 
-                            {% endif %}
-                        </td>
-                    {% endif %}
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    <hr>
+                            <div class="row row-cols-1 row-cols-md-2 g-2">
+                                <div class="col">
+                                    <div class="card bg-secondary" style="border-radius: 0;">
+                                        <div class="row g-0 align-items-center">
+                                            <div class="col-md-4 d-flex justify-content-center align-items-center">
+                                                <i class="fa fa-home" style="color: #ffffff; font-size: 60px;"></i>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">Habitaciones</h5>
+                                                    <p class="card-text" style="color: white">{{ item.habitaciones }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
 
 
-
-        <div class="mask d-flex align-items-center h-100 ">
-            <div class="container " >
-                <div class="row justify-content-center  ">
-                    <div class="col-12 ">
-                        <div class="card ">
-                            <div class="card-body p-0 ">
-                                <div class="table-responsive table-scroll" data-mdb-perfect-scrollbar="true"
-                                    style="position: relative; height: 300px;">
-                                    <table class="table table-striped mb-0 table-responsive ">
-                                        <thead style="background-color: #002d72;">
-                                            <tr>
-                                                <th>establecimiento</th>
-                                                <th>clasificacion</th>
-                                                <th>categoria</th>
-                                                <th>habitaciones</th>
-                                                <th>plazas</th>
-                                                <th>fecha</th>
-                                                <th>checkins</th>
-                                                <th>checkouts</th>
-                                                <th>pernoctaciones</th>
-                                                <th>nacionales</th>
-                                                <th>extranjeros</th>
-                                                <th>habitaciones ocupadas</th>
-                                                <th>habitaciones disponibles</th>
-                                                <th>tipo tarifa</th>
-                                                <th>tarifa promedio</th>
-                                                <th>ventas netas</th>
-                                                <th>porcentaje ocupacion</th>
-                                                <th>revpar</th>
-                                                <th>empleados temporales</th>
-                                                <th>estado</th>
-                                                <th>opciones</th>
-                                                {% if administrativo %}
-                                                {% endif %}
-                                            </tr>
-                                        </thead>
-                                        <tfoot style="background-color: #002d72;">
-                                            <tr>
-                                                <th>establecimiento</th>
-                                                <th>clasificacion</th>
-                                                <th>categoria</th>
-                                                <th>habitaciones</th>
-                                                <th>plazas</th>
-                                                <th>fecha</th>
-                                                <th>checkins</th>
-                                                <th>checkouts</th>
-                                                <th>pernoctaciones</th>
-                                                <th>nacionales</th>
-                                                <th>extranjeros</th>
-                                                <th>habitaciones ocupadas</th>
-                                                <th>habitaciones disponibles</th>
-                                                <th>tipo tarifa</th>
-                                                <th>tarifa promedio</th>
-                                                <th>ventas netas</th>
-                                                <th>porcentaje ocupacion</th>
-                                                <th>revpar</th>
-                                                <th>empleados temporales</th>
-                                                <th>estado</th>
-                                                <th>opciones</th>
-                                                {% if administrativo %}
-                                                {% endif %}
-                                            </tr>
-                                        </tfoot>
-                                        <tbody>
-                                            {% for reg in list %}
-                                                <tr>
-                                                    <td>{{ reg.establecimiento }}</td>
-                                                    <td>{{ reg.establecimiento.clasificacion }}</td>
-                                                    <td>{{ reg.establecimiento.categoria }}</td>
-                                                    <td>{{ reg.establecimiento.habitaciones }}</td>
-                                                    <td>{{ reg.establecimiento.plazas }}</td>
-                                                    <td><strong>{{ reg.fecha|date:"d/m/Y" }}</strong></td>
-                                                    <td>{{ reg.checkins }}</td>
-                                                    <td>{{ reg.checkouts }}</td>
-                                                    <td>{{ reg.pernoctaciones }}</td>
-                                                    <td>{{ reg.nacionales }}</td>
-                                                    <td>{{ reg.extranjeros }}</td>
-                                                    <td>{{ reg.habitaciones_ocupadas }}</td>
-                                                    <td>{{ reg.habitaciones_disponibles }}</td>
-                                                    <td>{{ reg.tipo_tarifa }}</td>
-                                                    <td>$ {{ reg.tarifa_promedio|floatformat:"2" }}</td>
-                                                    <td>$ {{ reg.ventas_netas|floatformat:"2" }}</td>
-                                                    <td>{{ reg.porcentaje_ocupacion }} %</td>
-                                                    <td>$ {{ reg.revpar|floatformat:"2" }}</td>
-                                                    <td>{{ reg.empleados_temporales }}</td>
-                                                    <td id="estado-{{ reg.id }}">{{ reg.estado }}</td>
-                                                    {% if administrativo %}
-                                                        <td id="opcion-{{ reg.id }}">
-                                                            {% if reg.estado == 'sin_validar' %}
-                                                                <a href="#" id="{{ reg.id }}" data-estado="validado"
-                                                                    class="validar">Validar</a>
-                                                            {% else %}
-                                                                <a href="#" id="{{ reg.id }}" data-estado="sin_validar"
-                                                                    class="validar" style="color:#f00;">Revocar</a>
-                                                            {% endif %}
-                                                        </td>
-                                                    {% else %}
-                                                        <td>
-                                                            {% if reg.estado == 'sin_validar' %}
-                                                                <a class="btn custom-bg-color" href="{% url "core:establecimiento_registro_editar" reg.id %}">Editar</a>
-                                                                <br>
-                                                                <br>
-
-                                                                <a class="btn custom1-bg-color" href="{% url "core:establecimiento_registro_eliminar" reg.id %}"
-                                                                    style="color: white;">Borrar</a>
-
-                                                            {% endif %}
-                                                        </td>
-                                                    {% endif %}
-                                                </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
+                                <div class="col">
+                                    <div class="card bg-secondary"style="border-radius: 0;">
+                                        <div class="row g-0 align-items-center">
+                                            <div class="col-md-4 d-flex justify-content-center align-items-center">
+                                                <i class="fa fa-users" style="color: #ffffff; font-size: 60px;"></i>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">Empleados</h5>
+                                                    <p class="card-text" style="color: white">{{ item.empleados }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+                            <br>
+
+                        {% endif %}
+
+                        <div class="card bg-secondary" style="border-radius: 0;">
+                            <div class="card-body">
+                                <h1 style="color: #0c0c0c">Ver Registros</h1>
+                                <h5 style="color: white">{{ item.nombre }}</h5>
+                                {% if not administrativo %}
+                                    <a class="btn bg-primary"
+                                       href="{% url 'core:establecimiento_registro_nuevo' item.id %}"
+                                       style="color: white">Agregar Registro</a>
+                                {% endif %}
+                            </div>
                         </div>
+
                     </div>
-                </div>
+                    <br>
+                    <div class="table-responsive ">
+                        <table class="table table-bordered table-striped table-condensed text-center"
+                               id="table-registers"
+                               style="font-size:12px;">
+                            <thead>
+                            <tr>
+                                <th>establecimiento</th>
+                                <th>clasificacion</th>
+                                <th>categoria</th>
+                                <th>habitaciones</th>
+                                <th>plazas</th>
+                                <th>fecha</th>
+                                <th>checkins</th>
+                                <th>checkouts</th>
+                                <th>pernoctaciones</th>
+                                <th>nacionales</th>
+                                <th>extranjeros</th>
+                                <th>habitaciones ocupadas</th>
+                                <th>habitaciones disponibles</th>
+                                <th>tipo tarifa</th>
+                                <th>tarifa promedio</th>
+                                <th>ventas netas</th>
+                                <th>porcentaje ocupacion %</th>
+                                <th>revpar</th>
+                                <th>empleados temporales</th>
+                                <th>estado</th>
+                                <th>opciones</th>
+                                {% if administrativo %}
+                                {% endif %}
+                            </tr>
+                            </thead>
+                            <tfoot>
+                            <tr>
+                                <th>establecimiento</th>
+                                <th>clasificacion</th>
+                                <th>categoria</th>
+                                <th>habitaciones</th>
+                                <th>plazas</th>
+                                <th>fecha</th>
+                                <th>checkins</th>
+                                <th>checkouts</th>
+                                <th>pernoctaciones</th>
+                                <th>nacionales</th>
+                                <th>extranjeros</th>
+                                <th>habitaciones ocupadas</th>
+                                <th>habitaciones disponibles</th>
+                                <th>tipo tarifa</th>
+                                <th>tarifa promedio</th>
+                                <th>ventas netas</th>
+                                <th>porcentaje ocupacion</th>
+                                <th>revpar</th>
+                                <th>empleados temporales</th>
+                                <th>estado</th>
+                                <th>opciones</th>
+                                {% if administrativo %}
+                                {% endif %}
+                            </tr>
+                            </tfoot>
+                            <tbody>
+                            {% for reg in list %}
+                                <tr>
+                                    <td>{{ reg.establecimiento }}</td>
+                                    <td>{{ reg.establecimiento.clasificacion }}</td>
+                                    <td>{{ reg.establecimiento.categoria }}</td>
+                                    <td>{{ reg.establecimiento.habitaciones }}</td>
+                                    <td>{{ reg.establecimiento.plazas }}</td>
+                                    <td><strong>{{ reg.fecha|date:"d/m/Y" }}</strong></td>
+                                    <td>{{ reg.checkins }}</td>
+                                    <td>{{ reg.checkouts }}</td>
+                                    <td>{{ reg.pernoctaciones }}</td>
+                                    <td>{{ reg.nacionales }}</td>
+                                    <td>{{ reg.extranjeros }}</td>
+                                    <td>{{ reg.habitaciones_ocupadas }}</td>
+                                    <td>{{ reg.habitaciones_disponibles }}</td>
+                                    <td>{{ reg.tipo_tarifa }}</td>
+                                    <td>$ {{ reg.tarifa_promedio|floatformat:"2" }}</td>
+                                    <td>$ {{ reg.ventas_netas|floatformat:"2" }}</td>
+                                    <td>{{ reg.porcentaje_ocupacion }} %</td>
+                                    <td>$ {{ reg.revpar|floatformat:"2" }}</td>
+                                    <td>{{ reg.empleados_temporales }}</td>
+                                    <td id="estado-{{ reg.id }}">{{ reg.estado }}</td>
+                                    {% if administrativo %}
+                                        <td id="opcion-{{ reg.id }}">
+                                            {% if reg.estado == 'sin_validar' %}
+                                                <a href="#" id="{{ reg.id }}" data-estado="validado" class="validar">Validar</a>
+                                            {% else %}
+                                                <a href="#" id="{{ reg.id }}" data-estado="sin_validar" class="validar"
+                                                   style="color:#f00;">Revocar</a>
+                                            {% endif %}
+                                        </td>
+                                    {% else %}
+                                        <td>
+                                            {% if reg.estado == 'sin_validar' %}
+                                                <a class="btn bg-primary"
+                                                   href="{% url "core:establecimiento_registro_editar" reg.id %}"
+                                                   style="color: white;">Editar</a>
+
+                                                <br>
+                                                <br>
+
+                                                <a class="btn bg-danger"
+                                                   href="{% url "core:establecimiento_registro_eliminar" reg.id %}"
+                                                   style="color: white;">Borrar</a>
+                                            {% endif %}
+                                        </td>
+                                    {% endif %}
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <hr>
+
+
+
+
+
+
+                {% endblock container %}
             </div>
-        </div>
-    <br>
+        </main>
+    </div>
+    </main>
+
+</div>
+</div>
+<br><br><br>
+</main>
+{% include "master.html" with exclude_header=True exclude_footer=True %}
+
+</div>
+
+</div>
 
 
+</body>
+<footer>
 
-{% endblock container %}
+</footer>
 
+</html>
 {% block javascript %}
     {% include "core/datatables.html" %}
     <script>
         $(document).ready(function () {
-
-            console.log('datatable');
             var table = $('#table-registers').DataTable({
                 language: {
                     url: "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
                 },
-                pageLength: 25,
-                lengthMenu: [[25, 50, 100, -1], [25, 50, 100, 'Todos']],
+                pageLength: 10,
+                lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'Todos']],
                 dom: 'Bflrtip',
                 buttons: [
                     'copy',
                     'csv',
                     'excel',
-                    //{
-                    //    extend: 'pdfHtml5',
-                    //    orientation: 'landscape',
-                    //    pageSize: 'LEGAL'
-                    //},
                     'print'
                 ],
+
                 initComplete: function () {
                     this.api().columns().every(function () {
                         var column = this;
@@ -379,4 +396,51 @@
 
         });
     </script>
-{% endblock javascript %}
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+            crossorigin="anonymous"></script>
+    <script src="{% static 'assets/js/scripts.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+    <script src="{% static 'assets/assets/demo/chart-area-demo.js' %}"></script>
+    <script src="{% static 'assets/assets/demo/chart-bar-demo.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"
+            crossorigin="anonymous"></script>
+    <script src="{% static 'assets/js/datatables-simple-demo.js' %}"></script>
+    <script src="{% static 'assets/js/linecharts.js' %}"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+            integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"
+            integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa"
+            crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const logoutLink = document.getElementById('logout-link');
+
+            logoutLink.addEventListener('click', function (event) {
+                event.preventDefault();
+
+                fetch("{% url 'logout' %}", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    }
+                }).then(function () {
+                    window.location.href = "{% url 'index' %}";
+                }).catch(function (error) {
+                    console.error('Error al cerrar la sesión:', error);
+                });
+            });
+        });
+    </script>
+    <script>
+
+        $('input').attr('required', false);
+        $('input[type="number"]').attr('min', 0);
+    </script>
+{% endblock %}

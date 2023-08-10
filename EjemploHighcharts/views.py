@@ -6,29 +6,37 @@ from django.db.models.functions import Coalesce
 
 
 def obtener_datos(request):
-    user = request.user  # Obtener el usuario loggeado
-
     anios = list(range(2019, 2024))
     data = {
         'anios': anios,
-        'nacionales': [],
+        'checkins': [],  # Lista para almacenar los datos de checkins
+        'checkouts': [],  # Lista para almacenar los datos de checkouts
     }
 
     year_param = request.GET.get('year')  # Obtener el año seleccionado desde el frontend
 
-    registros = EstablecimientoRegistro.objects.filter(establecimiento__user=user, fecha__year__in=anios)
+    registros = EstablecimientoRegistro.objects.filter(fecha__year__in=anios)
 
     if year_param:
         registros = registros.filter(fecha__year=year_param)
 
-    registros = registros.values('fecha__year').annotate(total_nacionales=Sum('nacionales'))
+    # Obtener los checkins y checkouts para cada año
+    registros = registros.values('fecha__year').annotate(
+        total_checkins=Sum('checkins'),
+        total_checkouts=Sum('checkouts'),
+    )
 
     for anio in anios:
-        nacionales_anio = next(
-            (registro['total_nacionales'] for registro in registros if registro['fecha__year'] == anio), 0)
-        data['nacionales'].append(nacionales_anio)
+        checkins_anio = next(
+            (registro['total_checkins'] for registro in registros if registro['fecha__year'] == anio), 0)
+        checkouts_anio = next(
+            (registro['total_checkouts'] for registro in registros if registro['fecha__year'] == anio), 0)
+        data['checkins'].append(checkins_anio)
+        data['checkouts'].append(checkouts_anio)
 
     return JsonResponse(data)
+
+
 
 
 def obtener_datosCheckinsAnuales(request):

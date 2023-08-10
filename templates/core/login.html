@@ -18,6 +18,7 @@
       <form method="post" action="{% url 'login' %}">
         {% csrf_token %}
 
+
         <div class="form-floating">
           <input name="username" id="id_username" required="" maxlength="30" class="form-control form-control-sm"
             type="text">
@@ -28,6 +29,11 @@
           <input name="password" id="id_password" required="" maxlength="30" class="form-control form-control-sm"
             type="password">
           <label for="id_password">Contraseña</label>
+            <br>
+             {{ form.captcha }}
+            {% for error in form.captcha.errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
         </div>
 
         <div class="form-check text-start my-3">
@@ -36,8 +42,8 @@
             Recordarme
           </label>
         </div>
-        <button class="btn btn-primary py-2 px-4" type="submit"
-          style="background-color: #eab308; border-color: #eab308;">Ingresar</button>
+        <button class="btn btn-primary py-2 px-4 bg-primary" type="submit"
+          >Ingresar</button>
 
         <p class="mt-5 mb-3 text-body-secondary">&copy; 2017–2023</p>
       </form>

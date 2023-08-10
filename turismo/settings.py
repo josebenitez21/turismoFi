@@ -36,7 +36,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'core',
     'rest',
-    'EjemploHighcharts'
+    'EjemploHighcharts',
+    'captcha'
 ]
 
 MIDDLEWARE = [
@@ -126,3 +127,6 @@ MEDIA_ROOT = BASE_DIR / 'images'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+RECAPTCHA_PUBLIC_KEY = '6Ld0PHwnAAAAAAfJkQC11fISZ6FbA-Xg_kv1Tb2G'
+RECAPTCHA_PRIVATE_KEY = '6Ld0PHwnAAAAAOQF6-6PD5sPrmfLuKOBy481m_PK'

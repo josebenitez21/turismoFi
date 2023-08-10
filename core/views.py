@@ -9,6 +9,7 @@ from django.http import JsonResponse
 from core.forms import *
 from decimal import Decimal
 from django.views.decorators.csrf import csrf_exempt
+from .forms import LoginForm,ReCaptchaField
 
 
 # Create your views here.
@@ -30,10 +31,11 @@ def index(request):
 def login_view(request):
     ctx = {}
     if request.method == 'POST':
-        formulario = LoginForm(request.POST)
-        if formulario.is_valid:
+        formulario = LoginForm(request=request, data=request.POST)
+        if formulario.is_valid():
             usuario = request.POST['username']
             clave = request.POST['password']
+
             user = authenticate(username=usuario, password=clave)
             if user is not None:
                 if user.is_active:
@@ -46,9 +48,10 @@ def login_view(request):
     else:
         formulario = LoginForm()
 
-    ctx['form'] = LoginForm()
+    ctx['form'] = formulario  # Usar el formulario instanciado
 
     return render(request, 'core/login.html', ctx)
+
 
 def years_view(request):
     ctx = _get_context(request)
@@ -62,7 +65,7 @@ def years_view(request):
 
     print(ctx)
 
-    return render(request, 'core/DatosAnuales.html', ctx)
+    return render(request, 'core/DatosAnuales/DatosAnuales.html', ctx)
 
 
 def _group_user(user):
@@ -103,7 +106,286 @@ def datosAnuales(request):
         ctx['list'] = Establecimiento.objects.filter(provincia__in=provincias)
     else:
         ctx['list'] = Establecimiento.objects.filter(user=user)
-    return render(request, 'core/DatosAnuales.html', ctx)
+    return render(request, 'core/DatosAnuales/DatosAnuales.html', ctx)
+
+#Redirect a datosAnual
+@login_required(login_url='/login/')
+def datosAnuales(request):
+    ctx = _get_context(request)
+    user = request.user
+    if ctx['administrativo']:
+        # ctx['list'] = Establecimiento.objects.all()
+        provincias = _get_provincias(user)
+        ctx['list'] = Establecimiento.objects.filter(provincia__in=provincias)
+    else:
+        ctx['list'] = Establecimiento.objects.filter(user=user)
+    return render(request, 'core/DatosAnuales/DatosAnuales.html', ctx)
+
+@login_required(login_url='/login/')
+def CheckinsA(request):
+    ctx = _get_context(request)
+    user = request.user
+    if ctx['administrativo']:
+        # ctx['list'] = Establecimiento.objects.all()
+        provincias = _get_provincias(user)
+        ctx['list'] = Establecimiento.objects.filter(provincia__in=provincias)
+    else:
+        ctx['list'] = Establecimiento.objects.filter(user=user)
+    return render(request, 'core/DatosAnuales/CheckinsA.html', ctx)
+@login_required(login_url='/login/')
+def CheckoutsA(request):
+    ctx = _get_context(request)
+    user = request.user
+    if ctx['administrativo']:
+        # ctx['list'] = Establecimiento.objects.all()
+        provincias = _get_provincias(user)
+        ctx['list'] = Establecimiento.objects.filter(provincia__in=provincias)
+    else:
+        ctx['list'] = Establecimiento.objects.filter(user=user)
+    return render(request, 'core/DatosAnuales/CheckoutA.html', ctx)
+@login_required(login_url='/login/')
+def ExtranjerosA(request):
+    ctx = _get_context(request)
+    user = request.user
+    if ctx['administrativo']:
+        # ctx['list'] = Establecimiento.objects.all()
+        provincias = _get_provincias(user)
+        ctx['list'] = Establecimiento.objects.filter(provincia__in=provincias)
+    else:
+        ctx['list'] = Establecimiento.objects.filter(user=user)
+    return render(request, 'core/DatosAnuales/ExtranjerosA.html', ctx)
+
+@login_required(login_url='/login/')
+def HabitacionesDisponiblesA(request):
+    ctx = _get_context(request)
+    user = request.user
+    if ctx['administrativo']:
+        # ctx['list'] = Establecimiento.objects.all()
+        provincias = _get_provincias(user)
+        ctx['list'] = Establecimiento.objects.filter(provincia__in=provincias)
+    else:
+        ctx['list'] = Establecimiento.objects.filter(user=user)
+    return render(request, 'core/DatosAnuales/HabitacionesDisponiblesA.html', ctx)
+@login_required(login_url='/login/')
+def HabitacionesOcupadasA(request):
+    ctx = _get_context(request)
+    user = request.user
+    if ctx['administrativo']:
+        # ctx['list'] = Establecimiento.objects.all()
+        provincias = _get_provincias(user)
+        ctx['list'] = Establecimiento.objects.filter(provincia__in=provincias)
+    else:
+        ctx['list'] = Establecimiento.objects.filter(user=user)
+    return render(request, 'core/DatosAnuales/HabitacionesOcupadasA.html', ctx)
+
+@login_required(login_url='/login/')
+def NacionalesA(request):
+    ctx = _get_context(request)
+    user = request.user
+    if ctx['administrativo']:
+        # ctx['list'] = Establecimiento.objects.all()
+        provincias = _get_provincias(user)
+        ctx['list'] = Establecimiento.objects.filter(provincia__in=provincias)
+    else:
+        ctx['list'] = Establecimiento.objects.filter(user=user)
+    return render(request, 'core/DatosAnuales/NacionalesA.html', ctx)
+@login_required(login_url='/login/')
+def PernoctacionesA(request):
+    ctx = _get_context(request)
+    user = request.user
+    if ctx['administrativo']:
+        # ctx['list'] = Establecimiento.objects.all()
+        provincias = _get_provincias(user)
+        ctx['list'] = Establecimiento.objects.filter(provincia__in=provincias)
+    else:
+        ctx['list'] = Establecimiento.objects.filter(user=user)
+    return render(request, 'core/DatosAnuales/PernoctacionesA.html', ctx)
+
+#redirect to DatosMensuales
+@login_required(login_url='/login/')
+def datosMensuales(request):
+    ctx = _get_context(request)
+    user = request.user
+    if ctx['administrativo']:
+        # ctx['list'] = Establecimiento.objects.all()
+        provincias = _get_provincias(user)
+        ctx['list'] = Establecimiento.objects.filter(provincia__in=provincias)
+    else:
+        ctx['list'] = Establecimiento.objects.filter(user=user)
+    return render(request, 'core/DatosMensuales/DatosMensuales.html', ctx)
+
+@login_required(login_url='/login/')
+def CheckinsM(request):
+    ctx = _get_context(request)
+    user = request.user
+    if ctx['administrativo']:
+        # ctx['list'] = Establecimiento.objects.all()
+        provincias = _get_provincias(user)
+        ctx['list'] = Establecimiento.objects.filter(provincia__in=provincias)
+    else:
+        ctx['list'] = Establecimiento.objects.filter(user=user)
+    return render(request, 'core/DatosMensuales/CheckinsM.html', ctx)
+@login_required(login_url='/login/')
+def CheckoutsM(request):
+    ctx = _get_context(request)
+    user = request.user
+    if ctx['administrativo']:
+        # ctx['list'] = Establecimiento.objects.all()
+        provincias = _get_provincias(user)
+        ctx['list'] = Establecimiento.objects.filter(provincia__in=provincias)
+    else:
+        ctx['list'] = Establecimiento.objects.filter(user=user)
+    return render(request, 'core/DatosMensuales/CheckoutM.html', ctx)
+@login_required(login_url='/login/')
+def ExtranjerosM(request):
+    ctx = _get_context(request)
+    user = request.user
+    if ctx['administrativo']:
+        # ctx['list'] = Establecimiento.objects.all()
+        provincias = _get_provincias(user)
+        ctx['list'] = Establecimiento.objects.filter(provincia__in=provincias)
+    else:
+        ctx['list'] = Establecimiento.objects.filter(user=user)
+    return render(request, 'core/DatosMensuales/ExtranjerosM.html', ctx)
+
+@login_required(login_url='/login/')
+def HabitacionesDisponiblesM(request):
+    ctx = _get_context(request)
+    user = request.user
+    if ctx['administrativo']:
+        # ctx['list'] = Establecimiento.objects.all()
+        provincias = _get_provincias(user)
+        ctx['list'] = Establecimiento.objects.filter(provincia__in=provincias)
+    else:
+        ctx['list'] = Establecimiento.objects.filter(user=user)
+    return render(request, 'core/DatosMensuales/HabitacionesDisponiblesM.html', ctx)
+@login_required(login_url='/login/')
+def HabitacionesOcupadasM(request):
+    ctx = _get_context(request)
+    user = request.user
+    if ctx['administrativo']:
+        # ctx['list'] = Establecimiento.objects.all()
+        provincias = _get_provincias(user)
+        ctx['list'] = Establecimiento.objects.filter(provincia__in=provincias)
+    else:
+        ctx['list'] = Establecimiento.objects.filter(user=user)
+    return render(request, 'core/DatosMensuales/HabitacionesOcupadasM.html', ctx)
+
+@login_required(login_url='/login/')
+def NacionalesM(request):
+    ctx = _get_context(request)
+    user = request.user
+    if ctx['administrativo']:
+        # ctx['list'] = Establecimiento.objects.all()
+        provincias = _get_provincias(user)
+        ctx['list'] = Establecimiento.objects.filter(provincia__in=provincias)
+    else:
+        ctx['list'] = Establecimiento.objects.filter(user=user)
+    return render(request, 'core/DatosMensuales/NacionalesM.html', ctx)
+@login_required(login_url='/login/')
+def PernoctacionesM(request):
+    ctx = _get_context(request)
+    user = request.user
+    if ctx['administrativo']:
+        # ctx['list'] = Establecimiento.objects.all()
+        provincias = _get_provincias(user)
+        ctx['list'] = Establecimiento.objects.filter(provincia__in=provincias)
+    else:
+        ctx['list'] = Establecimiento.objects.filter(user=user)
+    return render(request, 'core/DatosMensuales/PernoctacionesM.html', ctx)
+
+#redirect to DatosDiarios
+@login_required(login_url='/login/')
+def datosDiarios(request):
+    ctx = _get_context(request)
+    user = request.user
+    if ctx['administrativo']:
+        # ctx['list'] = Establecimiento.objects.all()
+        provincias = _get_provincias(user)
+        ctx['list'] = Establecimiento.objects.filter(provincia__in=provincias)
+    else:
+        ctx['list'] = Establecimiento.objects.filter(user=user)
+    return render(request, 'core/DatosDiarios/DatosDiarios.html', ctx)
+
+@login_required(login_url='/login/')
+def CheckinsD(request):
+    ctx = _get_context(request)
+    user = request.user
+    if ctx['administrativo']:
+        # ctx['list'] = Establecimiento.objects.all()
+        provincias = _get_provincias(user)
+        ctx['list'] = Establecimiento.objects.filter(provincia__in=provincias)
+    else:
+        ctx['list'] = Establecimiento.objects.filter(user=user)
+    return render(request, 'core/DatosDiarios/CheckinsD.html', ctx)
+@login_required(login_url='/login/')
+def CheckoutsD(request):
+    ctx = _get_context(request)
+    user = request.user
+    if ctx['administrativo']:
+        # ctx['list'] = Establecimiento.objects.all()
+        provincias = _get_provincias(user)
+        ctx['list'] = Establecimiento.objects.filter(provincia__in=provincias)
+    else:
+        ctx['list'] = Establecimiento.objects.filter(user=user)
+    return render(request, 'core/DatosDiarios/CheckoutD.html', ctx)
+@login_required(login_url='/login/')
+def ExtranjerosD(request):
+    ctx = _get_context(request)
+    user = request.user
+    if ctx['administrativo']:
+        # ctx['list'] = Establecimiento.objects.all()
+        provincias = _get_provincias(user)
+        ctx['list'] = Establecimiento.objects.filter(provincia__in=provincias)
+    else:
+        ctx['list'] = Establecimiento.objects.filter(user=user)
+    return render(request, 'core/DatosDiarios/ExtranjerosD.html', ctx)
+
+@login_required(login_url='/login/')
+def HabitacionesDisponiblesD(request):
+    ctx = _get_context(request)
+    user = request.user
+    if ctx['administrativo']:
+        # ctx['list'] = Establecimiento.objects.all()
+        provincias = _get_provincias(user)
+        ctx['list'] = Establecimiento.objects.filter(provincia__in=provincias)
+    else:
+        ctx['list'] = Establecimiento.objects.filter(user=user)
+    return render(request, 'core/DatosDiarios/HabitacionesDisponiblesD.html', ctx)
+@login_required(login_url='/login/')
+def HabitacionesOcupadasD(request):
+    ctx = _get_context(request)
+    user = request.user
+    if ctx['administrativo']:
+        # ctx['list'] = Establecimiento.objects.all()
+        provincias = _get_provincias(user)
+        ctx['list'] = Establecimiento.objects.filter(provincia__in=provincias)
+    else:
+        ctx['list'] = Establecimiento.objects.filter(user=user)
+    return render(request, 'core/DatosDiarios/HabitacionesOcupadasD.html', ctx)
+
+@login_required(login_url='/login/')
+def NacionalesD(request):
+    ctx = _get_context(request)
+    user = request.user
+    if ctx['administrativo']:
+        # ctx['list'] = Establecimiento.objects.all()
+        provincias = _get_provincias(user)
+        ctx['list'] = Establecimiento.objects.filter(provincia__in=provincias)
+    else:
+        ctx['list'] = Establecimiento.objects.filter(user=user)
+    return render(request, 'core/DatosDiarios/NacionalesD.html', ctx)
+@login_required(login_url='/login/')
+def PernoctacionesD(request):
+    ctx = _get_context(request)
+    user = request.user
+    if ctx['administrativo']:
+        # ctx['list'] = Establecimiento.objects.all()
+        provincias = _get_provincias(user)
+        ctx['list'] = Establecimiento.objects.filter(provincia__in=provincias)
+    else:
+        ctx['list'] = Establecimiento.objects.filter(user=user)
+    return render(request, 'core/DatosDiarios/PernoctacionesD.html', ctx)
 
 @login_required(login_url='/login/')
 def views_years(request):
@@ -116,7 +398,7 @@ def views_years(request):
     else:
         ctx['list'] = Establecimiento.objects.filter(user=user)
     print('Hola')
-    return render(request, 'core/DatosAnuales.html', ctx)
+    return render(request, 'core/DatosDiarios/DatosDiarios.html', ctx)
 
 @login_required(login_url='/login/')
 def establecimientos(request):

@@ -15,138 +15,217 @@
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     <link href="assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css"/>
     <script src="assets/plugins/global/plugins.bundle.js"></script>
-
+    {% block header %}
+    {% endblock header %}
 </head>
 <body class="sb-nav-fixed">
-
+<nav class="sb-topnav navbar navbar-expand navbar-dark bg-secondary">
+    <!-- Navbar Brand-->
+    <a class="navbar-brand ps-3 " href="{% url 'profile' %}">Inicio</a>
+    <!-- Sidebar Toggle-->
+    <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
+            class="fas fa-bars"></i></button>
+    <!-- Navbar Search-->
+    <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+        <div class="input-group">
+        </div>
+    </form>
+    <!-- Navbar-->
+    <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
+               aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="#!">Settings</a></li>
+                <li><a class="dropdown-item" href="#!">Activity Log</a></li>
+                <li>
+                    <hr class="dropdown-divider"/>
+                </li>
+                <li><a class="dropdown-item" href="#!" id="logout-link">Cerrar Sesión</a></li>
+            </ul>
+        </li>
+    </ul>
+</nav>
 <div id="layoutSidenav">
     <div id="layoutSidenav_nav">
-        <nav class="sb-sidenav accordion sb-sidenav-dark custom1-bg-color" id="sidenavAccordion">
+        <nav class="sb-sidenav accordion sb-sidenav-light" id="sidenavAccordion">
             <div class="sb-sidenav-menu">
                 <div class="nav">
+                    <div class="sb-sidenav-menu-heading">Core</div>
                     <a class="nav-link" href="{% url 'profile' %}">
                         <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                        Inicio
+                        Dashboard
                     </a>
-                    <div class="sb-sidenav-menu-heading ">Datos Generales</div>
+
+                    <div class="sb-sidenav-menu-heading">Datos</div>
                     <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts"
                        aria-expanded="false" aria-controls="collapseLayouts">
                         <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                        Datos
+                        Estadística
                         <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                     </a>
                     <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne"
                          data-bs-parent="#sidenavAccordion">
                         <nav class="sb-sidenav-menu-nested nav">
                             <a class="nav-link" href="{% url 'DatosAnuales' %}">Datos Anuales</a>
-                            <a class="nav-link" href="">Datos Mensuales</a>
-                            <a class="nav-link" href="layout-sidenav-light.html">Datos Diarios</a>
+                            <a class="nav-link" href="{% url 'DatosMensuales' %}">Datos Mensuales</a>
+                            <a class="nav-link" href="{% url 'DatosDiarios' %}">Datos Diarios</a>
                         </nav>
                     </div>
-                    <nav>
 
-                    </nav>
+                    <div class="collapse" id="collapsePages" aria-labelledby="headingTwo"
+                         data-bs-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
+                               data-bs-target="#pagesCollapseAuth" aria-expanded="false"
+                               aria-controls="pagesCollapseAuth">
+                                Authentication
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne"
+                                 data-bs-parent="#sidenavAccordionPages">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="login.html">Login</a>
+                                    <a class="nav-link" href="register.html">Register</a>
+                                    <a class="nav-link" href="password.html">Forgot Password</a>
+                                </nav>
+                            </div>
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
+                               data-bs-target="#pagesCollapseError" aria-expanded="false"
+                               aria-controls="pagesCollapseError">
+                                Error
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne"
+                                 data-bs-parent="#sidenavAccordionPages">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="401.html">401 Page</a>
+                                    <a class="nav-link" href="404.html">404 Page</a>
+                                    <a class="nav-link" href="500.html">500 Page</a>
+                                </nav>
+                            </div>
+                        </nav>
+                    </div>
+                    <div class="sb-sidenav-menu-heading"></div>
 
                 </div>
             </div>
-
-            <div class="sb-sidenav-footer custom1-bg-color  ">
-                <div class="small ">Logged in as:</div>
+            <div class="sb-sidenav-footer">
+                <div class="small">Inició sesión como:</div>
                 {{ user.first_name }}
             </div>
         </nav>
     </div>
-
     <div id="layoutSidenav_content">
         <main>
-            <div class="container-fluid px-4 ">
-                <h1 class="mt-4">Menu</h1>
+            <div class="container-fluid px-4">
+                <h1 class="mt-4">Dashboard</h1>
                 <ol class="breadcrumb mb-4">
-                    <li class="breadcrumb-item active">{{ user.email }}</li>
+                    <li class="breadcrumb-item active">Bienvenido a OBTUR. Descubre varias de nuestras opciones: </li>
                 </ol>
                 {% for item in list %}
                     <div class="row">
                         <div class="col-xl-3 col-md-6">
-                            <div class="card custom-bg-color mb-4">
-                                <div class="card-body">Ver Información</div>
-                                <div class="card-footer d-flex align-items-center justify-content-between">
+                            <div class="card bg-primary mb-4 " style="border-radius: 0;">
+                                <div class="card-body text-center">
+                                    <i class="fa-solid fa-circle-info" style="color: #ffffff; font-size: 40px;"></i>
+                                    <h5 class="card-title mt-3" style="color: white;">Ver Información</h5>
                                     <a class="small text-white stretched-link"
-                                       href="{% url "core:establecimiento" item.id %}   ">Clic aquí</a>
-                                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                       href="{% url 'core:establecimiento' item.id %}"></a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card bg-primary mb-4" style="border-radius: 0;">
+                                <div class="card-body text-center">
+                                    <i class="fa-solid fa-plus" style="color: #ffffff; font-size: 40px;"></i>
+                                    <h5 class="card-title mt-3"style="color: white;">Agregar Registro</h5>
+                                    <a class="small text-white stretched-link"
+                                       href="{% url "core:establecimiento_registro_nuevo" item.id %}"></a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card bg-primary mb-4" style="border-radius: 0;">
+                                <div class="card-body text-center">
+                                    <i class="fa-solid fa-eye" style="color: #ffffff; font-size: 40px;"></i>
+                                    <h5 class="card-title mt-3"style="color: white;">Ver Registros</h5>
+                                    <a class="small text-white stretched-link"
+                                       href="{% url "core:establecimiento_registros" item.id %}"></a>
                                 </div>
                             </div>
                         </div>
                         <div class="col-xl-3 col-md-6">
-                            <div class="card custom-bg-color text-white mb-4">
-                                <div class="card-body">Agregar Registro</div>
-                                <div class="card-footer d-flex align-items-center justify-content-between">
+                            <div class="card bg-primary mb-4" style="border-radius: 0;">
+                                <div class="card-body text-center">
+                                    <i class="fa-solid fa-pen-to-square" style="color: #ffffff; font-size: 40px;"></i>
+                                    <h5 class="card-title mt-3" style="color: white;">Editar Información</h5>
                                     <a class="small text-white stretched-link"
-                                       href="{% url "core:establecimiento_registro_nuevo" item.id %}">Clic aquí</a>
-                                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-md-6">
-                            <div class="card custom-bg-color text-white mb-4">
-                                <div class="card-body">Ver Registros</div>
-                                <div class="card-footer d-flex align-items-center justify-content-between">
-                                    <a class="small text-white stretched-link"
-                                       href="{% url "core:establecimiento_registros" item.id %}">Clic aquí</a>
-                                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-md-6">
-                            <div class="card custom-bg-color text-white mb-4">
-                                <div class="card-body">Editar Información</div>
-                                <div class="card-footer d-flex align-items-center justify-content-between">
-                                    <a class="small text-white stretched-link "
-                                       href="{% url "core:establecimiento_editar" item.id %}">Clic aquí</a>
-                                    <div class="small text-white"><i class="fas fa-angle-right "></i></div>
+                                       href="{% url "core:establecimiento_editar" item.id %}"></a>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                 {% endfor %}
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Dropdown button
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                    </div>
-                </div>
-
-
-           <div>{% include "Graficas/PernoctacionesDia.html" %}</div>
-
-
             </div>
         </main>
-        {% include "master.html" %}
 
     </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-        crossorigin="anonymous"></script>
-<script src="{% static 'assets/js/scripts.js' %}"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-<script src="{% static 'assets/assets/demo/chart-area-demo.js' %}"></script>
-<script src="{% static 'assets/assets/demo/chart-bar-demo.js' %}"></script>
-<script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"
-        crossorigin="anonymous"></script>
-<script src="{% static 'assets/js/datatables-simple-demo.js' %}"></script>
-<script src="{% static 'assets/js/linecharts.js' %}"></script>
+<br><br><br>
+</main>
+{% include "master.html" with exclude_header=True exclude_footer=True %}
 
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-        crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"
-        integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa"
-        crossorigin="anonymous"></script>
+</div>
+
+</div>
+
+
 </body>
+<footer>
+
+</footer>
+
 </html>
+{% block javascript %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+            crossorigin="anonymous"></script>
+    <script src="{% static 'assets/js/scripts.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+    <script src="{% static 'assets/assets/demo/chart-area-demo.js' %}"></script>
+    <script src="{% static 'assets/assets/demo/chart-bar-demo.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"
+            crossorigin="anonymous"></script>
+    <script src="{% static 'assets/js/datatables-simple-demo.js' %}"></script>
+    <script src="{% static 'assets/js/linecharts.js' %}"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+            integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"
+            integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa"
+            crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const logoutLink = document.getElementById('logout-link');
+
+            logoutLink.addEventListener('click', function (event) {
+                event.preventDefault();
+
+                fetch("{% url 'logout' %}", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    }
+                }).then(function () {
+                    window.location.href = "{% url 'index' %}";
+                }).catch(function (error) {
+                    console.error('Error al cerrar la sesión:', error);
+                });
+            });
+        });
+    </script>
+{% endblock %}

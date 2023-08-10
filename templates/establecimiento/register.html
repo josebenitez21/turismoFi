@@ -1,94 +1,415 @@
-{% extends "master.html" %}
-{% block container %}
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet"/>
+    <link href="{% static 'assets/css/styles.css' %}" rel="stylesheet"/>
+    <link rel="stylesheet" href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css'>
 
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <link href="assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css"/>
+    <script src="assets/plugins/global/plugins.bundle.js"></script>
+    {% block header %}
+    {% endblock header %}
+</head>
+<body class="sb-nav-fixed">
+<nav class="sb-topnav navbar navbar-expand navbar-dark bg-secondary">
+    <!-- Navbar Brand-->
+    <a class="navbar-brand ps-3 " href="{% url 'profile' %}">Inicio</a>
+    <!-- Sidebar Toggle-->
+    <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
+            class="fas fa-bars"></i></button>
+    <!-- Navbar Search-->
+    <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+        <div class="input-group">
 
-    <div class="page-header mt-4">
-        {% if not administrativo %}
+        </div>
+    </form>
+    <!-- Navbar-->
+    <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
+               aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="#!">Settings</a></li>
+                <li><a class="dropdown-item" href="#!">Activity Log</a></li>
+                <li>
+                    <hr class="dropdown-divider"/>
+                </li>
+                <li><a class="dropdown-item" href="#!" id="logout-link">Cerrar Sesión</a></li>
+            </ul>
+        </li>
+    </ul>
+</nav>
+<div id="layoutSidenav">
+    <div id="layoutSidenav_nav">
+        <nav class="sb-sidenav accordion sb-sidenav-light" id="sidenavAccordion">
+            <div class="sb-sidenav-menu">
+                <div class="nav">
+                    <div class="sb-sidenav-menu-heading">Core</div>
+                    <a class="nav-link" href="{% url 'profile' %}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        Dashboard
+                    </a>
+                    <div class="sb-sidenav-menu-heading">Datos</div>
+                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts"
+                       aria-expanded="false" aria-controls="collapseLayouts">
+                        <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                        Estadística
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+                    <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne"
+                         data-bs-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav">
+                            <a class="nav-link" href="{% url 'DatosAnuales' %}">Datos Anuales</a>
+                            <a class="nav-link" href="{% url 'DatosMensuales' %}">Datos Mensuales</a>
+                            <a class="nav-link" href="{% url 'DatosDiarios' %}">Datos Diarios</a>
+                        </nav>
+                    </div>
 
-            <a href="{% url "core:establecimiento" item.id %}"> - Regresar </a>
-            <br>
+                    <div class="collapse" id="collapsePages" aria-labelledby="headingTwo"
+                         data-bs-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
+                               data-bs-target="#pagesCollapseAuth" aria-expanded="false"
+                               aria-controls="pagesCollapseAuth">
+                                Authentication
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne"
+                                 data-bs-parent="#sidenavAccordionPages">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="login.html">Login</a>
+                                    <a class="nav-link" href="register.html">Register</a>
+                                    <a class="nav-link" href="password.html">Forgot Password</a>
+                                </nav>
+                            </div>
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
+                               data-bs-target="#pagesCollapseError" aria-expanded="false"
+                               aria-controls="pagesCollapseError">
+                                Error
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne"
+                                 data-bs-parent="#sidenavAccordionPages">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="401.html">401 Page</a>
+                                    <a class="nav-link" href="404.html">404 Page</a>
+                                    <a class="nav-link" href="500.html">500 Page</a>
+                                </nav>
+                            </div>
+                        </nav>
+                    </div>
+                    <div class="sb-sidenav-menu-heading"></div>
 
-            <br><br><br>
-            <div class="row row-cols-1 row-cols-md-2 g-2">
-<div class="col">
-    <div class="card custom-bg-color">
-        <div class="row g-0 align-items-center">
-            <div class="col-md-4 d-flex justify-content-center align-items-center">
-                <i class="fa fa-home" style="color: #ffffff; font-size: 60px;"></i>
-            </div>
-            <div class="col-md-8">
-                <div class="card-body">
-                    <h5 class="card-title">Habitaciones</h5>
-                    <p class="card-text">{{ item.habitaciones }}</p>
                 </div>
             </div>
-        </div>
+            <div class="sb-sidenav-footer">
+                <div class="small">Inició sesión como:</div>
+                {{ user.first_name }}
+            </div>
+        </nav>
     </div>
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4">
+                {% block container %}
+
+
+                    <div class="page-header mt-4">
+                        {% if not administrativo %}
+                            <div class="row row-cols-1 row-cols-md-2 g-2">
+                                <div class="col">
+                                    <div class="card bg-secondary" style="border-radius: 0;">
+                                        <div class="row g-0 align-items-center">
+                                            <div class="col-md-4 d-flex justify-content-center align-items-center">
+                                                <i class="fa fa-home" style="color: #ffffff; font-size: 60px;"></i>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">Habitaciones</h5>
+                                                    <p class="card-text" style="color: white">{{ item.habitaciones }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="col">
+                                    <div class="card bg-secondary " style="border-radius: 0;">
+                                        <div class="row g-0 align-items-center">
+                                            <div class="col-md-4 d-flex justify-content-center align-items-center">
+                                                <i class="fa fa-users" style="color: #ffffff; font-size: 60px;"></i>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">Empleados</h5>
+                                                    <p class="card-text" style="color: white">{{ item.empleados }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+
+                        {% endif %}
+
+                        <div class="card bg-secondary" style="border-radius: 0;">
+                            <div class="card-body " style="color: white">
+                                <h1 style="color: black">Agregar Registro</h1>
+                                <h5>{{ item.nombre }}</h5>
+
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        {# Include the hidden fields #}
+                        {% for hidden in form.hidden_fields %}
+                            {{ hidden }}
+                        {% endfor %}
+
+                        {# Include the visible fields with Bootstrap styles #}
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label for="{{ form.fecha.id_for_label }}"
+                                       class="form-label">{{ form.fecha.label }}</label>
+                                <input type="date" class="form-control" id="{{ form.fecha.id_for_label }}"
+                                       name="{{ form.fecha.html_name }}" value="{{ form.fecha.value|default:'' }}">
+                                {% if form.fecha.help_text %}
+                                    <small class="form-text text-muted">{{ form.fecha.help_text }}</small>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label for="{{ form.checkins.id_for_label }}" class="form-label">
+                                    {{ form.checkins.label }} <span class="help-icon" data-toggle="tooltip"
+                                                                    data-placement="top"
+                                                                    title="{{ form.checkins.help_text }}"><i
+                                        class="fa-solid fa-circle-question" style="color: #bfbfc0;"></i></span>
+                                </label>
+                                <input type="number" class="form-control" id="{{ form.checkins.id_for_label }}"
+                                       name="{{ form.checkins.html_name }}"
+                                       value="{{ form.checkins.value|default:'' }}">
+
+                            </div>
+                            <div class="col-md-4">
+                                <label for="{{ form.checkouts.id_for_label }}" class="form-label">
+                                    {{ form.checkouts.label }} <span class="help-icon" data-toggle="tooltip"
+                                                                     data-placement="top"
+                                                                     title="{{ form.checkouts.help_text }}"><i
+                                        class="fa-solid fa-circle-question" style="color: #bfbfc0;"></i></span>
+                                </label>
+                                <input type="number" class="form-control" id="{{ form.checkouts.id_for_label }}"
+                                       name="{{ form.checkouts.html_name }}"
+                                       value="{{ form.checkouts.value|default:'' }}">
+
+                            </div>
+                            <div class="col-md-4">
+                                <label for="{{ form.pernoctaciones.id_for_label }}" class="form-label">
+                                    {{ form.pernoctaciones.label }} <span class="help-icon" data-toggle="tooltip"
+                                                                          data-placement="top"
+                                                                          title="{{ form.pernoctaciones.help_text }}"><i
+                                        class="fa-solid fa-circle-question" style="color: #bfbfc0;"></i></span>
+                                </label>
+                                <input type="number" class="form-control" id="{{ form.pernoctaciones.id_for_label }}"
+                                       name="{{ form.pernoctaciones.html_name }}"
+                                       value="{{ form.pernoctaciones.value|default:'' }}">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="{{ form.nacionales.id_for_label }}" class="form-label">
+                                    {{ form.nacionales.label }} <span class="help-icon" data-toggle="tooltip"
+                                                                      data-placement="top"
+                                                                      title="{{ form.nacionales.help_text }}"><i
+                                        class="fa-solid fa-circle-question" style="color: #bfbfc0;"></i></span>
+                                </label>
+                                <input type="number" class="form-control" id="{{ form.nacionales.id_for_label }}"
+                                       name="{{ form.nacionales.html_name }}"
+                                       value="{{ form.nacionales.value|default:'' }}">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="{{ form.extranjeros.id_for_label }}" class="form-label">
+                                    {{ form.extranjeros.label }} <span class="help-icon" data-toggle="tooltip"
+                                                                       data-placement="top"
+                                                                       title="{{ form.extranjeros.help_text }}"><i
+                                        class="fa-solid fa-circle-question" style="color: #bfbfc0;"></i></span>
+                                </label>
+                                <input type="number" class="form-control" id="{{ form.extranjeros.id_for_label }}"
+                                       name="{{ form.extranjeros.html_name }}"
+                                       value="{{ form.extranjeros.value|default:'' }}">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="{{ form.habitaciones_ocupadas.id_for_label }}" class="form-label">
+                                    {{ form.habitaciones_ocupadas.label }} <span class="help-icon" data-toggle="tooltip"
+                                                                                 data-placement="top"
+                                                                                 title="{{ form.habitaciones_ocupadas.help_text }}"><i
+                                        class="fa-solid fa-circle-question" style="color: #bfbfc0;"></i></span>
+                                </label>
+                                <input type="number" class="form-control"
+                                       id="{{ form.habitaciones_ocupadas.id_for_label }}"
+                                       name="{{ form.habitaciones_ocupadas.html_name }}"
+                                       value="{{ form.habitaciones_ocupadas.value|default:'' }}">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="{{ form.habitaciones_disponibles.id_for_label }}" class="form-label">
+                                    {{ form.habitaciones_disponibles.label }} <span class="help-icon"
+                                                                                    data-toggle="tooltip"
+                                                                                    data-placement="top"
+                                                                                    title="{{ form.habitaciones_disponibles.help_text }}"><i
+                                        class="fa-solid fa-circle-question" style="color: #bfbfc0;"></i></span>
+                                </label>
+                                <input type="number" class="form-control"
+                                       id="{{ form.habitaciones_disponibles.id_for_label }}"
+                                       name="{{ form.habitaciones_disponibles.html_name }}"
+                                       value="{{ form.habitaciones_disponibles.value|default:'' }}">
+
+                            </div>
+                            <div class="col-md-4">
+                                <label for="{{ form.tipo_tarifa.id_for_label }}"
+                                       class="form-label">{{ form.tipo_tarifa.label }}</label>
+                                <select class="form-select" id="{{ form.tipo_tarifa.id_for_label }}"
+                                        name="{{ form.tipo_tarifa.html_name }}">
+                                    <option value="" {% if form.tipo_tarifa.value is None %}selected{% endif %}>
+                                        ---------
+                                    </option>
+                                    {% for choice in form.tipo_tarifa.field.choices %}
+                                        <option value="{{ choice.0 }}"
+                                                {% if choice.0 == form.tipo_tarifa.value %}selected{% endif %}>{{ choice.1 }}</option>
+                                    {% endfor %}
+                                </select>
+                                {% if form.tipo_tarifa.help_text %}
+                                    <small class="form-text text-muted">{{ form.tipo_tarifa.help_text }}</small>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4">
+                                <label for="{{ form.tarifa_promedio.id_for_label }}" class="form-label">
+                                    {{ form.tarifa_promedio.label }} <span class="help-icon" data-toggle="tooltip"
+                                                                           data-placement="top"
+                                                                           title="{{ form.tarifa_promedio.help_text }}"><i
+                                        class="fa-solid fa-circle-question" style="color: #bfbfc0;"></i></span>
+                                </label>
+                                <input type="number" step="0.01" class="form-control"
+                                       id="{{ form.tarifa_promedio.id_for_label }}"
+                                       name="{{ form.tarifa_promedio.html_name }}"
+                                       value="{{ form.tarifa_promedio.value|default:'' }}">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="{{ form.ventas_netas.id_for_label }}" class="form-label">
+                                    {{ form.ventas_netas.label }} <span class="help-icon" data-toggle="tooltip"
+                                                                        data-placement="top"
+                                                                        title="{{ form.ventas_netas.help_text }}"><i
+                                        class="fa-solid fa-circle-question" style="color: #bfbfc0;"></i></span>
+                                </label>
+                                <input type="number" step="0.01" class="form-control"
+                                       id="{{ form.ventas_netas.id_for_label }}"
+                                       name="{{ form.ventas_netas.html_name }}"
+                                       value="{{ form.ventas_netas.value|default:'' }}">
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="{{ form.empleados_temporales.id_for_label }}" class="form-label">
+                                    {{ form.empleados_temporales.label }} <span class="help-icon" data-toggle="tooltip"
+                                                                                data-placement="top"
+                                                                                title="{{ form.empleados_temporales.help_text }}"><i
+                                        class="fa-solid fa-circle-question" style="color: #bfbfc0;"></i></span>
+                                </label>
+                                <input type="number" class="form-control"
+                                       id="{{ form.empleados_temporales.id_for_label }}"
+                                       name="{{ form.empleados_temporales.html_name }}"
+                                       value="{{ form.empleados_temporales.value|default:'' }}">
+                            </div>
+                            {# Add more fields following the same pattern for other fields #}
+                        </div>
+                        <br>
+                        <div class="text-center">
+                            <button class="btn btn-success" type="submit">Registrar</button>
+                            <a class="btn btn-danger" href="{% url 'core:establecimiento_registros' item.id %}"
+                               role="button">Cancelar</a>
+                        </div>
+                    </form>
+
+
+                    <hr>
+
+                {% endblock container %}
+            </div>
+        </main>
+
+    </div>
+</div>
+<br><br><br>
+</main>
+{% include "master.html" with exclude_header=True exclude_footer=True %}
+
+</div>
 
 </div>
 
 
-                <div class="col">
-                    <div class="card custom-bg-color">
-        <div class="row g-0 align-items-center">
-            <div class="col-md-4 d-flex justify-content-center align-items-center">
-                                <i class="fa fa-users" style="color: #ffffff; font-size: 60px;"></i>
-                            </div>
-                            <div class="col-md-8">
-                                <div class="card-body">
-                                    <h5 class="card-title">Empleados</h5>
-                                    <p class="card-text">{{ item.empleados }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <br>
+</body>
+<footer>
 
-        {% endif %}
+</footer>
 
-        <div class="card" style="background-color: #f9a825;">
-            <div class="card-body">
-                <h1>Registro</h1>
-                <h5>{{ item.nombre }}</h5>
-
-            </div>
-        </div>
-    </div>
-    <br>
-
-    <form action="" method="post" class="form-horizontal">
-        {% csrf_token %}
-        {# Include the hidden fields #}
-        {% for hidden in form.hidden_fields %}
-            {{ hidden }}
-        {% endfor %}
-        {# Include the visible fields #}
-        <div class="row">
-            {% for field in form.visible_fields %}
-                <div class="col-md-3">
-                    {{ field.label_tag }} {{ field }}
-                    {% if field.help_text %}
-                        <small class="text-muted">{{ field.help_text }}</small>
-                    {% endif %}
-                    <small class="text-danger">{{ field.errors }}</small>
-                </div>
-            {% endfor %}
-        </div>
-        <br>
-        <div class="text-center">
-            <button class="btn custom-bg-color" type="submit">Registrar</button>
-            <a class="btn custom1-bg-color" href="{% url "core:establecimiento_registros" item.id %}" role="button">Cancelar</a>
-        </div>
-    </form>
-    <hr>
-
-{% endblock container %}
+</html>
 {% block javascript %}
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+            crossorigin="anonymous"></script>
+    <script src="{% static 'assets/js/scripts.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+    <script src="{% static 'assets/assets/demo/chart-area-demo.js' %}"></script>
+    <script src="{% static 'assets/assets/demo/chart-bar-demo.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"
+            crossorigin="anonymous"></script>
+    <script src="{% static 'assets/js/datatables-simple-demo.js' %}"></script>
+    <script src="{% static 'assets/js/linecharts.js' %}"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+            integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"
+            integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa"
+            crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const logoutLink = document.getElementById('logout-link');
+
+            logoutLink.addEventListener('click', function (event) {
+                event.preventDefault();
+
+                fetch("{% url 'logout' %}", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    }
+                }).then(function () {
+                    window.location.href = "{% url 'index' %}";
+                }).catch(function (error) {
+                    console.error('Error al cerrar la sesión:', error);
+                });
+            });
+        });
+    </script>
     <script>
 
         $('input').attr('required', false);
         $('input[type="number"]').attr('min', 0);
     </script>
-{% endblock javascript %}
+{% endblock %}
