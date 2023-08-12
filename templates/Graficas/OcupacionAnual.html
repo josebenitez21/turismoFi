@@ -1,7 +1,7 @@
 {% block title %}
 {% endblock %}
 
-{% block content %}
+{% block container %}
     <style type="text/css">
         .highcharts-figure,
         .highcharts-data-table table {
@@ -55,9 +55,10 @@
         }
     </style>
 
+
     <div class="row">
         <div class="col-md-12">
-            <h1>Tarifa Promedio</h1>
+            <h1>Porcentaje de Ocupación Anual</h1>
             <form class="filter-form">
                 <label for="year">Selecciona un año:</label>
                 <select id="year" name="year">
@@ -73,17 +74,19 @@
             <div id="container"></div>
         </div>
     </div>
+{% endblock %}
 
+{% block javascriptx %}
     <script>
         // Función para obtener los datos y cargar la gráfica
         function loadChart(data) {
-            data.tarifa_promedio = data.tarifa_promedio.map(Number);
+            data.porcentaje_ocupacion = data.porcentaje_ocupacion.map(val => parseFloat(val));  // Convertir a números decimales
             Highcharts.chart('container', {
                 chart: {
                     type: 'line'
                 },
                 title: {
-                    text: 'Tarifa Promedio por Año'  // Cambiar el título de la gráfica
+                    text: 'Porcentaje de Ocupación Anual'
                 },
                 xAxis: {
                     categories: data.anios,
@@ -93,12 +96,12 @@
                 },
                 yAxis: {
                     title: {
-                        text: 'Tarifa Promedio'  // Cambiar el título del eje Y
+                        text: 'Porcentaje de Ocupación'
                     }
                 },
                 series: [{
-                    name: 'Tarifa Promedio',  // Cambiar el nombre de la serie
-                    data: data.tarifa_promedio  // Cambiar 'nacionales' por 'tarifa_promedio' en los datos
+                    name: 'Porcentaje de Ocupación',
+                    data: data.porcentaje_ocupacion
                 }],
                 responsive: {
                     rules: [{
@@ -120,7 +123,7 @@
         // Función para obtener los datos filtrados por año
         function filterByYear() {
             var selectedYear = document.getElementById('year').value;
-            var url = "{% url 'datosTarifaA' %}";
+            var url = "{% url 'OcupacionAnual' %}";
 
             if (selectedYear) {
                 url += "?year=" + selectedYear;
@@ -140,6 +143,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Cargar la gráfica inicial sin filtrar
             filterByYear();
+            document.getElementById('year').addEventListener('change', filterByYear);  // Agregar el evento change
         });
     </script>
 {% endblock %}

@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'core',
     'rest',
     'EjemploHighcharts',
-    'captcha'
+    'captcha' #agregar la captcha al apartado de apps de Django para poder hacer uso del mismo.
 ]
 
 MIDDLEWARE = [

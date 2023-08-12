@@ -57,7 +57,7 @@
 
     <div class="row">
         <div class="col-md-12">
-            <h1>Tarifa Promedio</h1>
+            <h1>Ventas Netas Anuales</h1>
             <form class="filter-form">
                 <label for="year">Selecciona un año:</label>
                 <select id="year" name="year">
@@ -77,13 +77,13 @@
     <script>
         // Función para obtener los datos y cargar la gráfica
         function loadChart(data) {
-            data.tarifa_promedio = data.tarifa_promedio.map(Number);
+            data.ventas_netas = data.ventas_netas.map(Number);
             Highcharts.chart('container', {
                 chart: {
                     type: 'line'
                 },
                 title: {
-                    text: 'Tarifa Promedio por Año'  // Cambiar el título de la gráfica
+                    text: 'Ventas Netas por Año'  // Cambiar el título de la gráfica
                 },
                 xAxis: {
                     categories: data.anios,
@@ -93,12 +93,12 @@
                 },
                 yAxis: {
                     title: {
-                        text: 'Tarifa Promedio'  // Cambiar el título del eje Y
+                        text: 'Ventas Netas'  // Cambiar el título del eje Y
                     }
                 },
                 series: [{
-                    name: 'Tarifa Promedio',  // Cambiar el nombre de la serie
-                    data: data.tarifa_promedio  // Cambiar 'nacionales' por 'tarifa_promedio' en los datos
+                    name: 'Ventas Netas',  // Cambiar el nombre de la serie
+                    data: data.ventas_netas  // Cambiar 'tarifa_promedio' por 'ventas_netas' en los datos
                 }],
                 responsive: {
                     rules: [{
@@ -120,7 +120,7 @@
         // Función para obtener los datos filtrados por año
         function filterByYear() {
             var selectedYear = document.getElementById('year').value;
-            var url = "{% url 'datosTarifaA' %}";
+            var url = "{% url 'VentasAnual' %}";
 
             if (selectedYear) {
                 url += "?year=" + selectedYear;

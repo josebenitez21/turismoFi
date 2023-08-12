@@ -37,7 +37,7 @@ def obtener_datos(request):
     return JsonResponse(data)
 
 
-
+# Inicio modelo 1
 
 def obtener_datosCheckinsAnuales(request):
     user = request.user  # Obtener el usuario loggeado
@@ -65,9 +65,6 @@ def obtener_datosCheckinsAnuales(request):
         data['checkins'].append(checkins_anio)  # Cambiar 'nacionales' por 'checkins' en la lista de datos
 
     return JsonResponse(data)
-
-
-
 
 
 def barras_check_view(request):
@@ -263,17 +260,23 @@ def obtener_datosTarifaPromedioAnual(request):
     return JsonResponse(data)
 
 
-# revisar
-def obtener_datosVentasNetasAnual(request):
+def obtener_datosVentasNetasAnuales(request):
+    user = request.user  # Obtener el usuario loggeado
+
     anios = list(range(2019, 2024))
     data = {
         'anios': anios,
         'ventas_netas': [],
     }
 
-    registros = EstablecimientoRegistro.objects.filter(fecha__year__in=anios) \
-        .values('fecha__year') \
-        .annotate(total_ventas_netas=Sum('ventas_netas'))
+    year_param = request.GET.get('year')  # Obtener el año seleccionado desde el frontend
+
+    registros = EstablecimientoRegistro.objects.filter(establecimiento__user=user, fecha__year__in=anios)
+
+    if year_param:
+        registros = registros.filter(fecha__year=year_param)
+
+    registros = registros.values('fecha__year').annotate(total_ventas_netas=Sum('ventas_netas'))
 
     for anio in anios:
         ventas_netas_anio = next(
@@ -284,6 +287,65 @@ def obtener_datosVentasNetasAnual(request):
     return JsonResponse(data)
 
 
+def obtener_datosRevPARAnuales(request):
+    user = request.user  # Obtener el usuario loggeado
+
+    anios = list(range(2019, 2024))
+    data = {
+        'anios': anios,
+        'revpar': [],
+    }
+
+    year_param = request.GET.get('year')  # Obtener el año seleccionado desde el frontend
+
+    registros = EstablecimientoRegistro.objects.filter(establecimiento__user=user, fecha__year__in=anios)
+
+    if year_param:
+        registros = registros.filter(fecha__year=year_param)
+
+    registros = registros.values('fecha__year').annotate(total_revpar=Sum('revpar'))
+
+    for anio in anios:
+        revpar_anio = next(
+            (registro['total_revpar'] for registro in registros if registro['fecha__year'] == anio), 0)
+
+        data['revpar'].append(revpar_anio)
+
+    return JsonResponse(data)
+
+
+def obtener_datosPorcentajeOcupacionAnual(request):
+    user = request.user  # Obtener el usuario loggeado
+
+    anios = list(range(2019, 2024))
+    data = {
+        'anios': anios,
+        'porcentaje_ocupacion': [],
+    }
+
+    year_param = request.GET.get('year')  # Obtener el año seleccionado desde el frontend
+
+    registros = EstablecimientoRegistro.objects.filter(establecimiento__user=user, fecha__year__in=anios)
+
+    if year_param:
+        registros = registros.filter(fecha__year=year_param)
+
+    registros = registros.values('fecha__year').annotate(total_porcentaje_ocupacion=Sum('porcentaje_ocupacion'))
+
+    for anio in anios:
+        porcentaje_ocupacion_anio = next(
+            (registro['total_porcentaje_ocupacion'] for registro in registros if registro['fecha__year'] == anio), 0)
+
+        data['porcentaje_ocupacion'].append(porcentaje_ocupacion_anio)
+
+    return JsonResponse(data)
+
+
+# Fin modelo 1
+
+# revisar
+
+# Inicio modelo 2
 def obtener_datosCheckinsMensuales(request):
     user = request.user  # Obtener el usuario loggeado
 
@@ -507,6 +569,106 @@ def obtener_datosHabitacionesDisponiblesMensuales(request):
 
     return JsonResponse(data)
 
+
+def obtener_datosTarifaPromedioMensual(request):
+    user = request.user  # Obtener el usuario loggeado
+
+    year_param = request.GET.get('year')  # Obtener el año seleccionado desde el frontend
+
+    datos = EstablecimientoRegistro.objects.filter(establecimiento__user=user)
+
+    if year_param:
+        datos = datos.filter(fecha__year=year_param)
+
+    datos = datos.values('fecha__month').annotate(total_tarifa_promedio=Sum('tarifa_promedio'))
+
+    meses = [
+        'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+        'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    ]
+
+    data = {
+        'meses': [],
+        'tarifa_promedio': [],
+    }
+
+    for mes_num in range(1, 13):
+        mes = meses[mes_num - 1]
+        data['meses'].append(mes)
+        tarifa_promedio_mes = next(
+            (item['total_tarifa_promedio'] for item in datos if item['fecha__month'] == mes_num), 0)
+        data['tarifa_promedio'].append(tarifa_promedio_mes)
+
+    return JsonResponse(data)
+
+
+def obtener_datosVentasNetasMensuales(request):
+    user = request.user  # Obtener el usuario loggeado
+
+    year_param = request.GET.get('year')  # Obtener el año seleccionado desde el frontend
+
+    datos = EstablecimientoRegistro.objects.filter(establecimiento__user=user)
+
+    if year_param:
+        datos = datos.filter(fecha__year=year_param)
+
+    datos = datos.values('fecha__month').annotate(total_ventas_netas=Sum('ventas_netas'))
+
+    meses = [
+        'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+        'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    ]
+
+    data = {
+        'meses': [],
+        'ventas_netas': [],
+    }
+
+    for mes_num in range(1, 13):
+        mes = meses[mes_num - 1]
+        data['meses'].append(mes)
+        ventas_netas_mes = next(
+            (item['total_ventas_netas'] for item in datos if item['fecha__month'] == mes_num), 0)
+        data['ventas_netas'].append(ventas_netas_mes)
+
+    return JsonResponse(data)
+
+
+def obtener_datosRevPARMensuales(request):
+    user = request.user  # Obtener el usuario loggeado
+
+    year_param = request.GET.get('year')  # Obtener el año seleccionado desde el frontend
+
+    datos = EstablecimientoRegistro.objects.filter(establecimiento__user=user)
+
+    if year_param:
+        datos = datos.filter(fecha__year=year_param)
+
+    datos = datos.values('fecha__month').annotate(total_revpar=Sum('revpar'))
+
+    meses = [
+        'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+        'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    ]
+
+    data = {
+        'meses': [],
+        'revpar': [],
+    }
+
+    for mes_num in range(1, 13):
+        mes = meses[mes_num - 1]
+        data['meses'].append(mes)
+        revpar_mes = next(
+            (item['total_revpar'] for item in datos if item['fecha__month'] == mes_num), 0)
+        data['revpar'].append(revpar_mes)
+
+    return JsonResponse(data)
+
+
+# Fin modelo 2
+
+# Inicio modelo 3
 
 def obtener_datosHabitacionesDisponiblesDiarias(request):
     user = request.user  # Obtener el usuario loggeado
@@ -793,19 +955,20 @@ def obtener_datosHabitacionesOcupadas(request):
             habitaciones_ocupadas_dia = registros.filter(fecha__month=i + 1, fecha__day=dia).aggregate(
                 total_habitaciones_ocupadas=Sum('habitaciones_ocupadas'))
             total_habitaciones_ocupadas = habitaciones_ocupadas_dia['total_habitaciones_ocupadas'] if \
-            habitaciones_ocupadas_dia['total_habitaciones_ocupadas'] else 0
+                habitaciones_ocupadas_dia['total_habitaciones_ocupadas'] else 0
             data['habitaciones_ocupadas'][i].append(total_habitaciones_ocupadas)
 
     return JsonResponse(data)
 
 
-def obtener_datosTarifaPromedioDias(request):
-    user = request.user
+def obtener_datosTarifaPromedioDiaria(request):
+    user = request.user  # Obtener el usuario loggeado
 
     anios = [2019, 2020, 2021, 2022, 2023]
-    year_param = int(request.GET.get('year', 0))
+    year_param = int(request.GET.get('year', 0))  # Obtener el año seleccionado desde el frontend
     selected_year = year_param if year_param in anios else anios[-1]
 
+    # Obtener el número de días de febrero según el año (considerando si es bisiesto o no)
     feb_days = 29 if (selected_year % 4 == 0 and selected_year % 100 != 0) or selected_year % 400 == 0 else 28
 
     meses = [
@@ -834,13 +997,142 @@ def obtener_datosTarifaPromedioDias(request):
 
     for i, mes in enumerate(meses):
         for dia in range(1, mes['dias'] + 1):
-            tarifa_promedio_dia = registros.filter(fecha__month=i + 1, fecha__day=dia).aggregate(
-                avg_tarifa=Sum('tarifa_promedio'))
-            tarifa_promedio = tarifa_promedio_dia['avg_tarifa'] if tarifa_promedio_dia['avg_tarifa'] else 0
-            data['tarifa_promedio'][i].append(round(tarifa_promedio, 2))  # Redondear a 2 decimales
+            tarifa_dia = registros.filter(fecha__month=i + 1, fecha__day=dia).aggregate(
+                avg_tarifa_promedio=Avg('tarifa_promedio'))
+            avg_tarifa_promedio = tarifa_dia['avg_tarifa_promedio'] if tarifa_dia['avg_tarifa_promedio'] else 0
+            data['tarifa_promedio'][i].append(avg_tarifa_promedio)
 
     return JsonResponse(data)
 
+
+def obtener_datosTarifaPromedioDiaria(request):
+    user = request.user  # Obtener el usuario loggeado
+
+    anios = [2019, 2020, 2021, 2022, 2023]
+    year_param = int(request.GET.get('year', 0))  # Obtener el año seleccionado desde el frontend
+    selected_year = year_param if year_param in anios else anios[-1]
+
+    # Obtener el número de días de febrero según el año (considerando si es bisiesto o no)
+    feb_days = 29 if (selected_year % 4 == 0 and selected_year % 100 != 0) or selected_year % 400 == 0 else 28
+
+    meses = [
+        {'nombre': 'Enero', 'dias': 31},
+        {'nombre': 'Febrero', 'dias': feb_days},
+        {'nombre': 'Marzo', 'dias': 31},
+        {'nombre': 'Abril', 'dias': 30},
+        {'nombre': 'Mayo', 'dias': 31},
+        {'nombre': 'Junio', 'dias': 30},
+        {'nombre': 'Julio', 'dias': 31},
+        {'nombre': 'Agosto', 'dias': 31},
+        {'nombre': 'Septiembre', 'dias': 30},
+        {'nombre': 'Octubre', 'dias': 31},
+        {'nombre': 'Noviembre', 'dias': 30},
+        {'nombre': 'Diciembre', 'dias': 31},
+    ]
+
+    data = {
+        'anios': anios,
+        'selected_year': selected_year,
+        'meses': meses,
+        'tarifa_promedio': [[] for _ in range(12)],  # Inicializar una lista vacía para cada mes
+    }
+
+    registros = EstablecimientoRegistro.objects.filter(establecimiento__user=user, fecha__year=selected_year)
+
+    for i, mes in enumerate(meses):
+        for dia in range(1, mes['dias'] + 1):
+            tarifa_dia = registros.filter(fecha__month=i + 1, fecha__day=dia).aggregate(
+                avg_tarifa_promedio=Avg('tarifa_promedio'))
+            avg_tarifa_promedio = tarifa_dia['avg_tarifa_promedio'] if tarifa_dia['avg_tarifa_promedio'] else 0
+            data['tarifa_promedio'][i].append(avg_tarifa_promedio)
+
+    return JsonResponse(data)
+
+
+def obtener_datosVentasNetasDiarias(request):
+    user = request.user  # Obtener el usuario loggeado
+
+    anios = [2019, 2020, 2021, 2022, 2023]
+    year_param = int(request.GET.get('year', 0))  # Obtener el año seleccionado desde el frontend
+    selected_year = year_param if year_param in anios else anios[-1]
+
+    meses = [
+        {'nombre': 'Enero', 'dias': 31},
+        {'nombre': 'Febrero', 'dias': 28},  # Considerando que febrero tiene 28 días por defecto
+        {'nombre': 'Marzo', 'dias': 31},
+        {'nombre': 'Abril', 'dias': 30},
+        {'nombre': 'Mayo', 'dias': 31},
+        {'nombre': 'Junio', 'dias': 30},
+        {'nombre': 'Julio', 'dias': 31},
+        {'nombre': 'Agosto', 'dias': 31},
+        {'nombre': 'Septiembre', 'dias': 30},
+        {'nombre': 'Octubre', 'dias': 31},
+        {'nombre': 'Noviembre', 'dias': 30},
+        {'nombre': 'Diciembre', 'dias': 31},
+    ]
+
+    data = {
+        'anios': anios,
+        'selected_year': selected_year,
+        'meses': meses,
+        'ventas_netas': [[] for _ in range(12)],  # Inicializar una lista vacía para cada mes
+    }
+
+    registros = EstablecimientoRegistro.objects.filter(establecimiento__user=user, fecha__year=selected_year)
+
+    for i, mes in enumerate(meses):
+        for dia in range(1, mes['dias'] + 1):
+            ventas_dia = registros.filter(fecha__month=i + 1, fecha__day=dia).aggregate(
+                total_ventas_netas=Sum('ventas_netas'))
+            total_ventas_netas = ventas_dia['total_ventas_netas'] if ventas_dia['total_ventas_netas'] else 0
+            data['ventas_netas'][i].append(total_ventas_netas)
+
+    return JsonResponse(data)
+
+
+def obtener_datosRevPARDiario(request):
+    user = request.user  # Obtener el usuario loggeado
+
+    anios = [2019, 2020, 2021, 2022, 2023]
+    year_param = int(request.GET.get('year', 0))  # Obtener el año seleccionado desde el frontend
+    selected_year = year_param if year_param in anios else anios[-1]
+
+    meses = [
+        {'nombre': 'Enero', 'dias': 31},
+        {'nombre': 'Febrero',
+         'dias': 29 if (selected_year % 4 == 0 and selected_year % 100 != 0) or selected_year % 400 == 0 else 28},
+        {'nombre': 'Marzo', 'dias': 31},
+        {'nombre': 'Abril', 'dias': 30},
+        {'nombre': 'Mayo', 'dias': 31},
+        {'nombre': 'Junio', 'dias': 30},
+        {'nombre': 'Julio', 'dias': 31},
+        {'nombre': 'Agosto', 'dias': 31},
+        {'nombre': 'Septiembre', 'dias': 30},
+        {'nombre': 'Octubre', 'dias': 31},
+        {'nombre': 'Noviembre', 'dias': 30},
+        {'nombre': 'Diciembre', 'dias': 31},
+    ]
+
+    data = {
+        'anios': anios,
+        'selected_year': selected_year,
+        'meses': meses,
+        'revpar': [[] for _ in range(12)],  # Inicializar una lista vacía para cada mes
+    }
+
+    registros = EstablecimientoRegistro.objects.filter(establecimiento__user=user, fecha__year=selected_year)
+
+    for i, mes in enumerate(meses):
+        for dia in range(1, mes['dias'] + 1):
+            revpar_dia = registros.filter(fecha__month=i + 1, fecha__day=dia).aggregate(
+                avg_revpar=Avg('revpar'))
+            avg_revpar = revpar_dia['avg_revpar'] if revpar_dia['avg_revpar'] else 0
+            data['revpar'][i].append(avg_revpar)
+
+    return JsonResponse(data)
+
+
+# Fin modelo 3
 
 def graficaNacionalAnual(request):
     return render(request, 'Graficas/NacionalesAnual.html')

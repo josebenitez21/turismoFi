@@ -1,7 +1,10 @@
 {% block title %}
+    <!-- Título de tu página -->
 {% endblock %}
 
-{% block content %}
+<br>
+
+{% block container %}
     <style type="text/css">
         .highcharts-figure,
         .highcharts-data-table table {
@@ -57,7 +60,7 @@
 
     <div class="row">
         <div class="col-md-12">
-            <h1>Tarifa Promedio</h1>
+            <h1>Ventas Netas Mensuales</h1>
             <form class="filter-form">
                 <label for="year">Selecciona un año:</label>
                 <select id="year" name="year">
@@ -73,32 +76,34 @@
             <div id="container"></div>
         </div>
     </div>
+{% endblock %}
 
+{% block javascriptx %}
     <script>
         // Función para obtener los datos y cargar la gráfica
         function loadChart(data) {
-            data.tarifa_promedio = data.tarifa_promedio.map(Number);
+            data.ventas_netas = data.ventas_netas.map(Number);
             Highcharts.chart('container', {
                 chart: {
                     type: 'line'
                 },
                 title: {
-                    text: 'Tarifa Promedio por Año'  // Cambiar el título de la gráfica
+                    text: 'Ventas Netas Mensuales'
                 },
                 xAxis: {
-                    categories: data.anios,
+                    categories: data.meses,
                     accessibility: {
-                        rangeDescription: 'Range: 2019 to 2023'
+                        rangeDescription: 'Range: Enero to Diciembre'
                     }
                 },
                 yAxis: {
                     title: {
-                        text: 'Tarifa Promedio'  // Cambiar el título del eje Y
+                        text: 'Ventas Netas'
                     }
                 },
                 series: [{
-                    name: 'Tarifa Promedio',  // Cambiar el nombre de la serie
-                    data: data.tarifa_promedio  // Cambiar 'nacionales' por 'tarifa_promedio' en los datos
+                    name: 'Ventas Netas',
+                    data: data.ventas_netas
                 }],
                 responsive: {
                     rules: [{
@@ -120,7 +125,7 @@
         // Función para obtener los datos filtrados por año
         function filterByYear() {
             var selectedYear = document.getElementById('year').value;
-            var url = "{% url 'datosTarifaA' %}";
+            var url = "{% url 'VentasMensual' %}";
 
             if (selectedYear) {
                 url += "?year=" + selectedYear;
@@ -130,14 +135,14 @@
             $.ajax({
                 url: url,
                 dataType: 'json',
-                success: function(data) {
+                success: function (data) {
                     console.log(data);
                     loadChart(data);
                 }
             });
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Cargar la gráfica inicial sin filtrar
             filterByYear();
         });

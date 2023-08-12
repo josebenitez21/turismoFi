@@ -1,7 +1,10 @@
 {% block title %}
+    <!-- Título de tu página -->
 {% endblock %}
 
-{% block content %}
+<br>
+
+{% block container %}
     <style type="text/css">
         .highcharts-figure,
         .highcharts-data-table table {
@@ -55,9 +58,9 @@
         }
     </style>
 
-    <div class="row">
+     <div class="row">
         <div class="col-md-12">
-            <h1>Tarifa Promedio</h1>
+            <h1>Tarifa Promedio Diaria</h1>
             <form class="filter-form">
                 <label for="year">Selecciona un año:</label>
                 <select id="year" name="year">
@@ -68,38 +71,39 @@
                     <option value="2022">2022</option>
                     <option value="2023">2023</option>
                 </select>
-                <button type="button" onclick="filterByYear()">Filtrar</button>
+                <button type="button" onclick="filterByYearAndMonth()">Filtrar</button>
             </form>
             <div id="container"></div>
         </div>
     </div>
+{% endblock %}
 
+{% block javascriptx %}
     <script>
         // Función para obtener los datos y cargar la gráfica
         function loadChart(data) {
-            data.tarifa_promedio = data.tarifa_promedio.map(Number);
             Highcharts.chart('container', {
                 chart: {
                     type: 'line'
                 },
                 title: {
-                    text: 'Tarifa Promedio por Año'  // Cambiar el título de la gráfica
+                    text: 'Tarifa Promedio Diaria en ' + data.selected_year
                 },
                 xAxis: {
-                    categories: data.anios,
+                    categories: [...Array(31).keys()].map(day => day + 1),
                     accessibility: {
-                        rangeDescription: 'Range: 2019 to 2023'
+                        rangeDescription: 'Range: Days of the Month'
                     }
                 },
                 yAxis: {
                     title: {
-                        text: 'Tarifa Promedio'  // Cambiar el título del eje Y
+                        text: 'Tarifa Promedio'
                     }
                 },
-                series: [{
-                    name: 'Tarifa Promedio',  // Cambiar el nombre de la serie
-                    data: data.tarifa_promedio  // Cambiar 'nacionales' por 'tarifa_promedio' en los datos
-                }],
+                series: data.meses.map((mes, index) => ({
+                    name: mes.nombre,
+                    data: data.tarifa_promedio[index].map(val => parseFloat(val))
+                })),
                 responsive: {
                     rules: [{
                         condition: {
@@ -118,15 +122,14 @@
         }
 
         // Función para obtener los datos filtrados por año
-        function filterByYear() {
+        function filterByYearAndMonth() {
             var selectedYear = document.getElementById('year').value;
-            var url = "{% url 'datosTarifaA' %}";
+            var url = "{% url 'TarifaDia' %}";
 
             if (selectedYear) {
                 url += "?year=" + selectedYear;
             }
 
-            // Realizar la petición AJAX para obtener los datos
             $.ajax({
                 url: url,
                 dataType: 'json',
@@ -138,8 +141,8 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            // Cargar la gráfica inicial sin filtrar
-            filterByYear();
+            filterByYearAndMonth();
+            document.getElementById('year').addEventListener('change', filterByYearAndMonth);
         });
     </script>
 {% endblock %}
