@@ -267,6 +267,19 @@ def OcupacionA(request):
     return render(request, 'core/DatosAnuales/OcupacionA.html', ctx)
 
 
+@login_required(login_url='/login/')
+def EmpleadosTA(request):
+    ctx = _get_context(request)
+    user = request.user
+    if ctx['administrativo']:
+        # ctx['list'] = Establecimiento.objects.all()
+        provincias = _get_provincias(user)
+        ctx['list'] = Establecimiento.objects.filter(provincia__in=provincias)
+    else:
+        ctx['list'] = Establecimiento.objects.filter(user=user)
+    return render(request, 'core/DatosAnuales/EmpleadosTA.html', ctx)
+
+
 # Fin modelo 1
 
 # redirect to DatosMensuales
@@ -415,6 +428,30 @@ def RevParM(request):
     return render(request, 'core/DatosMensuales/RevParM.html', ctx)
 
 
+@login_required(login_url='/login/')
+def OcupacionM(request):
+    ctx = _get_context(request)
+    user = request.user
+    if ctx['administrativo']:
+        # ctx['list'] = Establecimiento.objects.all()
+        provincias = _get_provincias(user)
+        ctx['list'] = Establecimiento.objects.filter(provincia__in=provincias)
+    else:
+        ctx['list'] = Establecimiento.objects.filter(user=user)
+    return render(request, 'core/DatosMensuales/OcupacionM.html', ctx)
+
+@login_required(login_url='/login/')
+def EmpleadosTeM(request):
+    ctx = _get_context(request)
+    user = request.user
+    if ctx['administrativo']:
+        # ctx['list'] = Establecimiento.objects.all()
+        provincias = _get_provincias(user)
+        ctx['list'] = Establecimiento.objects.filter(provincia__in=provincias)
+    else:
+        ctx['list'] = Establecimiento.objects.filter(user=user)
+    return render(request, 'core/DatosMensuales/EmpleadosTM.html', ctx)
+
 # Fin modelo 2
 
 # Inicio modelo 3
@@ -561,6 +598,30 @@ def RevParD(request):
         ctx['list'] = Establecimiento.objects.filter(user=user)
     return render(request, 'core/DatosDiarios/RevParD.html', ctx)
 
+
+@login_required(login_url='/login/')
+def OcupacionD(request):
+    ctx = _get_context(request)
+    user = request.user
+    if ctx['administrativo']:
+        # ctx['list'] = Establecimiento.objects.all()
+        provincias = _get_provincias(user)
+        ctx['list'] = Establecimiento.objects.filter(provincia__in=provincias)
+    else:
+        ctx['list'] = Establecimiento.objects.filter(user=user)
+    return render(request, 'core/DatosDiarios/OcupacionD.html', ctx)
+
+@login_required(login_url='/login/')
+def EmpleadosTeD(request):
+    ctx = _get_context(request)
+    user = request.user
+    if ctx['administrativo']:
+        # ctx['list'] = Establecimiento.objects.all()
+        provincias = _get_provincias(user)
+        ctx['list'] = Establecimiento.objects.filter(provincia__in=provincias)
+    else:
+        ctx['list'] = Establecimiento.objects.filter(user=user)
+    return render(request, 'core/DatosDiarios/EmpleadosTeD.html', ctx)
 
 # Fin modelo 3
 

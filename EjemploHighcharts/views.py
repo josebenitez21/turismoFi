@@ -341,6 +341,33 @@ def obtener_datosPorcentajeOcupacionAnual(request):
     return JsonResponse(data)
 
 
+def obtener_datosEmpleadosTemporalesAnuales(request):
+    user = request.user  # Obtener el usuario loggeado
+
+    anios = list(range(2019, 2024))
+    data = {
+        'anios': anios,
+        'empleados_temporales': [],
+    }
+
+    year_param = request.GET.get('year')  # Obtener el año seleccionado desde el frontend
+
+    registros = EstablecimientoRegistro.objects.filter(establecimiento__user=user, fecha__year__in=anios)
+
+    if year_param:
+        registros = registros.filter(fecha__year=year_param)
+
+    registros = registros.values('fecha__year').annotate(total_empleados_temporales=Sum('empleados_temporales'))
+
+    for anio in anios:
+        empleados_temporales_anio = next(
+            (registro['total_empleados_temporales'] for registro in registros if registro['fecha__year'] == anio), 0)
+
+        data['empleados_temporales'].append(empleados_temporales_anio)
+
+    return JsonResponse(data)
+
+
 # Fin modelo 1
 
 # revisar
@@ -666,6 +693,70 @@ def obtener_datosRevPARMensuales(request):
     return JsonResponse(data)
 
 
+def obtener_datosPorcentajeOcupacionMensual(request):
+    user = request.user  # Obtener el usuario loggeado
+
+    year_param = request.GET.get('year')  # Obtener el año seleccionado desde el frontend
+
+    datos = EstablecimientoRegistro.objects.filter(establecimiento__user=user)
+
+    if year_param:
+        datos = datos.filter(fecha__year=year_param)
+
+    datos = datos.values('fecha__month').annotate(sum_porcentaje_ocupacion=Sum('porcentaje_ocupacion'))
+
+    meses = [
+        'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+        'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    ]
+
+    data = {
+        'meses': [],
+        'porcentaje_ocupacion': [],
+    }
+
+    for mes_num in range(1, 13):
+        mes = meses[mes_num - 1]
+        data['meses'].append(mes)
+        sum_porcentaje_ocupacion_mes = next(
+            (item['sum_porcentaje_ocupacion'] for item in datos if item['fecha__month'] == mes_num), 0)
+        data['porcentaje_ocupacion'].append(sum_porcentaje_ocupacion_mes)
+
+    return JsonResponse(data)
+
+
+def obtener_datosEmpleadosTemporalesMensuales(request):
+    user = request.user  # Obtener el usuario loggeado
+
+    year_param = request.GET.get('year')  # Obtener el año seleccionado desde el frontend
+
+    datos = EstablecimientoRegistro.objects.filter(establecimiento__user=user)
+
+    if year_param:
+        datos = datos.filter(fecha__year=year_param)
+
+    datos = datos.values('fecha__month').annotate(total_empleados_temporales=Sum('empleados_temporales'))
+
+    meses = [
+        'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+        'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    ]
+
+    data = {
+        'meses': [],
+        'empleados_temporales': [],
+    }
+
+    for mes_num in range(1, 13):
+        mes = meses[mes_num - 1]
+        data['meses'].append(mes)
+        empleados_temporales_mes = next(
+            (item['total_empleados_temporales'] for item in datos if item['fecha__month'] == mes_num), 0)
+        data['empleados_temporales'].append(empleados_temporales_mes)
+
+    return JsonResponse(data)
+
+
 # Fin modelo 2
 
 # Inicio modelo 3
@@ -673,30 +764,42 @@ def obtener_datosRevPARMensuales(request):
 def obtener_datosHabitacionesDisponiblesDiarias(request):
     user = request.user  # Obtener el usuario loggeado
 
-    year_param = request.GET.get('year')  # Obtener el año seleccionado desde el frontend
-    month_param = request.GET.get('month')  # Obtener el mes seleccionado desde el frontend
+    anios = [2019, 2020, 2021, 2022, 2023]
+    year_param = int(request.GET.get('year', 0))  # Obtener el año seleccionado desde el frontend
+    selected_year = year_param if year_param in anios else anios[-1]
 
-    datos = EstablecimientoRegistro.objects.filter(establecimiento__user=user)
-
-    if year_param and int(year_param) in [2019, 2020, 2021, 2022, 2023]:
-        datos = datos.filter(fecha__year=year_param)
-    if month_param:
-        datos = datos.filter(fecha__month=month_param)
-
-    dias_del_mes = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    meses = [
+        {'nombre': 'Enero', 'dias': 31},
+        {'nombre': 'Febrero', 'dias': 29 if (selected_year % 4 == 0 and selected_year % 100 != 0) or selected_year % 400 == 0 else 28},
+        {'nombre': 'Marzo', 'dias': 31},
+        {'nombre': 'Abril', 'dias': 30},
+        {'nombre': 'Mayo', 'dias': 31},
+        {'nombre': 'Junio', 'dias': 30},
+        {'nombre': 'Julio', 'dias': 31},
+        {'nombre': 'Agosto', 'dias': 31},
+        {'nombre': 'Septiembre', 'dias': 30},
+        {'nombre': 'Octubre', 'dias': 31},
+        {'nombre': 'Noviembre', 'dias': 30},
+        {'nombre': 'Diciembre', 'dias': 31},
+    ]
 
     data = {
-        'dias': list(range(1, dias_del_mes[int(month_param) - 1] + 1)),
-        'habitaciones_disponibles': [],
+        'anios': anios,
+        'selected_year': selected_year,
+        'meses': meses,
+        'habitaciones_disponibles': [[] for _ in range(12)],
     }
 
-    for dia in range(1, dias_del_mes[int(month_param) - 1] + 1):
-        habitaciones_disponibles_dia = datos.filter(fecha__day=dia).aggregate(total=Sum('habitaciones_disponibles'))[
-            'total']
-        data['habitaciones_disponibles'].append(habitaciones_disponibles_dia or 0)
+    registros = EstablecimientoRegistro.objects.filter(establecimiento__user=user, fecha__year=selected_year)
+
+    for i, mes in enumerate(meses):
+        for dia in range(1, mes['dias'] + 1):
+            habitaciones_disponibles_dia = registros.filter(fecha__month=i + 1, fecha__day=dia).aggregate(
+                total_habitaciones_disponibles=Sum('habitaciones_disponibles'))
+            total_habitaciones_disponibles = habitaciones_disponibles_dia['total_habitaciones_disponibles'] if habitaciones_disponibles_dia['total_habitaciones_disponibles'] else 0
+            data['habitaciones_disponibles'][i].append(total_habitaciones_disponibles)
 
     return JsonResponse(data)
-
 
 def obtener_datosCheckinsDiarios(request):
     user = request.user  # Obtener el usuario loggeado
@@ -787,18 +890,16 @@ def obtener_datosCheckoutsDiario(request):
     return JsonResponse(data)
 
 
-def obtener_datosPernoctacionesDias(request):
-    user = request.user
+def obtener_datosPernoctacionesDiarias(request):
+    user = request.user  # Obtener el usuario loggeado
 
     anios = [2019, 2020, 2021, 2022, 2023]
-    year_param = int(request.GET.get('year', 0))
+    year_param = int(request.GET.get('year', 0))  # Obtener el año seleccionado desde el frontend
     selected_year = year_param if year_param in anios else anios[-1]
-
-    feb_days = 29 if (selected_year % 4 == 0 and selected_year % 100 != 0) or selected_year % 400 == 0 else 28
 
     meses = [
         {'nombre': 'Enero', 'dias': 31},
-        {'nombre': 'Febrero', 'dias': feb_days},
+        {'nombre': 'Febrero', 'dias': 29 if (selected_year % 4 == 0 and selected_year % 100 != 0) or selected_year % 400 == 0 else 28},
         {'nombre': 'Marzo', 'dias': 31},
         {'nombre': 'Abril', 'dias': 30},
         {'nombre': 'Mayo', 'dias': 31},
@@ -815,7 +916,7 @@ def obtener_datosPernoctacionesDias(request):
         'anios': anios,
         'selected_year': selected_year,
         'meses': meses,
-        'pernoctaciones': [[] for _ in range(12)],  # Inicializar una lista vacía para cada mes
+        'pernoctaciones': [[] for _ in range(12)],
     }
 
     registros = EstablecimientoRegistro.objects.filter(establecimiento__user=user, fecha__year=selected_year)
@@ -824,25 +925,22 @@ def obtener_datosPernoctacionesDias(request):
         for dia in range(1, mes['dias'] + 1):
             pernoctaciones_dia = registros.filter(fecha__month=i + 1, fecha__day=dia).aggregate(
                 total_pernoctaciones=Sum('pernoctaciones'))
-            total_pernoctaciones = pernoctaciones_dia['total_pernoctaciones'] if pernoctaciones_dia[
-                'total_pernoctaciones'] else 0
+            total_pernoctaciones = pernoctaciones_dia['total_pernoctaciones'] if pernoctaciones_dia['total_pernoctaciones'] else 0
             data['pernoctaciones'][i].append(total_pernoctaciones)
 
     return JsonResponse(data)
 
 
 def obtener_datosNacionalesDia(request):
-    user = request.user
+    user = request.user  # Obtener el usuario loggeado
 
     anios = [2019, 2020, 2021, 2022, 2023]
-    year_param = int(request.GET.get('year', 0))
+    year_param = int(request.GET.get('year', 0))  # Obtener el año seleccionado desde el frontend
     selected_year = year_param if year_param in anios else anios[-1]
-
-    feb_days = 29 if (selected_year % 4 == 0 and selected_year % 100 != 0) or selected_year % 400 == 0 else 28
 
     meses = [
         {'nombre': 'Enero', 'dias': 31},
-        {'nombre': 'Febrero', 'dias': feb_days},
+        {'nombre': 'Febrero', 'dias': 29 if (selected_year % 4 == 0 and selected_year % 100 != 0) or selected_year % 400 == 0 else 28},
         {'nombre': 'Marzo', 'dias': 31},
         {'nombre': 'Abril', 'dias': 30},
         {'nombre': 'Mayo', 'dias': 31},
@@ -859,7 +957,7 @@ def obtener_datosNacionalesDia(request):
         'anios': anios,
         'selected_year': selected_year,
         'meses': meses,
-        'nacionales': [[] for _ in range(12)],  # Inicializar una lista vacía para cada mes
+        'nacionales': [[] for _ in range(12)],
     }
 
     registros = EstablecimientoRegistro.objects.filter(establecimiento__user=user, fecha__year=selected_year)
@@ -875,17 +973,15 @@ def obtener_datosNacionalesDia(request):
 
 
 def obtener_datosExtranjerosDia(request):
-    user = request.user
+    user = request.user  # Obtener el usuario loggeado
 
     anios = [2019, 2020, 2021, 2022, 2023]
-    year_param = int(request.GET.get('year', 0))
+    year_param = int(request.GET.get('year', 0))  # Obtener el año seleccionado desde el frontend
     selected_year = year_param if year_param in anios else anios[-1]
-
-    feb_days = 29 if (selected_year % 4 == 0 and selected_year % 100 != 0) or selected_year % 400 == 0 else 28
 
     meses = [
         {'nombre': 'Enero', 'dias': 31},
-        {'nombre': 'Febrero', 'dias': feb_days},
+        {'nombre': 'Febrero', 'dias': 29 if (selected_year % 4 == 0 and selected_year % 100 != 0) or selected_year % 400 == 0 else 28},
         {'nombre': 'Marzo', 'dias': 31},
         {'nombre': 'Abril', 'dias': 30},
         {'nombre': 'Mayo', 'dias': 31},
@@ -902,7 +998,7 @@ def obtener_datosExtranjerosDia(request):
         'anios': anios,
         'selected_year': selected_year,
         'meses': meses,
-        'extranjeros': [[] for _ in range(12)],  # Inicializar una lista vacía para cada mes
+        'extranjeros': [[] for _ in range(12)],
     }
 
     registros = EstablecimientoRegistro.objects.filter(establecimiento__user=user, fecha__year=selected_year)
@@ -918,17 +1014,15 @@ def obtener_datosExtranjerosDia(request):
 
 
 def obtener_datosHabitacionesOcupadas(request):
-    user = request.user
+    user = request.user  # Obtener el usuario loggeado
 
     anios = [2019, 2020, 2021, 2022, 2023]
-    year_param = int(request.GET.get('year', 0))
+    year_param = int(request.GET.get('year', 0))  # Obtener el año seleccionado desde el frontend
     selected_year = year_param if year_param in anios else anios[-1]
-
-    feb_days = 29 if (selected_year % 4 == 0 and selected_year % 100 != 0) or selected_year % 400 == 0 else 28
 
     meses = [
         {'nombre': 'Enero', 'dias': 31},
-        {'nombre': 'Febrero', 'dias': feb_days},
+        {'nombre': 'Febrero', 'dias': 29 if (selected_year % 4 == 0 and selected_year % 100 != 0) or selected_year % 400 == 0 else 28},
         {'nombre': 'Marzo', 'dias': 31},
         {'nombre': 'Abril', 'dias': 30},
         {'nombre': 'Mayo', 'dias': 31},
@@ -945,7 +1039,7 @@ def obtener_datosHabitacionesOcupadas(request):
         'anios': anios,
         'selected_year': selected_year,
         'meses': meses,
-        'habitaciones_ocupadas': [[] for _ in range(12)],  # Inicializar una lista vacía para cada mes
+        'habitaciones_ocupadas': [[] for _ in range(12)],
     }
 
     registros = EstablecimientoRegistro.objects.filter(establecimiento__user=user, fecha__year=selected_year)
@@ -954,8 +1048,7 @@ def obtener_datosHabitacionesOcupadas(request):
         for dia in range(1, mes['dias'] + 1):
             habitaciones_ocupadas_dia = registros.filter(fecha__month=i + 1, fecha__day=dia).aggregate(
                 total_habitaciones_ocupadas=Sum('habitaciones_ocupadas'))
-            total_habitaciones_ocupadas = habitaciones_ocupadas_dia['total_habitaciones_ocupadas'] if \
-                habitaciones_ocupadas_dia['total_habitaciones_ocupadas'] else 0
+            total_habitaciones_ocupadas = habitaciones_ocupadas_dia['total_habitaciones_ocupadas'] if habitaciones_ocupadas_dia['total_habitaciones_ocupadas'] else 0
             data['habitaciones_ocupadas'][i].append(total_habitaciones_ocupadas)
 
     return JsonResponse(data)
@@ -1128,6 +1221,96 @@ def obtener_datosRevPARDiario(request):
                 avg_revpar=Avg('revpar'))
             avg_revpar = revpar_dia['avg_revpar'] if revpar_dia['avg_revpar'] else 0
             data['revpar'][i].append(avg_revpar)
+
+    return JsonResponse(data)
+
+
+def obtener_datosPorcentajeOcupacionDiaria(request):
+    user = request.user  # Obtener el usuario loggeado
+
+    anios = [2019, 2020, 2021, 2022, 2023]
+    year_param = int(request.GET.get('year', 0))  # Obtener el año seleccionado desde el frontend
+    selected_year = year_param if year_param in anios else anios[-1]
+
+    # Obtener el número de días de febrero según el año (considerando si es bisiesto o no)
+    feb_days = 29 if (selected_year % 4 == 0 and selected_year % 100 != 0) or selected_year % 400 == 0 else 28
+
+    meses = [
+        {'nombre': 'Enero', 'dias': 31},
+        {'nombre': 'Febrero', 'dias': feb_days},
+        {'nombre': 'Marzo', 'dias': 31},
+        {'nombre': 'Abril', 'dias': 30},
+        {'nombre': 'Mayo', 'dias': 31},
+        {'nombre': 'Junio', 'dias': 30},
+        {'nombre': 'Julio', 'dias': 31},
+        {'nombre': 'Agosto', 'dias': 31},
+        {'nombre': 'Septiembre', 'dias': 30},
+        {'nombre': 'Octubre', 'dias': 31},
+        {'nombre': 'Noviembre', 'dias': 30},
+        {'nombre': 'Diciembre', 'dias': 31},
+    ]
+
+    data = {
+        'anios': anios,
+        'selected_year': selected_year,
+        'meses': meses,
+        'porcentaje_ocupacion': [[] for _ in range(12)],  # Inicializar una lista vacía para cada mes
+    }
+
+    registros = EstablecimientoRegistro.objects.filter(establecimiento__user=user, fecha__year=selected_year)
+
+    for i, mes in enumerate(meses):
+        for dia in range(1, mes['dias'] + 1):
+            porcentaje_ocupacion_dia = registros.filter(fecha__month=i + 1, fecha__day=dia).aggregate(
+                sum_porcentaje_ocupacion=Sum('porcentaje_ocupacion'))
+            sum_porcentaje_ocupacion = porcentaje_ocupacion_dia['sum_porcentaje_ocupacion'] if porcentaje_ocupacion_dia[
+                'sum_porcentaje_ocupacion'] else 0
+            data['porcentaje_ocupacion'][i].append(sum_porcentaje_ocupacion)
+
+    return JsonResponse(data)
+
+
+def obtener_datosEmpleadosTemporalesDiarios(request):
+    user = request.user  # Obtener el usuario loggeado
+
+    anios = [2019, 2020, 2021, 2022, 2023]
+    year_param = int(request.GET.get('year', 0))  # Obtener el año seleccionado desde el frontend
+    selected_year = year_param if year_param in anios else anios[-1]
+
+    # Obtener el número de días de febrero según el año (considerando si es bisiesto o no)
+    feb_days = 29 if (selected_year % 4 == 0 and selected_year % 100 != 0) or selected_year % 400 == 0 else 28
+
+    meses = [
+        {'nombre': 'Enero', 'dias': 31},
+        {'nombre': 'Febrero', 'dias': feb_days},
+        {'nombre': 'Marzo', 'dias': 31},
+        {'nombre': 'Abril', 'dias': 30},
+        {'nombre': 'Mayo', 'dias': 31},
+        {'nombre': 'Junio', 'dias': 30},
+        {'nombre': 'Julio', 'dias': 31},
+        {'nombre': 'Agosto', 'dias': 31},
+        {'nombre': 'Septiembre', 'dias': 30},
+        {'nombre': 'Octubre', 'dias': 31},
+        {'nombre': 'Noviembre', 'dias': 30},
+        {'nombre': 'Diciembre', 'dias': 31},
+    ]
+
+    data = {
+        'anios': anios,
+        'selected_year': selected_year,
+        'meses': meses,
+        'empleados_temporales': [[] for _ in range(12)],  # Inicializar una lista vacía para cada mes
+    }
+
+    registros = EstablecimientoRegistro.objects.filter(establecimiento__user=user, fecha__year=selected_year)
+
+    for i, mes in enumerate(meses):
+        for dia in range(1, mes['dias'] + 1):
+            empleados_dia = registros.filter(fecha__month=i + 1, fecha__day=dia).aggregate(
+                total_empleados_temporales=Sum('empleados_temporales'))
+            total_empleados_temporales = empleados_dia['total_empleados_temporales'] if empleados_dia[
+                'total_empleados_temporales'] else 0
+            data['empleados_temporales'][i].append(total_empleados_temporales)
 
     return JsonResponse(data)
 

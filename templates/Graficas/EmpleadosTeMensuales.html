@@ -60,7 +60,7 @@
 
     <div class="row">
         <div class="col-md-12">
-            <h1>Extranjeros Diarios</h1>
+            <h1>Empleados Temporales Mensuales</h1>
             <form class="filter-form">
                 <label for="year">Selecciona un año:</label>
                 <select id="year" name="year">
@@ -85,23 +85,23 @@
                     type: 'line'
                 },
                 title: {
-                    text: 'Extranjeros Diarios en ' + data.selected_year
+                    text: 'Empleados Temporales Mensuales'  // Cambiar el título de la gráfica
                 },
                 xAxis: {
-                    categories: [...Array(31).keys()].map(day => day + 1),
+                    categories: data.meses,
                     accessibility: {
-                        rangeDescription: 'Range: Days of the Month'
+                        rangeDescription: 'Range: Enero to Diciembre'
                     }
                 },
                 yAxis: {
                     title: {
-                        text: 'Extranjeros'
+                        text: 'Empleados Temporales'  // Cambiar el título del eje Y
                     }
                 },
-                series: data.meses.map((mes, index) => ({
-                    name: mes.nombre,
-                    data: data.extranjeros[index].map(val => parseFloat(val))
-                })),
+                series: [{
+                    name: 'Empleados Temporales',  // Cambiar el nombre de la serie
+                    data: data.empleados_temporales  // Cambiar 'ventas_netas' por 'empleados_temporales' en los datos
+                }],
                 responsive: {
                     rules: [{
                         condition: {
@@ -122,7 +122,7 @@
         // Función para obtener los datos filtrados por año
         function filterByYear() {
             var selectedYear = document.getElementById('year').value;
-            var url = "{% url 'ExtranjerosDia' %}";
+            var url = "{% url 'TemporalesMensuales' %}";
 
             if (selectedYear) {
                 url += "?year=" + selectedYear;

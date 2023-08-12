@@ -60,7 +60,7 @@
 
     <div class="row">
         <div class="col-md-12">
-            <h1>Extranjeros Diarios</h1>
+            <h1>Empleados Temporales Diarios</h1>
             <form class="filter-form">
                 <label for="year">Selecciona un año:</label>
                 <select id="year" name="year">
@@ -85,7 +85,7 @@
                     type: 'line'
                 },
                 title: {
-                    text: 'Extranjeros Diarios en ' + data.selected_year
+                    text: 'Empleados Temporales Diarios en ' + data.selected_year
                 },
                 xAxis: {
                     categories: [...Array(31).keys()].map(day => day + 1),
@@ -95,12 +95,12 @@
                 },
                 yAxis: {
                     title: {
-                        text: 'Extranjeros'
+                        text: 'Empleados Temporales'
                     }
                 },
                 series: data.meses.map((mes, index) => ({
                     name: mes.nombre,
-                    data: data.extranjeros[index].map(val => parseFloat(val))
+                    data: data.empleados_temporales[index].map(val => parseInt(val))
                 })),
                 responsive: {
                     rules: [{
@@ -122,7 +122,7 @@
         // Función para obtener los datos filtrados por año
         function filterByYear() {
             var selectedYear = document.getElementById('year').value;
-            var url = "{% url 'ExtranjerosDia' %}";
+            var url = "{% url 'TemporalesDiarios' %}";
 
             if (selectedYear) {
                 url += "?year=" + selectedYear;

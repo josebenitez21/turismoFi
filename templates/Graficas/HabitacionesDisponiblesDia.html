@@ -1,5 +1,5 @@
 {% block title %}
-
+    <!-- Título de tu página -->
 {% endblock %}
 
 <br>
@@ -58,9 +58,9 @@
         }
     </style>
 
-   <div class="row">
+    <div class="row">
         <div class="col-md-12">
-            <h1>Habitaciones Disponibles Diarios</h1>
+            <h1>Habitaciones Disponibles Diarias</h1>
             <form class="filter-form">
                 <label for="year">Selecciona un año:</label>
                 <select id="year" name="year">
@@ -71,14 +71,12 @@
                     <option value="2022">2022</option>
                     <option value="2023">2023</option>
                 </select>
-                <button type="button" onclick="filterByYearAndMonth()">Filtrar</button>
+                <button type="button" onclick="filterByYear()">Filtrar</button>
             </form>
             <div id="container"></div>
         </div>
     </div>
-{% endblock %}
 
-{% block javascriptx %}
     <script>
         // Función para obtener los datos y cargar la gráfica
         function loadChart(data) {
@@ -87,22 +85,22 @@
                     type: 'line'
                 },
                 title: {
-                    text: 'Habitaciones Disponibles por Día en ' + data.selected_year  // Cambiar el título de la gráfica
+                    text: 'Habitaciones Disponibles Diarias en ' + data.selected_year
                 },
                 xAxis: {
-                    categories: [...Array(31).keys()].map(day => day + 1),  // Generar los números del 1 al 31 para el eje X
+                    categories: [...Array(31).keys()].map(day => day + 1),
                     accessibility: {
                         rangeDescription: 'Range: Days of the Month'
                     }
                 },
                 yAxis: {
                     title: {
-                        text: 'Habitaciones Disponibles'  // Cambiar el título del eje Y
+                        text: 'Habitaciones Disponibles'
                     }
                 },
                 series: data.meses.map((mes, index) => ({
                     name: mes.nombre,
-                    data: data.habitaciones_disponibles[index]  // Obtener los datos de habitaciones disponibles para cada mes
+                    data: data.habitaciones_disponibles[index].map(val => parseFloat(val))
                 })),
                 responsive: {
                     rules: [{
@@ -122,7 +120,7 @@
         }
 
         // Función para obtener los datos filtrados por año
-        function filterByYearAndMonth() {
+        function filterByYear() {
             var selectedYear = document.getElementById('year').value;
             var url = "{% url 'HabiDisDia' %}";
 
@@ -144,9 +142,6 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Cargar la gráfica inicial sin filtrar
             filterByYear();
-
-            // Asignar evento click al botón "Filtrar"
-            document.getElementById('filter-button').addEventListener('click', filterByYearAndMonth);
         });
     </script>
 {% endblock %}

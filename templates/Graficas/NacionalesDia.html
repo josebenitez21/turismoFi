@@ -1,5 +1,5 @@
 {% block title %}
-
+    <!-- Título de tu página -->
 {% endblock %}
 
 <br>
@@ -58,7 +58,7 @@
         }
     </style>
 
-   <div class="row">
+    <div class="row">
         <div class="col-md-12">
             <h1>Nacionales Diarios</h1>
             <form class="filter-form">
@@ -71,18 +71,11 @@
                     <option value="2022">2022</option>
                     <option value="2023">2023</option>
                 </select>
-                <button type="button" onclick="filterByYearAndMonth()">Filtrar</button>
+                <button type="button" onclick="filterByYear()">Filtrar</button>
             </form>
             <div id="container"></div>
         </div>
     </div>
-{% endblock %}
-
-{% block javascriptx %}
-    <script src="https://code.highcharts.com/highcharts.js"></script>
-    <script src="https://code.highcharts.com/modules/exporting.js"></script>
-    <script src="https://code.highcharts.com/modules/export-data.js"></script>
-    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 
     <script>
         // Función para obtener los datos y cargar la gráfica
@@ -92,7 +85,7 @@
                     type: 'line'
                 },
                 title: {
-                    text: 'Nacionales por Día en ' + data.selected_year
+                    text: 'Nacionales Diarios en ' + data.selected_year
                 },
                 xAxis: {
                     categories: [...Array(31).keys()].map(day => day + 1),
@@ -107,7 +100,7 @@
                 },
                 series: data.meses.map((mes, index) => ({
                     name: mes.nombre,
-                    data: data.nacionales[index]
+                    data: data.nacionales[index].map(val => parseFloat(val))
                 })),
                 responsive: {
                     rules: [{
@@ -127,9 +120,9 @@
         }
 
         // Función para obtener los datos filtrados por año
-        function filterByYearAndMonth() {
+        function filterByYear() {
             var selectedYear = document.getElementById('year').value;
-            var url = "{% url 'obtener_datos' %}";
+            var url = "{% url 'NacionalesDia' %}";
 
             if (selectedYear) {
                 url += "?year=" + selectedYear;
@@ -149,9 +142,6 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Cargar la gráfica inicial sin filtrar
             filterByYear();
-
-            // Asignar evento click al botón "Filtrar"
-            document.getElementById('filter-button').addEventListener('click', filterByYearAndMonth);
         });
     </script>
 {% endblock %}

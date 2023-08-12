@@ -38,7 +38,7 @@ urlpatterns = [
                   path('HabiDisDia/', views.obtener_datosHabitacionesDisponiblesDiarias, name='HabiDisDia'),
                   path('CheckinsDia/', views.obtener_datosCheckinsDiarios, name='CheckinsDia'),
                   path('CheckoutsDia/', views.obtener_datosCheckoutsDiario, name='CheckoutsDia'),
-                  path('PernoctacionesDia/', views.obtener_datosPernoctacionesDias, name='PernoctacionesDia'),
+                  path('PernoctacionesDia/', views.obtener_datosPernoctacionesDiarias, name='PernoctacionesDia'),
                   path('NacionalesDia/', views.obtener_datosNacionalesDia, name='NacionalesDia'),
                   path('ExtranjerosDia/', views.obtener_datosExtranjerosDia, name='ExtranjerosDia'),
                   path('HabiOcDia/', views.obtener_datosHabitacionesOcupadas, name='HabiOcDia'),
@@ -56,6 +56,11 @@ urlpatterns = [
                   path('datosRevParM/', views.obtener_datosRevPARMensuales, name='RevParMensuales'),
                   path('datosRevParD/', views.obtener_datosRevPARDiario, name='RevParDiario'),
                   path('datosOcupacionA/', views.obtener_datosPorcentajeOcupacionAnual, name='OcupacionAnual'),
+                  path('datosOcupacionM/', views.obtener_datosPorcentajeOcupacionMensual, name='OcupacionMensual'),
+                  path('datosOcupacionD/', views.obtener_datosPorcentajeOcupacionDiaria, name='OcupacionDiaria'),
+                  path('datosEmpleadosTA/', views.obtener_datosEmpleadosTemporalesAnuales, name='TemporalesAnuales'),
+                  path('datosEmpleadosTM/', views.obtener_datosEmpleadosTemporalesMensuales, name='TemporalesMensuales'),
+                  path('datosEmpleadosTD/', views.obtener_datosEmpleadosTemporalesDiarios, name='TemporalesDiarios'),
 
                   path('ejemplohighcharts/', include('EjemploHighcharts.urls')),
                   path('accounts/profile/DatosAnuales', core_views.datosAnuales, name='DatosAnuales'),
@@ -92,6 +97,11 @@ urlpatterns = [
                   path('accounts/profile/RevParM', core_views.RevParM, name='RevParM'),
                   path('accounts/profile/RevParD', core_views.RevParD, name='RevParD'),
                   path('accounts/profile/OcupacionA', core_views.OcupacionA, name='OcupacionA'),
+                  path('accounts/profile/OcupacionM', core_views.OcupacionM, name='OcupacionM'),
+                  path('accounts/profile/OcupacionD', core_views.OcupacionD, name='OcupacionD'),
+                  path('accounts/profile/EmpleadosTA', core_views.EmpleadosTA, name='EmpleadosTA'),
+                  path('accounts/profile/EmpleadosTM', core_views.EmpleadosTeM, name='EmpleadosTM'),
+                  path('accounts/profile/EmpleadosTD', core_views.EmpleadosTeD, name='EmpleadosTD'),
                   path('estadistica/', TemplateView.as_view(template_name='Estadistica.html'), name='estadistica'),
 
               ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

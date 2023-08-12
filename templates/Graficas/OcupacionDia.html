@@ -60,7 +60,7 @@
 
     <div class="row">
         <div class="col-md-12">
-            <h1>Extranjeros Diarios</h1>
+            <h1>Porcentaje de Ocupación Diaria</h1>
             <form class="filter-form">
                 <label for="year">Selecciona un año:</label>
                 <select id="year" name="year">
@@ -85,7 +85,7 @@
                     type: 'line'
                 },
                 title: {
-                    text: 'Extranjeros Diarios en ' + data.selected_year
+                    text: 'Porcentaje de Ocupación Diaria en ' + data.selected_year
                 },
                 xAxis: {
                     categories: [...Array(31).keys()].map(day => day + 1),
@@ -95,12 +95,12 @@
                 },
                 yAxis: {
                     title: {
-                        text: 'Extranjeros'
+                        text: 'Porcentaje de Ocupación'
                     }
                 },
                 series: data.meses.map((mes, index) => ({
                     name: mes.nombre,
-                    data: data.extranjeros[index].map(val => parseFloat(val))
+                    data: data.porcentaje_ocupacion[index].map(val => parseFloat(val))
                 })),
                 responsive: {
                     rules: [{
@@ -122,13 +122,12 @@
         // Función para obtener los datos filtrados por año
         function filterByYear() {
             var selectedYear = document.getElementById('year').value;
-            var url = "{% url 'ExtranjerosDia' %}";
+            var url = "{% url 'OcupacionDiaria' %}";
 
             if (selectedYear) {
                 url += "?year=" + selectedYear;
             }
 
-            // Realizar la petición AJAX para obtener los datos
             $.ajax({
                 url: url,
                 dataType: 'json',
@@ -140,8 +139,8 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            // Cargar la gráfica inicial sin filtrar
             filterByYear();
+            document.getElementById('year').addEventListener('change', filterByYear);
         });
     </script>
 {% endblock %}
