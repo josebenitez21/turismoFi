@@ -58,7 +58,7 @@
         }
     </style>
 
-    <div class="row">
+ <div class="row">
         <div class="col-md-12">
             <h1>Porcentaje de Ocupación Diaria</h1>
             <form class="filter-form">
@@ -71,7 +71,23 @@
                     <option value="2022">2022</option>
                     <option value="2023">2023</option>
                 </select>
-                <button type="button" onclick="filterByYear()">Filtrar</button>
+                <label for="month">Selecciona un mes:</label>
+                <select id="month" name="month">
+                    <option value="">Todos</option>
+                    <option value="Enero">Enero</option>
+                    <option value="Febrero">Febrero</option>
+                    <option value="Marzo">Marzo</option>
+                    <option value="Abril">Abril</option>
+                    <option value="Mayo">Mayo</option>
+                    <option value="Junio">Junio</option>
+                    <option value="Julio">Julio</option>
+                    <option value="Agosto">Agosto</option>
+                    <option value="Septiembre">Septiembre</option>
+                    <option value="Octubre">Octubre</option>
+                    <option value="Noviembre">Noviembre</option>
+                    <option value="Diciembre">Diciembre</option>
+                </select>
+                <button type="button" onclick="filterByYearAndMonth()">Filtrar</button>
             </form>
             <div id="container"></div>
         </div>
@@ -79,18 +95,23 @@
 
     <script>
         // Función para obtener los datos y cargar la gráfica
-        function loadChart(data) {
+        function loadChart(data, selectedYear, selectedMonth) {
+            // Obtener los datos de porcentaje de ocupación para el año y mes seleccionados
+            var selectedMonthIndex = data.meses.findIndex(month => month.nombre === selectedMonth);
+            var selectedMonthData = data.porcentaje_ocupacion[selectedMonthIndex];
+
+            // Crear la gráfica
             Highcharts.chart('container', {
                 chart: {
                     type: 'line'
                 },
                 title: {
-                    text: 'Porcentaje de Ocupación Diaria en ' + data.selected_year
+                    text: 'Porcentaje de Ocupación Diaria en ' + selectedYear
                 },
                 xAxis: {
-                    categories: [...Array(31).keys()].map(day => day + 1),
+                    categories: [...Array(selectedMonthData.length).keys()].map(day => day + 1),
                     accessibility: {
-                        rangeDescription: 'Range: Days of the Month'
+                        rangeDescription: 'Range: Días del Mes'
                     }
                 },
                 yAxis: {
@@ -98,10 +119,10 @@
                         text: 'Porcentaje de Ocupación'
                     }
                 },
-                series: data.meses.map((mes, index) => ({
-                    name: mes.nombre,
-                    data: data.porcentaje_ocupacion[index].map(val => parseFloat(val))
-                })),
+                series: [{
+                    name: selectedMonth,
+                    data: selectedMonthData.map(val => parseFloat(val))
+                }],
                 responsive: {
                     rules: [{
                         condition: {
@@ -119,28 +140,43 @@
             });
         }
 
-        // Función para obtener los datos filtrados por año
-        function filterByYear() {
+        // Función para obtener los datos filtrados por año y mes
+        function filterByYearAndMonth() {
             var selectedYear = document.getElementById('year').value;
+            var selectedMonth = document.getElementById('month').value;
             var url = "{% url 'OcupacionDiaria' %}";
 
             if (selectedYear) {
                 url += "?year=" + selectedYear;
             }
+            if (selectedMonth) {
+                url += selectedYear ? "&month=" + selectedMonth : "?month=" + selectedMonth;
+            }
 
+            // Realizar la petición AJAX para obtener los datos
             $.ajax({
                 url: url,
                 dataType: 'json',
                 success: function(data) {
                     console.log(data);
-                    loadChart(data);
+                    if (!selectedYear && !selectedMonth) {
+                        // Cargar la gráfica con los datos de enero de 2023 por defecto
+                        loadChart(data, 2023, "Enero");
+                    } else {
+                        // Cargar la gráfica con los datos filtrados
+                        loadChart(data, selectedYear, selectedMonth);
+                    }
                 }
             });
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            filterByYear();
-            document.getElementById('year').addEventListener('change', filterByYear);
+            // Cargar la gráfica inicial sin filtrar
+            filterByYearAndMonth();
+
+            // Asignar evento change al elemento "select" para filtrar automáticamente al cambiar el año o mes
+            document.getElementById('year').addEventListener('change', filterByYearAndMonth);
+            document.getElementById('month').addEventListener('change', filterByYearAndMonth);
         });
     </script>
 {% endblock %}

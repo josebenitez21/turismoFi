@@ -1,0 +1,164 @@
+{% block title %}
+    <!-- Título de tu página -->
+{% endblock %}
+
+<br>
+
+{% block container %}
+    <style type="text/css">
+        .highcharts-figure,
+        .highcharts-data-table table {
+            min-width: 310px;
+            max-width: 800px;
+            margin: 1em auto;
+        }
+
+        #nacionales-container {
+            /* Ajusta el tamaño del contenedor aquí */
+            height: 300px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .highcharts-data-table table {
+            font-family: Verdana, sans-serif;
+            border-collapse: collapse;
+            border: 1px solid #ebebeb;
+            margin: 10px auto;
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .highcharts-data-table caption {
+            padding: 1em 0;
+            font-size: 1.2em;
+            color: #555;
+        }
+
+        .highcharts-data-table th {
+            font-weight: 600;
+            padding: 0.5em;
+        }
+
+        .highcharts-data-table td,
+        .highcharts-data-table th,
+        .highcharts-data-table caption {
+            padding: 0.5em;
+        }
+
+        .highcharts-data-table thead tr,
+        .highcharts-data-table tr:nth-child(even) {
+            background: #f8f8f8;
+        }
+
+        .highcharts-data-table tr:hover {
+            background: #f1f7ff;
+        }
+
+        .filter-form {
+            margin-top: 10px;
+        }
+    </style>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div id="nacionales-container"></div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascriptx %}
+    <script>
+        function getFullYear() {
+            var currentDate = new Date();
+            return currentDate.getFullYear().toString();
+        }
+
+        // Función para cargar la gráfica de donut
+        function loadNacionalesChart(yearlyData, selectedYear) {
+            var months = [
+                'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+            ];
+
+            var data = months.reduce(function(result, month, index) {
+                var value = yearlyData[selectedYear][index];
+                if (value !== 0) {
+                    result.push({
+                        name: month,
+                        y: value
+                    });
+                }
+                return result;
+            }, []);
+
+            var chart = Highcharts.chart('nacionales-container', {
+                chart: {
+                    type: 'pie',
+                    height: 350 // Ajusta el tamaño de la gráfica aquí
+                },
+                title: {
+                    text: 'Nacionales Mensuales'
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.y}</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            format: '<b>{point.name}</b>: {point.y}'
+                        },
+                        showInLegend: true
+                    }
+                },
+                series: [
+                    {
+                        name: selectedYear,
+                        data: data
+                    }
+                ],
+                credits: {
+                    enabled: false  // Desactivar el enlace "Highcharts"
+                },
+                exporting: {
+                    enabled: false  // Desactivar el menú de exportación
+                },
+                responsive: {
+                    // ... (opciones de diseño responsivo)
+                }
+            });
+        }
+
+        // Función para obtener los datos filtrados por año
+        function fetchNacionalesYearlyData(year) {
+            var url = "{% url 'NacionalMes' %}?year=" + year;
+
+            // Realizar la petición AJAX para obtener los datos
+            return $.ajax({
+                url: url,
+                dataType: 'json'
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var currentYear = getFullYear();
+            var years = [currentYear];
+            var promises = years.map(function(year) {
+                return fetchNacionalesYearlyData(year);
+            });
+
+            Promise.all(promises).then(function(dataArray) {
+                var yearlyData = {};
+                dataArray.forEach(function(data, index) {
+                    yearlyData[years[index]] = data.nacionales;
+                });
+
+                loadNacionalesChart(yearlyData, currentYear);
+            });
+        });
+    </script>
+{% endblock %}

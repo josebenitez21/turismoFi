@@ -1,7 +1,8 @@
 {% block title %}
+    <title>Revpar Mensual</title>
 {% endblock %}
 
-{% block container %}
+{% block content %}
     <style type="text/css">
         .highcharts-figure,
         .highcharts-data-table table {
@@ -57,51 +58,57 @@
 
     <div class="row">
         <div class="col-md-12">
-            <h1>RevPAR Mensual</h1>
-            <form class="filter-form">
-                <label for="year">Selecciona un año:</label>
-                <select id="year" name="year">
-                    <option value="">Todos</option>
+            <h1>Revpar Mensual</h1>
+            <div id="container"></div>
+            <div class="filter-form">
+                <label for="year1">Desde:</label>
+                <select id="year1">
                     <option value="2019">2019</option>
                     <option value="2020">2020</option>
                     <option value="2021">2021</option>
                     <option value="2022">2022</option>
-                    <option value="2023">2023</option>
+                    <option value="2023" selected>2023</option>
                 </select>
-                <button type="button" onclick="filterByYear()">Filtrar</button>
-            </form>
-            <div id="container"></div>
+                <label for="year2">Hasta:</label>
+                <select id="year2">
+                    <option value="2019">2019</option>
+                    <option value="2020">2020</option>
+                    <option value="2021">2021</option>
+                    <option value="2022">2022</option>
+                    <option value="2023" selected>2023</option>
+                </select>
+                <button id="filterButton">Filtrar</button>
+            </div>
         </div>
     </div>
-{% endblock %}
 
-{% block javascriptx %}
     <script>
-        // Función para obtener los datos y cargar la gráfica
-        function loadChart(data) {
-            data.revpar = data.revpar.map(Number);
-            Highcharts.chart('container', {
+        // Función para cargar la gráfica
+        function loadChart(yearlyData) {
+            var xAxisCategories = [
+                'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+            ];
+
+            var chart = Highcharts.chart('container', {
                 chart: {
                     type: 'line'
                 },
                 title: {
-                    text: 'RevPAR Mensual'
+                    text: 'Revpar Mensual'
                 },
                 xAxis: {
-                    categories: data.meses,
+                    categories: xAxisCategories,
                     accessibility: {
-                        rangeDescription: 'Range: Enero to Diciembre'
+                        rangeDescription: 'Range: Enero a Diciembre'
                     }
                 },
                 yAxis: {
                     title: {
-                        text: 'RevPAR'
+                        text: 'Revpar'
                     }
                 },
-                series: [{
-                    name: 'RevPAR',
-                    data: data.revpar
-                }],
+                series: [],
                 responsive: {
                     rules: [{
                         condition: {
@@ -117,31 +124,75 @@
                     }]
                 }
             });
-        }
 
-        // Función para obtener los datos filtrados por año
-        function filterByYear() {
-            var selectedYear = document.getElementById('year').value;
-            var url = "{% url 'RevParMensuales' %}";
-
-            if (selectedYear) {
-                url += "?year=" + selectedYear;
-            }
-
-            // Realizar la petición AJAX para obtener los datos
-            $.ajax({
-                url: url,
-                dataType: 'json',
-                success: function (data) {
-                    console.log(data);
-                    loadChart(data);
+            // Agregar series a la gráfica
+            var years = ['2019', '2020', '2021', '2022', '2023'];
+            years.forEach(function(year) {
+                var data = yearlyData[year];
+                if (data && data.meses && data.revpar) {
+                    var dataSeries = data.revpar.map(parseFloat);
+                    chart.addSeries({
+                        name: year,
+                        data: dataSeries,
+                        color: getSeriesColor(years.indexOf(year))
+                    });
                 }
             });
         }
 
-        document.addEventListener('DOMContentLoaded', function () {
-            // Cargar la gráfica inicial sin filtrar
-            filterByYear();
+        // Función para obtener los datos filtrados por año
+        function fetchYearlyData(year) {
+            var url = "{% url 'RevParMensuales' %}?year=" + year;
+
+            // Realizar la petición AJAX para obtener los datos
+            return fetch(url)
+                .then(response => response.json())
+                .catch(error => console.error("Error loading data:", error));
+        }
+
+        // Función para obtener el color de la serie basado en el índice
+        function getSeriesColor(index) {
+            var colors = [
+                '#ccea07', '#434348', '#90ed7d', '#f7a35c', '#8085e9',
+                '#f15c80', '#e4d354', '#0de1ca', '#8d4653', '#91e8e1'
+            ];
+            return colors[index % colors.length]; // Ciclo de colores si hay más series que colores
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Obtener los datos anuales y cargar la gráfica
+            var years = ['2019', '2020', '2021', '2022', '2023'];
+            var promises = years.map(function(year) {
+                return fetchYearlyData(year);
+            });
+
+            Promise.all(promises).then(function(dataArray) {
+                var yearlyData = {};
+                dataArray.forEach(function(data, index) {
+                    yearlyData[years[index]] = data;
+                });
+
+                // Cargar la gráfica con los datos anuales
+                loadChart(yearlyData);
+            });
+
+            // Agregar evento para el botón de filtro
+            document.getElementById('filterButton').addEventListener('click', function() {
+                var year1 = document.getElementById('year1').value;
+                var year2 = document.getElementById('year2').value;
+
+                // Obtener los datos filtrados por año y cargar la gráfica
+                var promises = [fetchYearlyData(year1), fetchYearlyData(year2)];
+
+                Promise.all(promises).then(function(dataArray) {
+                    var yearlyData = {};
+                    yearlyData[year1] = dataArray[0];
+                    yearlyData[year2] = dataArray[1];
+
+                    // Cargar la gráfica con los datos filtrados por año
+                    loadChart(yearlyData);
+                });
+            });
         });
     </script>
 {% endblock %}

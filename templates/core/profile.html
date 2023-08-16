@@ -8,6 +8,7 @@
     <meta name="description" content=""/>
     <meta name="author" content=""/>
     <title>Dashboard</title>
+
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet"/>
     <link href="{% static 'assets/css/styles.css' %}" rel="stylesheet"/>
 
@@ -18,8 +19,8 @@
     {% block header %}
     {% endblock header %}
 </head>
-<body class="sb-nav-fixed">
-<nav class="sb-topnav navbar navbar-expand navbar-dark bg-secondary">
+<body class="sb-nav-fixed ">
+<nav class="sb-topnav navbar navbar-expand navbar-dark custom-bg-color">
     <!-- Navbar Brand-->
     <a class="navbar-brand ps-3 " href="{% url 'profile' %}">Inicio</a>
     <!-- Sidebar Toggle-->
@@ -95,9 +96,6 @@
                             <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne"
                                  data-bs-parent="#sidenavAccordionPages">
                                 <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="401.html">401 Page</a>
-                                    <a class="nav-link" href="404.html">404 Page</a>
-                                    <a class="nav-link" href="500.html">500 Page</a>
                                 </nav>
                             </div>
                         </nav>
@@ -115,9 +113,9 @@
     <div id="layoutSidenav_content">
         <main>
             <div class="container-fluid px-4">
-                <h1 class="mt-4">Dashboard</h1>
+                <h1 class="mt-4">Dashboard<h2 style="color: white"></h2></h1>
                 <ol class="breadcrumb mb-4">
-                    <li class="breadcrumb-item active">Bienvenido a OBTUR. Descubre varias de nuestras opciones: </li>
+                    <li class="breadcrumb-item active">Bienvenido a OBTUR. Descubre varias de nuestras opciones:</li>
                 </ol>
                 {% for item in list %}
                     <div class="row">
@@ -136,7 +134,7 @@
                             <div class="card bg-primary mb-4" style="border-radius: 0;">
                                 <div class="card-body text-center">
                                     <i class="fa-solid fa-plus" style="color: #ffffff; font-size: 40px;"></i>
-                                    <h5 class="card-title mt-3"style="color: white;">Agregar Registro</h5>
+                                    <h5 class="card-title mt-3" style="color: white;">Agregar Registro</h5>
                                     <a class="small text-white stretched-link"
                                        href="{% url "core:establecimiento_registro_nuevo" item.id %}"></a>
                                 </div>
@@ -147,7 +145,7 @@
                             <div class="card bg-primary mb-4" style="border-radius: 0;">
                                 <div class="card-body text-center">
                                     <i class="fa-solid fa-eye" style="color: #ffffff; font-size: 40px;"></i>
-                                    <h5 class="card-title mt-3"style="color: white;">Ver Registros</h5>
+                                    <h5 class="card-title mt-3" style="color: white;">Ver Registros</h5>
                                     <a class="small text-white stretched-link"
                                        href="{% url "core:establecimiento_registros" item.id %}"></a>
                                 </div>
@@ -166,6 +164,23 @@
                     </div>
 
                 {% endfor %}
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="container"
+                             style="border: 1px solid #ccc; padding: 10px; background-color: white; border-radius: 0px; box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.2); margin-bottom: 20px;">
+                            {% include 'Graficas/CheckinProfile.html' %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="container"
+                             style="border: 1px solid #ccc; padding: 10px; background-color: white; border-radius: 0px; box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.2); margin-bottom: 20px;">
+                            {% include 'Graficas/NacionalesProfile.html' %}
+                        </div>
+                    </div>
+                </div>
+
+
             </div>
         </main>
 
@@ -190,9 +205,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
             crossorigin="anonymous"></script>
     <script src="{% static 'assets/js/scripts.js' %}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-    <script src="{% static 'assets/assets/demo/chart-area-demo.js' %}"></script>
-    <script src="{% static 'assets/assets/demo/chart-bar-demo.js' %}"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"
             crossorigin="anonymous"></script>
     <script src="{% static 'assets/js/datatables-simple-demo.js' %}"></script>

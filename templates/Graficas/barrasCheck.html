@@ -3,8 +3,6 @@
 <head>
     <title>Estadísticas</title>
     <script src="https://code.highcharts.com/highcharts.js"></script>
-    <script src="https://code.highcharts.com/modules/exporting.js"></script>
-    <script src="https://code.highcharts.com/modules/export-data.js"></script>
     <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 </head>
 <body>
@@ -40,6 +38,12 @@
                             name: 'Checkouts',
                             data: data.checkouts
                         }],
+                        credits: {
+                            enabled: false  // Desactivar el enlace "Highcharts"
+                        },
+                        exporting: {
+                            enabled: false  // Desactivar el menú de exportación
+                        },
                         responsive: {
                             rules: [{
                                 condition: {
